@@ -4,25 +4,32 @@
       <view class="auth-dialog">
         <image class="auth-logo" src="/img/来整-头像.png" mode="aspectFit" />
         <text class="auth-title">先授权，再进来整</text>
-        <text class="auth-desc">首页一进来就确认。主按钮会拉起微信手机号授权并直接登录；头像直接用微信头像，昵称直接填微信昵称。</text>
+        <text class="auth-desc">获取头像、获取昵称，然后直接进入。数据库里没有就注册，已经有了就直接登录。</text>
 
-        <view class="auth-profile-row">
+        <view class="auth-section auth-avatar-section">
+          <text class="auth-section-label">获取头像</text>
           <button class="auth-avatar-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
             <image wx:if="{{authAvatarUrl}}" class="auth-avatar-image" src="{{authAvatarUrl}}" mode="aspectFill" />
-            <view wx:else class="auth-avatar-placeholder">微信头像</view>
+            <view wx:else class="auth-avatar-placeholder">点这里选头像</view>
           </button>
+          <text class="auth-section-tip">选完后会用这个微信头像展示。</text>
+        </view>
+
+        <view class="auth-section auth-nickname-section">
+          <text class="auth-section-label">获取昵称</text>
           <input
             class="auth-nickname-input"
             type="nickname"
             maxlength="20"
-            placeholder="微信昵称"
+            placeholder="点这里直接填微信昵称"
             value="{{authNickname}}"
             bindinput="handleNicknameInput"
           />
+          <text class="auth-section-tip">键盘上方会带出微信昵称建议。</text>
         </view>
 
-        <button class="primary-button auth-button auth-submit" open-type="getPhoneNumber" loading="{{authLoading}}" bindgetphonenumber="confirmLogin">
-          {{authLoading ? '确认中...' : '确认授权并进入'}}
+        <button class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLogin">
+          {{authLoading ? '进入中...' : '确认并进入'}}
         </button>
       </view>
     </view>

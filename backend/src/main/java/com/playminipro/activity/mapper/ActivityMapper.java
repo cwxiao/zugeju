@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 @Mapper
 public interface ActivityMapper {
@@ -34,6 +35,47 @@ public interface ActivityMapper {
             WHERE id = CAST(#{id} AS UUID)
             """)
     ActivityEntity findById(String id);
+
+    @Update("""
+            UPDATE activities
+            SET title = #{title},
+                description = #{description},
+                mode = #{mode},
+                target_participant_count = #{targetParticipantCount},
+                max_participant_count = #{maxParticipantCount},
+                start_time = #{startTime},
+                end_time = #{endTime},
+                meetup_time = #{meetupTime},
+                meetup_address = #{meetupAddress},
+                venue_address = #{venueAddress},
+                online_join_info = CAST(#{onlineJoinInfo} AS JSONB),
+                expense_mode = #{expenseMode},
+                expense_flag = #{expenseFlag},
+                allow_member_add_expense = #{allowMemberAddExpense},
+                updated_at = NOW()
+            WHERE id = CAST(#{id} AS UUID)
+              AND creator_id = CAST(#{creatorId} AS UUID)
+            """)
+    int update(ActivityEntity activity);
+
+    @Update("""
+            UPDATE activities
+            SET status = 'cancelled',
+                updated_at = NOW()
+            WHERE id = CAST(#{activityId} AS UUID)
+              AND creator_id = CAST(#{creatorId} AS UUID)
+            """)
+    int cancel(String creatorId, String activityId);
+
+                @Update("""
+                                                UPDATE activities
+                                                SET status = 'finished',
+                                                                end_time = COALESCE(end_time, NOW()),
+                                                                updated_at = NOW()
+                                                WHERE id = CAST(#{activityId} AS UUID)
+                                                        AND creator_id = CAST(#{creatorId} AS UUID)
+                                                """)
+                int finish(String creatorId, String activityId);
 
     @Select("""
             SELECT a.id,

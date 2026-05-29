@@ -14,35 +14,30 @@
           <text class="card-tag">{{detail.tag}}</text>
           <text class="card-mode">{{detail.mode}}</text>
         </view>
-        <text class="detail-count">{{detail.count}}</text>
+        <view class="detail-top-actions">
+          <view wx:if="{{detail.isCreator && detail.rawStatus !== 'finished' && detail.rawStatus !== 'cancelled'}}" class="detail-edit-link" bindtap="goEdit">修改</view>
+          <view wx:if="{{detail.isCreator && detail.rawStatus !== 'finished' && detail.rawStatus !== 'cancelled'}}" class="detail-cancel-link" bindtap="cancelActivity">取消</view>
+          <text class="detail-count">{{detail.count}}</text>
+        </view>
       </view>
       <text class="detail-title">{{detail.title}}</text>
       <text class="detail-subtitle">{{detail.status}}</text>
       <view class="detail-meta-strip">
         <view class="detail-meta-chip">{{detail.time}}</view>
-        <view class="detail-meta-chip">{{detail.place}}</view>
+        <view wx:if="{{detail.mode === '线下'}}" class="detail-meta-chip">{{detail.place}}</view>
+        <view wx:if="{{detail.expenseModeLabel}}" class="detail-meta-chip">{{detail.expenseModeLabel}}</view>
       </view>
       <view class="avatar-stack detail-avatar-stack">
-        <block wx:for="{{detail.members}}" wx:key="*this">
-          <view class="avatar-pill">{{item}}</view>
+        <block wx:for="{{detail.members}}" wx:key="id">
+          <view class="avatar-pill avatar-image-pill">
+            <image wx:if="{{item.avatarUrl}}" class="avatar-pill-image" src="{{item.avatarUrl}}" mode="aspectFill" />
+            <text wx:else>{{item.shortName}}</text>
+          </view>
         </block>
+        <button class="avatar-pill avatar-plus-pill" open-type="share">+</button>
       </view>
-    </view>
-
-    <view class="summary-card detail-card info-card detail-card-sand">
-      <view class="detail-card-accent accent-info"></view>
-      <view class="card-caption">基础信息</view>
-      <view class="detail-row first-row">
-        <text class="detail-label">时间</text>
-        <text class="detail-value">{{detail.time}}</text>
-      </view>
-      <view class="detail-row">
-        <text class="detail-label">方式</text>
-        <text class="detail-value">{{detail.mode}}</text>
-      </view>
-      <view class="detail-row">
-        <text class="detail-label">地点</text>
-        <text class="detail-value">{{detail.place}}</text>
+      <view wx:if="{{detail.mode === '线下'}}" class="detail-tool-row">
+        <view class="detail-tool-link" bindtap="goBills">记账结算</view>
       </view>
     </view>
 
@@ -50,33 +45,19 @@
       <view class="detail-card-accent accent-info"></view>
       <view class="card-caption">到场的人</view>
       <view class="member-grid">
-        <block wx:for="{{detail.members}}" wx:key="*this">
+        <block wx:for="{{detail.members}}" wx:key="id">
           <view class="member-card">
-            <view class="member-avatar">{{item}}</view>
-            <text class="member-name">{{item}}</text>
+            <view class="member-avatar member-avatar-frame">
+              <image wx:if="{{item.avatarUrl}}" class="member-avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" />
+              <text wx:else>{{item.shortName}}</text>
+            </view>
+            <text class="member-name">{{item.nickname}}</text>
           </view>
         </block>
-      </view>
-    </view>
-
-    <view class="summary-card detail-card info-card detail-card-sand-deep">
-      <view class="detail-card-accent accent-info"></view>
-      <view class="card-caption">提醒</view>
-      <view class="checklist-wrap">
-        <block wx:for="{{detail.checklist}}" wx:key="*this">
-          <view class="check-item">
-            <view class="check-dot"></view>
-            <text class="check-text">{{item}}</text>
-          </view>
-        </block>
-      </view>
-    </view>
-
-    <view class="summary-card detail-card info-card detail-card-plain">
-      <view class="detail-card-accent accent-info"></view>
-      <view class="card-caption">备注</view>
-      <view class="detail-note first-note">
-        <text class="detail-note-text">{{detail.note}}</text>
+        <button class="member-card member-invite-card" open-type="share">
+          <view class="member-avatar member-avatar-plus">+</view>
+          <text class="member-name">发到群聊</text>
+        </button>
       </view>
     </view>
   </view>

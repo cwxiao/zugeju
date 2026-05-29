@@ -68,21 +68,11 @@ Page({
     this.setData({ authAvatarUrl: avatarUrl })
   },
 
-  async confirmLogin(event) {
-    const phoneCode = event.detail && event.detail.code
-    if (!phoneCode || phoneCode === 'getPhoneNumber:fail user deny') {
-      wx.showToast({
-        title: '需要先同意手机号授权',
-        icon: 'none'
-      })
-      return
-    }
-
+  async confirmLogin() {
     this.setData({ authLoading: true })
 
     try {
       await getApp().loginWithConfirm({
-        phoneCode,
         nickname: this.data.authNickname.trim() || '微信用户',
         avatarUrl: this.data.authAvatarUrl
       })

@@ -1,11 +1,16 @@
-const BASE_URL = 'http://127.0.0.1:8080'
+const DEFAULT_BASE_URL = 'http://192.168.0.13:8080'
+
+function getBaseUrl() {
+  return wx.getStorageSync('apiBaseUrl') || DEFAULT_BASE_URL
+}
 
 function request({ url, method = 'GET', data, auth = true }) {
   const token = wx.getStorageSync('token')
+  const baseUrl = getBaseUrl()
 
   return new Promise((resolve, reject) => {
     wx.request({
-      url: `${BASE_URL}${url}`,
+      url: `${baseUrl}${url}`,
       method,
       data,
       header: auth && token ? { Authorization: `Bearer ${token}` } : {},
@@ -26,5 +31,6 @@ function request({ url, method = 'GET', data, auth = true }) {
 
 module.exports = {
   request,
-  BASE_URL
+  BASE_URL: DEFAULT_BASE_URL,
+  getBaseUrl
 }

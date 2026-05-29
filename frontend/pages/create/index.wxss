@@ -80,20 +80,20 @@
 }
 
 .create-card-sunrise {
-  background: linear-gradient(145deg, rgba(255, 244, 232, 0.98) 0%, rgba(245, 214, 182, 0.95) 100%);
-  box-shadow: 0 24rpx 54rpx rgba(169, 94, 52, 0.13);
+  background: linear-gradient(145deg, rgba(225, 244, 255, 0.98) 0%, rgba(255, 224, 193, 0.95) 100%);
+  box-shadow: 0 24rpx 54rpx rgba(31, 104, 156, 0.15);
 }
 
 .create-card-sand {
-  background: linear-gradient(145deg, rgba(251, 246, 237, 0.98) 0%, rgba(236, 226, 199, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(244, 251, 255, 0.98) 0%, rgba(255, 237, 215, 0.95) 100%);
 }
 
 .create-card-clay-soft {
-  background: linear-gradient(145deg, rgba(255, 245, 238, 0.98) 0%, rgba(242, 223, 205, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(240, 249, 255, 0.98) 0%, rgba(255, 229, 208, 0.95) 100%);
 }
 
 .create-card-sand-deep {
-  background: linear-gradient(145deg, rgba(247, 239, 228, 0.98) 0%, rgba(233, 210, 182, 0.95) 100%);
+  background: linear-gradient(145deg, rgba(235, 246, 255, 0.98) 0%, rgba(255, 218, 185, 0.95) 100%);
 }
 
 .create-card-accent {
@@ -107,7 +107,7 @@
   right: 20rpx;
   width: 170rpx;
   height: 170rpx;
-  background: radial-gradient(circle, rgba(230, 154, 77, 0.22) 0%, rgba(230, 154, 77, 0) 72%);
+  background: radial-gradient(circle, rgba(31, 182, 244, 0.24) 0%, rgba(255, 137, 36, 0.2) 46%, rgba(230, 154, 77, 0) 72%);
 }
 
 .accent-input {
@@ -132,8 +132,8 @@
 .header-badge {
   padding: 10rpx 18rpx;
   border-radius: 18rpx 24rpx 18rpx 26rpx;
-  background: rgba(244, 232, 216, 0.88);
-  color: #7e6e5d;
+  background: rgba(23, 181, 244, 0.12);
+  color: #0f7496;
   font-size: 22rpx;
 }
 
@@ -142,6 +142,13 @@
   flex-wrap: wrap;
   gap: 12rpx;
   margin-top: 24rpx;
+}
+
+.topic-panel {
+  margin-top: 24rpx;
+  padding: 24rpx;
+  border-radius: 30rpx 72rpx 34rpx 56rpx;
+  background: linear-gradient(135deg, rgba(255, 243, 229, 0.98) 0%, rgba(238, 209, 176, 0.95) 100%);
 }
 
 .summary-chip {
@@ -153,41 +160,8 @@
 }
 
 .strong-chip {
-  color: #774724;
-  background: #ead6be;
-}
-
-.live-card {
-  margin-top: 22rpx;
-  padding: 24rpx;
-  background: linear-gradient(135deg, #fff6ea 0%, #f2dfc7 100%);
-  border-radius: 30rpx 72rpx 34rpx 56rpx;
-}
-
-.live-card-clay {
-  background: linear-gradient(135deg, rgba(255, 240, 225, 0.98) 0%, rgba(236, 194, 152, 0.96) 100%);
-}
-
-.live-title {
-  display: block;
-  font-size: 34rpx;
-  font-weight: 700;
-  color: #2f2218;
-}
-
-.live-meta {
-  display: block;
-  margin-top: 12rpx;
-  font-size: 24rpx;
-  color: #6f5e4e;
-}
-
-.live-note {
-  display: block;
-  margin-top: 14rpx;
-  font-size: 24rpx;
-  line-height: 1.7;
-  color: #8b7867;
+  color: #ad5716;
+  background: rgba(255, 132, 35, 0.2);
 }
 
 .input-card {
@@ -218,15 +192,68 @@
   margin-top: 14rpx;
 }
 
-.form-intro {
-  margin-top: 8rpx;
-  font-size: 24rpx;
-  color: #8d7c69;
-}
-
 .field-label {
   font-size: 26rpx;
   color: #6b5e4f;
+}
+
+.compact-header-field {
+  margin-top: 0;
+}
+
+.header-input-shell {
+  margin-top: 16rpx;
+  padding: 0 24rpx;
+  height: 92rpx;
+  display: flex;
+  align-items: center;
+  border-radius: 22rpx 32rpx 22rpx 28rpx;
+  background: rgba(255, 251, 246, 0.78);
+  border: 1rpx solid rgba(176, 125, 71, 0.14);
+  box-sizing: border-box;
+}
+
+.header-input-control {
+  width: 100%;
+  height: 92rpx;
+  line-height: 92rpx;
+  color: #2e241b;
+  font-size: 30rpx;
+}
+
+.type-selector-block {
+  margin-top: 26rpx;
+}
+
+.type-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+  margin-top: 16rpx;
+}
+
+.type-chip {
+  padding: 14rpx 22rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 251, 246, 0.7);
+  border: 1rpx solid rgba(176, 125, 71, 0.14);
+  color: #806e5d;
+  font-size: 24rpx;
+}
+
+.type-chip-active {
+  background: linear-gradient(135deg, rgba(40, 182, 241, 0.16) 0%, rgba(255, 142, 45, 0.22) 100%);
+  border-color: rgba(56, 151, 197, 0.18);
+  color: #2e241b;
+}
+
+.expense-chip-row {
+  margin-top: 14rpx;
+}
+
+.expense-chip {
+  min-width: 148rpx;
+  text-align: center;
 }
 
 .field-box {
@@ -237,6 +264,24 @@
   color: #8d7c69;
   font-size: 26rpx;
   border: 1rpx solid rgba(176, 125, 71, 0.14);
+}
+
+.map-picker-box {
+  position: relative;
+}
+
+.map-picker-box::after {
+  content: '地图选择';
+  position: absolute;
+  right: 24rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 22rpx;
+  color: #a07f61;
+}
+
+.online-tip-block .field-box {
+  color: #8d7c69;
 }
 
 .field-value {

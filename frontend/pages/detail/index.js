@@ -3,16 +3,18 @@ const { request } = require('../../utils/request')
 Page({
   data: {
     detail: {
+      id: '',
       title: '详情',
       tag: '',
+      rawStatus: '',
       time: '',
       mode: '',
       place: '',
+      expenseModeLabel: '',
       status: '',
       count: '',
-      members: [],
-      note: '',
-      checklist: []
+      isCreator: false,
+      members: []
     }
   },
 
@@ -29,22 +31,39 @@ Page({
     }
 
     try {
+      const localUser = wx.getStorageSync('user') || {}
       const detail = await request({
         url: `/api/activities/${options.id}`
       })
 
+      wx.showShareMenu({
+        withShareTicket: true,
+        menus: ['shareAppMessage']
+      })
+
+      const isCreator = (detail.members || []).some((member) => member.userId === localUser.id && member.role === 'creator')
+
       this.setData({
         detail: {
+          id: detail.id,
           title: detail.title,
-          tag: detail.status === 'recruiting' ? '进行中' : '已确认',
+          tag: resolveActivityTag(detail.status),
+          rawStatus: detail.status,
           time: formatTime(detail.startTime),
           mode: detail.mode === 'offline' ? '线下' : '线上',
-          place: detail.venueAddress || detail.meetupAddress || '待补充',
-          status: detail.joinedCount < detail.maxParticipantCount ? `还差 ${detail.maxParticipantCount - detail.joinedCount} 人` : '人已到齐',
+          place: detail.mode === 'offline'
+            ? (detail.venueAddress || detail.meetupAddress || '待补充')
+            : '线上无需地点',
+          expenseModeLabel: resolveExpenseModeLabel(detail.expenseMode),
+          status: resolveActivityStatusText(detail.status, detail.joinedCount, detail.maxParticipantCount),
           count: `${detail.joinedCount} / ${detail.maxParticipantCount}`,
-          members: (detail.members || []).map((member) => member.nickname || '友'),
-          note: detail.description || '先把时间地点定下来。',
-          checklist: buildChecklist(detail)
+          isCreator,
+          members: (detail.members || []).map((member) => ({
+            id: member.userId,
+            nickname: member.nickname || '友',
+            shortName: (member.nickname || '友').slice(0, 1),
+            avatarUrl: member.avatarUrl || (member.userId === localUser.id ? (localUser.avatarUrl || '') : '')
+          }))
         }
       })
     } catch (error) {
@@ -53,6 +72,55 @@ Page({
         icon: 'none'
       })
     }
+  },
+
+  onShareAppMessage() {
+    const { detail } = this.data
+    return {
+      title: `${detail.title}，来整一下`,
+      path: `/pages/detail/index?id=${detail.id}`
+    }
+  },
+
+  goEdit() {
+    wx.navigateTo({
+      url: `/pages/create/index?id=${this.data.detail.id}`
+    })
+  },
+
+  goBills() {
+    wx.navigateTo({
+      url: `/pages/bills/index?id=${this.data.detail.id}`
+    })
+  },
+
+  cancelActivity() {
+    wx.showModal({
+      title: '取消活动',
+      content: '确定不组了吗？取消后首页就不会再显示这条活动。',
+      confirmText: '确认取消',
+      success: async (res) => {
+        if (!res.confirm) {
+          return
+        }
+
+        try {
+          await request({
+            url: `/api/activities/${this.data.detail.id}/cancel`,
+            method: 'POST'
+          })
+          wx.showToast({ title: '已取消', icon: 'success' })
+          wx.redirectTo({
+            url: '/pages/home/index'
+          })
+        } catch (error) {
+          wx.showToast({
+            title: '取消失败',
+            icon: 'none'
+          })
+        }
+      }
+    })
   }
 })
 
@@ -63,14 +131,32 @@ function formatTime(value) {
   return value.replace('T', ' ').slice(0, 16)
 }
 
-function buildChecklist(detail) {
-  const items = []
-  if (detail.meetupAddress || detail.venueAddress) {
-    items.push('出发前再确认一次地点')
+function resolveActivityTag(status) {
+  if (status === 'finished') {
+    return '已结束'
   }
-  if (detail.expenseMode === 'aa') {
-    items.push('费用按 AA 处理，活动后统一看账单')
+  if (status === 'cancelled') {
+    return '已取消'
   }
-  items.push('如果有变化，记得及时更新信息')
-  return items
+  return status === 'recruiting' ? '进行中' : '已确认'
+}
+
+function resolveExpenseModeLabel(expenseMode) {
+  if (expenseMode === 'host_treat') {
+    return '我请客'
+  }
+  if (expenseMode === 'aa') {
+    return 'AA'
+  }
+  return ''
+}
+
+function resolveActivityStatusText(status, joinedCount, maxParticipantCount) {
+  if (status === 'finished') {
+    return '这场已经结束，可以直接看结算。'
+  }
+  if (status === 'cancelled') {
+    return '这场已经取消。'
+  }
+  return joinedCount < maxParticipantCount ? `还差 ${maxParticipantCount - joinedCount} 人` : '人已到齐'
 }

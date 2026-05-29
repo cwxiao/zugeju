@@ -11,10 +11,9 @@
       <view class="create-card-accent accent-header"></view>
       <view class="create-header-top">
         <view>
-          <view class="section-title">开始整</view>
-          <view class="form-intro">把基础信息先落下来，后面再慢慢补。</view>
+          <view class="section-title">{{pageTitle}}</view>
         </view>
-        <view class="header-badge">草稿</view>
+        <view class="header-badge">{{editingId ? '编辑中' : '草稿'}}</view>
       </view>
 
       <view class="summary-strip">
@@ -23,10 +22,33 @@
         <view class="summary-chip strong-chip">{{modes[modeIndex]}}</view>
       </view>
 
-      <view class="summary-card live-card live-card-clay">
-        <text class="live-title">这次先整一个</text>
-        <text class="live-meta">{{form.location || '地点还没填'}}</text>
-        <text class="live-note">{{form.note || '备注空着也可以，先把局定下来。'}}</text>
+      <view class="topic-panel">
+        <view class="field-block first-field compact-header-field">
+          <text class="field-label">活动主题</text>
+          <view class="header-input-shell">
+            <input
+              class="header-input-control"
+              placeholder="比如：这次先整一个"
+              placeholder-class="input-placeholder"
+              value="{{form.title}}"
+              bindinput="onTitleInput"
+              maxlength="30"
+            />
+          </view>
+        </view>
+
+        <view class="type-selector-block">
+          <text class="field-label">活动类型</text>
+          <view class="type-chip-row">
+            <block wx:for="{{activityTypes}}" wx:key="code">
+              <view
+                class="type-chip {{activityTypeIndex === index ? 'type-chip-active' : ''}}"
+                data-index="{{index}}"
+                bindtap="chooseActivityType"
+              >{{item.name}}</view>
+            </block>
+          </view>
+        </view>
       </view>
     </view>
 
@@ -58,15 +80,27 @@
           <view class="field-box field-value">{{modes[modeIndex]}}</view>
         </picker>
       </view>
-      <view class="field-block">
+      <view wx:if="{{modes[modeIndex] === '线下'}}" class="field-block">
         <text class="field-label">地点</text>
-        <input
-          class="input-field"
-          placeholder="输入地点"
-          placeholder-class="input-placeholder"
-          value="{{form.location}}"
-          bindinput="onLocationInput"
-        />
+        <view class="field-box {{form.location ? 'field-value' : ''}} map-picker-box" bindtap="chooseLocation">
+          {{form.location || '打开地图选地点'}}
+        </view>
+      </view>
+      <view wx:if="{{modes[modeIndex] === '线下'}}" class="field-block">
+        <text class="field-label">谁来买单</text>
+        <view class="type-chip-row expense-chip-row">
+          <block wx:for="{{expenseOptions}}" wx:key="code">
+            <view
+              class="type-chip expense-chip {{expenseOptionIndex === index ? 'type-chip-active' : ''}}"
+              data-index="{{index}}"
+              bindtap="chooseExpenseMode"
+            >{{item.label}}</view>
+          </block>
+        </view>
+      </view>
+      <view wx:else class="field-block online-tip-block">
+        <text class="field-label">地点</text>
+        <view class="field-box">线上局不需要选地点</view>
       </view>
     </view>
 
@@ -85,7 +119,7 @@
         />
       </view>
       <view class="button-stack">
-        <view class="primary-button" bindtap="submit">下一步</view>
+        <button class="primary-button create-submit-button" bindtap="submit">{{submitLabel}}</button>
       </view>
     </view>
   </view>

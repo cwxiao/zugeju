@@ -35,30 +35,10 @@ public class ActivityService {
 
     @Transactional
     public CreateActivityResponse create(String userId, CreateActivityRequest request) {
-        if (request.maxParticipantCount() < request.targetParticipantCount()) {
-            throw new BusinessException(4001, "maxParticipantCount must be greater than or equal to targetParticipantCount");
-        }
+        validateRequest(request);
 
-        ActivityEntity activity = new ActivityEntity();
-        activity.setId(UUID.randomUUID().toString());
-        activity.setCreatorId(userId);
-        activity.setTypeCode(request.typeCode());
-        activity.setTypeName(request.typeName());
-        activity.setTitle(request.title());
-        activity.setDescription(request.description());
-        activity.setMode(request.mode());
+        ActivityEntity activity = buildActivity(userId, request, UUID.randomUUID().toString());
         activity.setStatus("recruiting");
-        activity.setTargetParticipantCount(request.targetParticipantCount());
-        activity.setMaxParticipantCount(request.maxParticipantCount());
-        activity.setStartTime(request.startTime());
-        activity.setEndTime(request.endTime());
-        activity.setMeetupTime(request.meetupTime());
-        activity.setMeetupAddress(request.meetupAddress());
-        activity.setVenueAddress(request.venueAddress());
-        activity.setOnlineJoinInfo(writeJson(request));
-        activity.setExpenseMode(request.expenseMode());
-        activity.setExpenseFlag(request.expenseFlag());
-        activity.setAllowMemberAddExpense(request.allowMemberAddExpense());
         activityMapper.insert(activity);
 
         ActivityMemberEntity activityMember = new ActivityMemberEntity();
@@ -70,6 +50,75 @@ public class ActivityService {
         activityMemberMapper.insert(activityMember);
 
         return new CreateActivityResponse(activity.getId());
+    }
+
+    @Transactional
+    public CreateActivityResponse update(String userId, String activityId, CreateActivityRequest request) {
+        validateRequest(request);
+
+        ActivityEntity existingActivity = activityMapper.findById(activityId);
+        if (existingActivity == null) {
+            throw new BusinessException(4004, "activity not found");
+        }
+        if (!userId.equals(existingActivity.getCreatorId())) {
+            throw new BusinessException(4003, "forbidden");
+        }
+
+        ActivityEntity activity = buildActivity(userId, request, activityId);
+        activity.setStatus(existingActivity.getStatus());
+        int updated = activityMapper.update(activity);
+        if (updated == 0) {
+            throw new BusinessException(4004, "activity not found");
+        }
+
+        return new CreateActivityResponse(activityId);
+    }
+
+    @Transactional
+    public CreateActivityResponse cancel(String userId, String activityId) {
+        ActivityEntity existingActivity = activityMapper.findById(activityId);
+        if (existingActivity == null) {
+            throw new BusinessException(4004, "activity not found");
+        }
+        if (!userId.equals(existingActivity.getCreatorId())) {
+            throw new BusinessException(4003, "forbidden");
+        }
+
+        int updated = activityMapper.cancel(userId, activityId);
+        if (updated == 0) {
+            throw new BusinessException(4004, "activity not found");
+        }
+
+        return new CreateActivityResponse(activityId);
+    }
+
+    private void validateRequest(CreateActivityRequest request) {
+        if (request.maxParticipantCount() < request.targetParticipantCount()) {
+            throw new BusinessException(4001, "maxParticipantCount must be greater than or equal to targetParticipantCount");
+        }
+    }
+
+    private ActivityEntity buildActivity(String userId, CreateActivityRequest request, String activityId) {
+        ActivityEntity activity = new ActivityEntity();
+        activity.setId(activityId);
+        activity.setCreatorId(userId);
+        activity.setTypeCode(request.typeCode());
+        activity.setTypeName(request.typeName());
+        activity.setTitle(request.title());
+        activity.setDescription(request.description());
+        activity.setMode(request.mode());
+        activity.setTargetParticipantCount(request.targetParticipantCount());
+        activity.setMaxParticipantCount(request.maxParticipantCount());
+        activity.setStartTime(request.startTime());
+        activity.setEndTime(request.endTime());
+        activity.setMeetupTime(request.meetupTime());
+        activity.setMeetupAddress(request.meetupAddress());
+        activity.setVenueAddress(request.venueAddress());
+        activity.setOnlineJoinInfo(writeJson(request));
+        activity.setExpenseMode(request.expenseMode());
+        activity.setExpenseFlag(request.expenseFlag());
+        activity.setAllowMemberAddExpense(request.allowMemberAddExpense());
+        return activity;
     }
 
     public List<ActivitySummaryResponse> listMineOngoing(String userId) {

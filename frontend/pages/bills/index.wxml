@@ -1,11 +1,74 @@
 <view class="page-shell">
-  <view class="bill-list bill-shell">
-    <view class="section-title">账单列表</view>
-    <block wx:for="{{bills}}" wx:key="title">
-      <view class="bill-card bill-item">
-        <text class="bill-title">{{item.title}}</text>
-        <text class="bill-meta">{{item.meta}}</text>
+  <view wx:if="{{!activityId}}" class="bill-card bill-shell bill-empty-card">
+    <view class="section-title">记账结算</view>
+    <text class="bill-meta">从活动详情点进来，再录消费和结算。</text>
+  </view>
+
+  <view wx:elif="{{summary}}" class="bill-list bill-shell">
+    <view class="bill-card bill-item bill-summary-card">
+      <view class="section-title">{{summary.activityTitle}}</view>
+      <view class="bill-chip-row">
+        <view class="bill-chip">{{summary.expenseModeLabel}}</view>
+        <view class="bill-chip">{{summary.activityStatus === 'finished' ? '已结束' : '进行中'}}</view>
       </view>
-    </block>
+      <text class="bill-total">总消费 {{summary.totalAmountText}}</text>
+      <text class="bill-meta">{{summary.settlementNote}}</text>
+    </view>
+
+    <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item">
+      <text class="bill-title">记一笔消费</text>
+      <input
+        class="bill-input"
+        placeholder="比如：烧烤食材"
+        placeholder-class="input-placeholder"
+        value="{{itemName}}"
+        bindinput="onItemNameInput"
+      />
+      <input
+        class="bill-input"
+        type="digit"
+        placeholder="金额，单位元"
+        placeholder-class="input-placeholder"
+        value="{{amountYuan}}"
+        bindinput="onAmountInput"
+      />
+      <button class="primary-button" bindtap="submitExpense">记上去</button>
+    </view>
+
+    <view class="bill-card bill-item">
+      <text class="bill-title">消费记录</text>
+      <view wx:if="{{summary.expenseItems.length}}" class="bill-record-list">
+        <block wx:for="{{summary.expenseItems}}" wx:key="id">
+          <view class="bill-record-row">
+            <view>
+              <text class="bill-record-title">{{item.itemName}}</text>
+              <text class="bill-record-meta">{{item.payerNickname}}</text>
+            </view>
+            <text class="bill-record-amount">{{item.amountText}}</text>
+          </view>
+        </block>
+      </view>
+      <text wx:else class="bill-meta">还没记消费项。</text>
+    </view>
+
+    <view class="bill-card bill-item">
+      <text class="bill-title">结算结果</text>
+      <view wx:if="{{summary.settlementItems.length}}" class="bill-record-list">
+        <block wx:for="{{summary.settlementItems}}" wx:key="userId">
+          <view class="bill-record-row">
+            <view>
+              <text class="bill-record-title">{{item.nickname}}</text>
+              <text class="bill-record-meta">{{item.roleLabel}}</text>
+            </view>
+            <text class="bill-record-amount {{item.amountFen > 0 ? 'bill-record-amount-strong' : ''}}">{{item.amountText}}</text>
+          </view>
+        </block>
+      </view>
+      <text wx:else class="bill-meta">这场目前没有需要转账的人。</text>
+    </view>
+
+    <view wx:if="{{summary.creatorView && summary.canFinish}}" class="bill-action-wrap">
+      <button class="primary-button" bindtap="finishActivity">结束活动并结算</button>
+    </view>
   </view>
 </view>
