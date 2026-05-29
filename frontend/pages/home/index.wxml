@@ -1,0 +1,94 @@
+<view class="page-shell">
+  <view class="home-stage">
+    <view wx:if="{{authVisible}}" class="auth-mask">
+      <view class="auth-dialog">
+        <image class="auth-logo" src="/img/来整-头像.png" mode="aspectFit" />
+        <text class="auth-title">先授权，再进来整</text>
+        <text class="auth-desc">首页一进来就确认。主按钮会拉起微信手机号授权并直接登录；头像直接用微信头像，昵称直接填微信昵称。</text>
+
+        <view class="auth-profile-row">
+          <button class="auth-avatar-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
+            <image wx:if="{{authAvatarUrl}}" class="auth-avatar-image" src="{{authAvatarUrl}}" mode="aspectFill" />
+            <view wx:else class="auth-avatar-placeholder">微信头像</view>
+          </button>
+          <input
+            class="auth-nickname-input"
+            type="nickname"
+            maxlength="20"
+            placeholder="微信昵称"
+            value="{{authNickname}}"
+            bindinput="handleNicknameInput"
+          />
+        </view>
+
+        <button class="primary-button auth-button auth-submit" open-type="getPhoneNumber" loading="{{authLoading}}" bindgetphonenumber="confirmLogin">
+          {{authLoading ? '确认中...' : '确认授权并进入'}}
+        </button>
+      </view>
+    </view>
+
+    <view class="stage-orb stage-orb-left"></view>
+    <view class="stage-orb stage-orb-right"></view>
+    <view class="stage-ribbon stage-ribbon-top"></view>
+    <view class="stage-ribbon stage-ribbon-bottom"></view>
+    <view class="stage-spark stage-spark-a"></view>
+    <view class="stage-spark stage-spark-b"></view>
+
+    <view class="hero-stack">
+      <view class="hero-layer hero-layer-back"></view>
+      <view class="hero-layer hero-layer-mid"></view>
+      <view class="hero-card home-card home-card-theme">
+        <view class="card-accent accent-home"></view>
+        <view class="topbar">
+          <view class="brand-wrap">
+            <image class="minimal-logo" src="/img/来整-头像.png" mode="aspectFit" />
+            <text class="minimal-brand">来整</text>
+          </view>
+          <view class="minimal-link" bindtap="goBills">账单</view>
+        </view>
+
+        <view class="cta-panel">
+          <view>
+            <text class="hero-title">整</text>
+            <text class="hero-subtitle">想法先落下，时间地点再往里填。</text>
+          </view>
+          <view class="primary-button minimal-button" bindtap="goCreate">整一下</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">我正在整的</text>
+      <text class="section-desc">点进卡片看详情</text>
+    </view>
+
+    <view class="card-list">
+      <block wx:for="{{ongoingItems}}" wx:key="id">
+        <view class="activity-card ongoing-card ongoing-theme" bindtap="goDetail" data-id="{{item.id}}">
+          <view class="card-accent accent-item"></view>
+          <view class="card-topline">
+            <view class="tag-group">
+              <text class="card-tag">{{item.tag}}</text>
+              <text class="card-mode">{{item.mode}}</text>
+            </view>
+            <text class="card-arrow">查看</text>
+          </view>
+          <text class="card-title">{{item.title}}</text>
+          <text class="card-meta">{{item.time}}</text>
+          <text class="card-meta">{{item.place}}</text>
+          <view class="card-footer">
+            <view>
+              <text class="card-status">{{item.status}}</text>
+              <text class="card-count">{{item.count}}</text>
+            </view>
+            <view class="avatar-stack">
+              <block wx:for="{{item.members}}" wx:key="*this">
+                <view class="avatar-pill">{{item}}</view>
+              </block>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

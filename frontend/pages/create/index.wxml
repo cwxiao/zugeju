@@ -1,0 +1,92 @@
+<view class="page-shell">
+  <view class="create-stage">
+    <view class="create-orb create-orb-left"></view>
+    <view class="create-orb create-orb-right"></view>
+    <view class="create-wave create-wave-top"></view>
+    <view class="create-wave create-wave-bottom"></view>
+    <view class="create-dot create-dot-a"></view>
+    <view class="create-dot create-dot-b"></view>
+
+    <view class="form-card create-card create-header-card create-card-sunrise">
+      <view class="create-card-accent accent-header"></view>
+      <view class="create-header-top">
+        <view>
+          <view class="section-title">开始整</view>
+          <view class="form-intro">把基础信息先落下来，后面再慢慢补。</view>
+        </view>
+        <view class="header-badge">草稿</view>
+      </view>
+
+      <view class="summary-strip">
+        <view class="summary-chip">{{form.date || '日期待定'}}</view>
+        <view class="summary-chip">{{form.time || '时间待定'}}</view>
+        <view class="summary-chip strong-chip">{{modes[modeIndex]}}</view>
+      </view>
+
+      <view class="summary-card live-card live-card-clay">
+        <text class="live-title">这次先整一个</text>
+        <text class="live-meta">{{form.location || '地点还没填'}}</text>
+        <text class="live-note">{{form.note || '备注空着也可以，先把局定下来。'}}</text>
+      </view>
+    </view>
+
+    <view class="form-card create-card input-card create-card-sand">
+      <view class="create-card-accent accent-input"></view>
+      <view class="card-caption">时间</view>
+      <view class="field-grid">
+        <view class="field-block compact-field">
+          <text class="field-label">日期</text>
+          <picker mode="date" value="{{form.date}}" bindchange="onDateChange">
+            <view class="field-box {{form.date ? 'field-value' : ''}}">{{form.date || '选择日期'}}</view>
+          </picker>
+        </view>
+        <view class="field-block compact-field">
+          <text class="field-label">时间</text>
+          <picker mode="time" value="{{form.time}}" bindchange="onTimeChange">
+            <view class="field-box {{form.time ? 'field-value' : ''}}">{{form.time || '选择时间'}}</view>
+          </picker>
+        </view>
+      </view>
+    </view>
+
+    <view class="form-card create-card input-card create-card-clay-soft">
+      <view class="create-card-accent accent-input"></view>
+      <view class="card-caption">方式和地点</view>
+      <view class="field-block first-field">
+        <text class="field-label">方式</text>
+        <picker mode="selector" range="{{modes}}" value="{{modeIndex}}" bindchange="onModeChange">
+          <view class="field-box field-value">{{modes[modeIndex]}}</view>
+        </picker>
+      </view>
+      <view class="field-block">
+        <text class="field-label">地点</text>
+        <input
+          class="input-field"
+          placeholder="输入地点"
+          placeholder-class="input-placeholder"
+          value="{{form.location}}"
+          bindinput="onLocationInput"
+        />
+      </view>
+    </view>
+
+    <view class="form-card create-card input-card create-card-sand-deep">
+      <view class="create-card-accent accent-input"></view>
+      <view class="card-caption">补充一句</view>
+      <view class="field-block first-field">
+        <text class="field-label">备注</text>
+        <textarea
+          class="textarea-field"
+          placeholder="补充一点说明"
+          placeholder-class="input-placeholder"
+          value="{{form.note}}"
+          bindinput="onNoteInput"
+          maxlength="200"
+        />
+      </view>
+      <view class="button-stack">
+        <view class="primary-button" bindtap="submit">下一步</view>
+      </view>
+    </view>
+  </view>
+</view>

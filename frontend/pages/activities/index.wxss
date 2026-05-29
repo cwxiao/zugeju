@@ -1,0 +1,30 @@
+.summary-panel {
+  padding: 28rpx;
+}
+
+.tab-row {
+  margin-top: 10rpx;
+}
+
+.activity-listing {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+  margin-top: 24rpx;
+}
+
+.listing-card {
+  padding: 28rpx;
+}
+
+.listing-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.listing-meta {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 24rpx;
+  color: #6b5e4f;
+}

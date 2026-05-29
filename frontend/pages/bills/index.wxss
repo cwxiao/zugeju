@@ -1,0 +1,26 @@
+.bill-shell {
+  gap: 16rpx;
+}
+
+.bill-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18rpx;
+}
+
+.bill-item {
+  padding: 28rpx;
+  background: #fffaf3;
+}
+
+.bill-title {
+  font-size: 28rpx;
+  font-weight: 600;
+}
+
+.bill-meta {
+  display: block;
+  margin-top: 10rpx;
+  font-size: 24rpx;
+  color: #6b5e4f;
+}

@@ -1,0 +1,11 @@
+<view class="page-shell">
+  <view class="bill-list bill-shell">
+    <view class="section-title">账单列表</view>
+    <block wx:for="{{bills}}" wx:key="title">
+      <view class="bill-card bill-item">
+        <text class="bill-title">{{item.title}}</text>
+        <text class="bill-meta">{{item.meta}}</text>
+      </view>
+    </block>
+  </view>
+</view>

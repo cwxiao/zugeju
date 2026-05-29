@@ -1,0 +1,83 @@
+<view class="page-shell">
+  <view class="detail-stage">
+    <view class="detail-orb detail-orb-left"></view>
+    <view class="detail-orb detail-orb-right"></view>
+    <view class="detail-arc detail-arc-top"></view>
+    <view class="detail-arc detail-arc-bottom"></view>
+    <view class="detail-spark detail-spark-a"></view>
+    <view class="detail-spark detail-spark-b"></view>
+
+    <view class="summary-card detail-card hero-detail-card detail-card-sunrise">
+      <view class="detail-card-accent accent-hero"></view>
+      <view class="detail-topline">
+        <view class="tag-group">
+          <text class="card-tag">{{detail.tag}}</text>
+          <text class="card-mode">{{detail.mode}}</text>
+        </view>
+        <text class="detail-count">{{detail.count}}</text>
+      </view>
+      <text class="detail-title">{{detail.title}}</text>
+      <text class="detail-subtitle">{{detail.status}}</text>
+      <view class="detail-meta-strip">
+        <view class="detail-meta-chip">{{detail.time}}</view>
+        <view class="detail-meta-chip">{{detail.place}}</view>
+      </view>
+      <view class="avatar-stack detail-avatar-stack">
+        <block wx:for="{{detail.members}}" wx:key="*this">
+          <view class="avatar-pill">{{item}}</view>
+        </block>
+      </view>
+    </view>
+
+    <view class="summary-card detail-card info-card detail-card-sand">
+      <view class="detail-card-accent accent-info"></view>
+      <view class="card-caption">基础信息</view>
+      <view class="detail-row first-row">
+        <text class="detail-label">时间</text>
+        <text class="detail-value">{{detail.time}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">方式</text>
+        <text class="detail-value">{{detail.mode}}</text>
+      </view>
+      <view class="detail-row">
+        <text class="detail-label">地点</text>
+        <text class="detail-value">{{detail.place}}</text>
+      </view>
+    </view>
+
+    <view class="summary-card detail-card info-card detail-card-clay-soft">
+      <view class="detail-card-accent accent-info"></view>
+      <view class="card-caption">到场的人</view>
+      <view class="member-grid">
+        <block wx:for="{{detail.members}}" wx:key="*this">
+          <view class="member-card">
+            <view class="member-avatar">{{item}}</view>
+            <text class="member-name">{{item}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="summary-card detail-card info-card detail-card-sand-deep">
+      <view class="detail-card-accent accent-info"></view>
+      <view class="card-caption">提醒</view>
+      <view class="checklist-wrap">
+        <block wx:for="{{detail.checklist}}" wx:key="*this">
+          <view class="check-item">
+            <view class="check-dot"></view>
+            <text class="check-text">{{item}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="summary-card detail-card info-card detail-card-plain">
+      <view class="detail-card-accent accent-info"></view>
+      <view class="card-caption">备注</view>
+      <view class="detail-note first-note">
+        <text class="detail-note-text">{{detail.note}}</text>
+      </view>
+    </view>
+  </view>
+</view>
