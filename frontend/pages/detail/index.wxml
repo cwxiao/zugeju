@@ -41,12 +41,14 @@
       </view>
     </view>
 
+    <!--
     <view class="ad-slot-card">
       <text class="ad-slot-badge">广告位预留</text>
       <text class="ad-slot-title">详情页横幅广告</text>
       <text class="ad-slot-desc">活动详情和成员区之间预留广告位，后面可以接品牌投放或活动赞助位。</text>
       <text class="ad-slot-footnote">这个位置曝光稳定，但不会盖住分享和成员操作。</text>
     </view>
+    -->
 
     <view class="summary-card detail-card info-card detail-card-clay-soft">
       <view class="detail-card-accent accent-info"></view>

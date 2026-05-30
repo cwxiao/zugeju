@@ -19,6 +19,7 @@
       <view class="summary-strip">
         <view class="summary-chip">{{form.date || '日期待定'}}</view>
         <view class="summary-chip">{{form.time || '时间待定'}}</view>
+        <view class="summary-chip">{{participantCountOptions[participantCountIndex]}} 人局</view>
         <view class="summary-chip strong-chip">{{modes[modeIndex]}}</view>
       </view>
 
@@ -48,9 +49,19 @@
               >{{item.name}}</view>
             </block>
           </view>
+          <text wx:if="{{activityRuleHint}}" class="field-required-tip">{{activityRuleHint}}</text>
         </view>
       </view>
     </view>
+
+    <!--
+    <view class="ad-slot-card">
+      <text class="ad-slot-badge">广告位预留</text>
+      <text class="ad-slot-title">发起页合作位</text>
+      <text class="ad-slot-desc">这里适合放地点、餐饮、娱乐类广告，不影响用户先把活动信息填完。</text>
+      <text class="ad-slot-footnote">后续可接入横幅广告或自定义广告卡片。</text>
+    </view>
+    -->
 
     <view class="form-card create-card input-card create-card-sand">
       <view class="create-card-accent accent-input"></view>
@@ -69,6 +80,12 @@
           </picker>
         </view>
       </view>
+      <view class="field-block first-field">
+        <text class="field-label">人数</text>
+        <picker mode="selector" range="{{participantCountOptions}}" value="{{participantCountIndex}}" bindchange="onParticipantCountChange">
+          <view class="field-box field-value">{{participantCountOptions[participantCountIndex]}} 人</view>
+        </picker>
+      </view>
     </view>
 
     <view class="form-card create-card input-card create-card-clay-soft">
@@ -79,12 +96,14 @@
         <picker mode="selector" range="{{modes}}" value="{{modeIndex}}" bindchange="onModeChange">
           <view class="field-box field-value">{{modes[modeIndex]}}</view>
         </picker>
+        <text wx:if="{{modeRequiredTip}}" class="field-required-tip">{{modeRequiredTip}}</text>
       </view>
       <view wx:if="{{modes[modeIndex] === '线下'}}" class="field-block">
-        <text class="field-label">地点</text>
+        <text class="field-label">地点{{locationRequired ? '（必填）' : ''}}</text>
         <view class="field-box {{form.location ? 'field-value' : ''}} map-picker-box" bindtap="chooseLocation">
           {{form.location || '打开地图选地点'}}
         </view>
+        <text wx:if="{{locationRequired}}" class="field-required-tip">{{locationTip}}</text>
       </view>
       <view wx:if="{{modes[modeIndex] === '线下'}}" class="field-block">
         <text class="field-label">谁来买单</text>

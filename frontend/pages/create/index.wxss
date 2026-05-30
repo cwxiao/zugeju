@@ -197,6 +197,14 @@
   color: #6b5e4f;
 }
 
+.field-required-tip {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: #b85a1d;
+}
+
 .compact-header-field {
   margin-top: 0;
 }

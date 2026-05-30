@@ -5,6 +5,8 @@ Page({
     pageTitle: '开始整',
     submitLabel: '下一步',
     editingId: '',
+    participantCountOptions: [2, 3, 4, 5, 6, 8, 10, 12],
+    participantCountIndex: 2,
     modes: ['线上', '线下'],
     modeIndex: 0,
     expenseOptions: [
@@ -20,6 +22,10 @@ Page({
       { code: 'coffee', name: '咖啡', presetTitle: '一起喝杯咖啡' }
     ],
     activityTypeIndex: 0,
+    activityRuleHint: '',
+    modeRequiredTip: '',
+    locationRequired: false,
+    locationTip: '',
     form: {
       title: '',
       date: '',
@@ -48,7 +54,9 @@ Page({
     }
 
     const now = new Date()
+    const ruleState = buildRuleState(this.data.activityTypes, this.data.activityTypeIndex)
     this.setData({
+      ...ruleState,
       form: {
         ...this.data.form,
         date: formatDate(now),
@@ -65,14 +73,18 @@ Page({
       const isOffline = detail.mode === 'offline'
       const startDate = detail.startTime ? detail.startTime.slice(0, 10) : ''
       const startTime = detail.startTime ? detail.startTime.slice(11, 16) : ''
+      const activityTypeIndex = resolveActivityTypeIndex(this.data.activityTypes, detail.typeCode, detail.typeName)
+      const ruleState = buildRuleState(this.data.activityTypes, activityTypeIndex)
 
       this.setData({
         pageTitle: '修改活动',
         submitLabel: '保存修改',
         editingId: activityId,
-        modeIndex: isOffline ? 1 : 0,
+        participantCountIndex: resolveParticipantCountIndex(this.data.participantCountOptions, detail.maxParticipantCount),
+        modeIndex: ruleState.forceOffline ? 1 : (isOffline ? 1 : 0),
         expenseOptionIndex: resolveExpenseOptionIndex(this.data.expenseOptions, detail.expenseMode),
-        activityTypeIndex: resolveActivityTypeIndex(this.data.activityTypes, detail.typeCode, detail.typeName),
+        activityTypeIndex,
+        ...ruleState,
         form: {
           title: detail.title || '',
           date: startDate,
@@ -110,6 +122,18 @@ Page({
 
   onModeChange(event) {
     const modeIndex = Number(event.detail.value)
+    const selectedType = this.data.activityTypes[this.data.activityTypeIndex] || this.data.activityTypes[0]
+    const typeRule = getActivityTypeRule(selectedType.code)
+
+    if (typeRule.forceOffline && this.data.modes[modeIndex] !== '线下') {
+      wx.showToast({
+        title: `${selectedType.name}默认线下`,
+        icon: 'none'
+      })
+      this.setData({ modeIndex: 1 })
+      return
+    }
+
     const nextState = { modeIndex }
 
     if (this.data.modes[modeIndex] === '线上') {
@@ -118,6 +142,12 @@ Page({
     }
 
     this.setData(nextState)
+  },
+
+  onParticipantCountChange(event) {
+    this.setData({
+      participantCountIndex: Number(event.detail.value)
+    })
   },
 
   chooseExpenseMode(event) {
@@ -130,9 +160,12 @@ Page({
     const activityTypeIndex = Number(event.currentTarget.dataset.index)
     const selectedType = this.data.activityTypes[activityTypeIndex]
     const nextTitle = selectedType.presetTitle || this.data.form.title
+    const ruleState = buildRuleState(this.data.activityTypes, activityTypeIndex)
 
     this.setData({
       activityTypeIndex,
+      modeIndex: ruleState.forceOffline ? 1 : this.data.modeIndex,
+      ...ruleState,
       'form.title': nextTitle
     })
   },
@@ -171,7 +204,18 @@ Page({
   },
 
   async submit() {
-    const { form, modes, modeIndex, editingId, activityTypes, activityTypeIndex, expenseOptions, expenseOptionIndex } = this.data
+    const {
+      form,
+      modes,
+      modeIndex,
+      editingId,
+      activityTypes,
+      activityTypeIndex,
+      expenseOptions,
+      expenseOptionIndex,
+      participantCountOptions,
+      participantCountIndex
+    } = this.data
     if (!form.date || !form.time) {
       wx.showToast({ title: '请先选时间', icon: 'none' })
       return
@@ -184,9 +228,21 @@ Page({
 
     const selectedType = activityTypes[activityTypeIndex] || activityTypes[0]
     const isOffline = modes[modeIndex] === '线下'
+    const typeRule = getActivityTypeRule(selectedType.code)
+    const participantCount = participantCountOptions[participantCountIndex] || participantCountOptions[0]
     const selectedExpenseMode = isOffline
       ? (expenseOptions[expenseOptionIndex] || expenseOptions[1]).code
       : 'none'
+
+    if (typeRule.forceOffline && !isOffline) {
+      wx.showToast({ title: `${selectedType.name}必须线下`, icon: 'none' })
+      return
+    }
+
+    if (isOffline && !hasLocationValue(form)) {
+      wx.showToast({ title: '线下活动要填地点', icon: 'none' })
+      return
+    }
 
     try {
       const payload = {
@@ -195,8 +251,8 @@ Page({
         title: form.title.trim(),
         description: form.note || '',
         mode: isOffline ? 'offline' : 'online',
-        targetParticipantCount: 4,
-        maxParticipantCount: 4,
+        targetParticipantCount: participantCount,
+        maxParticipantCount: participantCount,
         startTime: `${form.date}T${form.time}:00+08:00`,
         endTime: null,
         meetupTime: null,
@@ -239,6 +295,27 @@ function formatTime(date) {
   return `${hours}:${minutes}`
 }
 
+function getActivityTypeRule(typeCode) {
+  return ACTIVITY_TYPE_RULES[typeCode] || DEFAULT_ACTIVITY_TYPE_RULE
+}
+
+function buildRuleState(activityTypes, activityTypeIndex) {
+  const selectedType = activityTypes[activityTypeIndex] || activityTypes[0] || { code: 'custom', name: '自定义' }
+  const typeRule = getActivityTypeRule(selectedType.code)
+
+  return {
+    forceOffline: typeRule.forceOffline,
+    activityRuleHint: typeRule.summary ? `${selectedType.name}${typeRule.summary}` : '',
+    modeRequiredTip: typeRule.forceOffline ? `${selectedType.name}默认线下，不能改成线上。` : '',
+    locationRequired: typeRule.requireLocation,
+    locationTip: typeRule.requireLocation ? `${selectedType.name}需要先选地点。` : ''
+  }
+}
+
+function hasLocationValue(form) {
+  return !!((form.location || '').trim() || (form.locationAddress || '').trim())
+}
+
 function resolveSubmitErrorMessage(error, editingId) {
   const fallback = editingId ? '保存失败' : '创建失败'
   const message = error && error.message
@@ -266,4 +343,28 @@ function resolveActivityTypeIndex(activityTypes, typeCode, typeName) {
 function resolveExpenseOptionIndex(expenseOptions, expenseMode) {
   const index = expenseOptions.findIndex((item) => item.code === expenseMode)
   return index >= 0 ? index : 1
+}
+
+function resolveParticipantCountIndex(participantCountOptions, maxParticipantCount) {
+  const index = participantCountOptions.findIndex((item) => item === maxParticipantCount)
+  return index >= 0 ? index : 2
+}
+
+const DEFAULT_ACTIVITY_TYPE_RULE = {
+  forceOffline: false,
+  requireLocation: false,
+  summary: ''
+}
+
+const ACTIVITY_TYPE_RULES = {
+  dinner: {
+    forceOffline: true,
+    requireLocation: true,
+    summary: '默认线下，地点必填。'
+  },
+  coffee: {
+    forceOffline: true,
+    requireLocation: true,
+    summary: '默认线下，地点必填。'
+  }
 }

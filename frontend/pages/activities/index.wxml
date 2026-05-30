@@ -8,11 +8,13 @@
     </view>
   </view>
 
+  <!--
   <view class="ad-slot-card">
     <text class="ad-slot-badge">广告位预留</text>
     <text class="ad-slot-title">活动列表广告</text>
     <text class="ad-slot-desc">列表顶部预留一个广告卡位，适合做活动推荐或联盟推广。</text>
   </view>
+  -->
 
   <view class="activity-listing">
     <block wx:for="{{activities}}" wx:key="title">

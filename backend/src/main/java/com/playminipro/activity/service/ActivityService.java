@@ -96,6 +96,17 @@ public class ActivityService {
         if (request.maxParticipantCount() < request.targetParticipantCount()) {
             throw new BusinessException(4001, "maxParticipantCount must be greater than or equal to targetParticipantCount");
         }
+
+        ActivityTypeRuleSet.ActivityTypeRule typeRule = ActivityTypeRuleSet.resolve(request.typeCode());
+        if (typeRule.offlineOnly() && !"offline".equals(request.mode())) {
+            throw new BusinessException(4001, typeRule.displayName() + "活动必须是线下");
+        }
+
+        if ((typeRule.requireLocation() || "offline".equals(request.mode()))
+                && isBlank(request.meetupAddress())
+                && isBlank(request.venueAddress())) {
+            throw new BusinessException(4001, "线下活动必须填写地点");
+        }
     }
 
     private ActivityEntity buildActivity(String userId, CreateActivityRequest request, String activityId) {
@@ -167,5 +178,9 @@ public class ActivityService {
         } catch (JsonProcessingException exception) {
             throw new BusinessException(4002, "onlineJoinInfo is invalid");
         }
+    }
+
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
     }
 }
