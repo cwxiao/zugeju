@@ -65,6 +65,13 @@
       </view>
     </view>
 
+    <view class="ad-slot-card">
+      <text class="ad-slot-badge">广告位预留</text>
+      <text class="ad-slot-title">首页推荐广告</text>
+      <text class="ad-slot-desc">这里预留给首页信息流或横幅广告，后续可直接替换成微信广告组件。</text>
+      <text class="ad-slot-footnote">建议放活动推荐、吃喝玩乐或本地商家合作位。</text>
+    </view>
+
     <view class="section-head">
       <text class="section-title">我正在整的</text>
       <text class="section-desc">点进卡片看详情</text>

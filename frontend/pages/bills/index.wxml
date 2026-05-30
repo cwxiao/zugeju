@@ -2,6 +2,11 @@
   <view wx:if="{{!activityId}}" class="bill-card bill-shell bill-empty-card">
     <view class="section-title">记账结算</view>
     <text class="bill-meta">从活动详情点进来，再录消费和结算。</text>
+    <view class="ad-slot-card">
+      <text class="ad-slot-badge">广告位预留</text>
+      <text class="ad-slot-title">账单页广告</text>
+      <text class="ad-slot-desc">这里预留结算页广告位，后续可以接本地消费返券或支付相关合作内容。</text>
+    </view>
   </view>
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
@@ -13,6 +18,12 @@
       </view>
       <text class="bill-total">总消费 {{summary.totalAmountText}}</text>
       <text class="bill-meta">{{summary.settlementNote}}</text>
+    </view>
+
+    <view class="ad-slot-card">
+      <text class="ad-slot-badge">广告位预留</text>
+      <text class="ad-slot-title">结算合作位</text>
+      <text class="ad-slot-desc">记账摘要下方预留广告位，方便后面放优惠券、支付引导或品牌合作内容。</text>
     </view>
 
     <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item">
