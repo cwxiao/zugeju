@@ -40,6 +40,7 @@ App({
   logout() {
     wx.removeStorageSync('token')
     wx.removeStorageSync('user')
+    wx.removeStorageSync('profile')
     this.globalData.token = ''
     this.globalData.user = null
   }

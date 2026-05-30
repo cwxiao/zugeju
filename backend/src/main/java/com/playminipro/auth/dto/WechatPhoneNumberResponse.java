@@ -3,24 +3,21 @@ package com.playminipro.auth.dto;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public record WechatPhoneNumberResponse(
-        PhoneInfo phone_info,
-        Integer errcode,
-        String errmsg,
         @JsonProperty("phone_info") PhoneInfo phoneInfo,
         @JsonProperty("errcode") Integer errorCode,
         @JsonProperty("errmsg") String errorMessage
 ) {
 
     public PhoneInfo resolvedPhoneInfo() {
-        return phone_info != null ? phone_info : phoneInfo;
+        return phoneInfo;
     }
 
     public Integer resolvedErrorCode() {
-        return errcode != null ? errcode : errorCode;
+        return errorCode;
     }
 
     public String resolvedErrorMessage() {
-        return errmsg != null ? errmsg : errorMessage;
+        return errorMessage;
     }
 
     public record PhoneInfo(

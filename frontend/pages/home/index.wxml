@@ -2,7 +2,7 @@
   <view class="home-stage">
     <view wx:if="{{authVisible}}" class="auth-mask">
       <view class="auth-dialog">
-        <image class="auth-logo" src="/img/来整-头像.png" mode="aspectFit" />
+        <image class="auth-logo" src="/img/brand-logo.jpg" mode="aspectFit" />
         <text class="auth-title">先授权，再进来整</text>
         <text class="auth-desc">获取头像、获取昵称，然后顺手授权活动通知。数据库里没有就注册，已经有了就直接登录。</text>
 
@@ -49,7 +49,7 @@
         <view class="card-accent accent-home"></view>
         <view class="topbar">
           <view class="brand-wrap">
-            <image class="minimal-logo" src="/img/来整-头像.png" mode="aspectFit" />
+            <image class="minimal-logo" src="/img/brand-logo.jpg" mode="aspectFit" />
             <text class="minimal-brand">来整</text>
           </view>
           <view class="minimal-link" bindtap="goBills">账单</view>

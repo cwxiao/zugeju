@@ -1,7 +1,7 @@
-const DEFAULT_BASE_URL = 'http://192.168.0.13:8080'
+const DEFAULT_BASE_URL = 'https://ywsfs.cn'
 
 function getBaseUrl() {
-  return wx.getStorageSync('apiBaseUrl') || DEFAULT_BASE_URL
+  return DEFAULT_BASE_URL
 }
 
 function request({ url, method = 'GET', data, auth = true }) {
@@ -22,15 +22,38 @@ function request({ url, method = 'GET', data, auth = true }) {
           return
         }
 
-        reject(new Error((body && body.message) || 'request failed'))
+        if (auth && (statusCode === 401 || statusCode === 403)) {
+          clearAuthState()
+        }
+
+        const error = new Error((body && body.message) || 'request failed')
+        error.statusCode = statusCode
+        error.body = body
+        reject(error)
       },
       fail: reject
     })
   })
 }
 
+function clearAuthState() {
+  const app = typeof getApp === 'function' ? getApp() : null
+
+  wx.removeStorageSync('token')
+  wx.removeStorageSync('user')
+
+  if (app && typeof app.logout === 'function') {
+    app.logout()
+  }
+}
+
+function isAuthExpiredError(error) {
+  return !!(error && (error.statusCode === 401 || error.statusCode === 403))
+}
+
 module.exports = {
   request,
   BASE_URL: DEFAULT_BASE_URL,
-  getBaseUrl
+  getBaseUrl,
+  isAuthExpiredError
 }

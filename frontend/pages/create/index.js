@@ -1,4 +1,4 @@
-const { request } = require('../../utils/request')
+const { request, isAuthExpiredError } = require('../../utils/request')
 
 Page({
   data: {
@@ -83,6 +83,12 @@ Page({
         }
       })
     } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+
       wx.showToast({
         title: '加载活动失败',
         icon: 'none'
@@ -243,6 +249,10 @@ function resolveSubmitErrorMessage(error, editingId) {
 
   if (message.includes('request:fail')) {
     return '后端没启动，先开服务'
+  }
+
+  if (isAuthExpiredError(error)) {
+    return '登录已过期，请重新登录'
   }
 
   return fallback

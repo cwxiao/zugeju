@@ -6,7 +6,7 @@
 
 1. 小程序入口文件：`app.js`、`app.json`、`app.wxss`、`sitemap.json`
 2. 基础页面：首页、发起、我的活动、我的账单
-3. 已接入本地图标资源：`img/来整-头像.png`
+3. 已接入本地图标资源：`img/brand-logo.jpg`
 
 使用方式：
 

@@ -1,4 +1,4 @@
-const { request } = require('../../utils/request')
+const { request, isAuthExpiredError } = require('../../utils/request')
 
 Page({
   data: {
@@ -37,6 +37,12 @@ Page({
         loading: false
       })
     } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+
       this.setData({ loading: false })
       wx.showToast({ title: '账单加载失败', icon: 'none' })
     }
@@ -79,6 +85,12 @@ Page({
       })
       wx.showToast({ title: '已记一笔', icon: 'success' })
     } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+
       wx.showToast({ title: '记账失败', icon: 'none' })
     }
   },
@@ -101,6 +113,12 @@ Page({
           this.setData({ summary: mapSummary(summary) })
           wx.showToast({ title: '活动已结束', icon: 'success' })
         } catch (error) {
+          if (isAuthExpiredError(error)) {
+            wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+            wx.redirectTo({ url: '/pages/home/index' })
+            return
+          }
+
           wx.showToast({ title: '结束失败', icon: 'none' })
         }
       }

@@ -1,4 +1,4 @@
-const { request } = require('../../utils/request')
+const { request, isAuthExpiredError } = require('../../utils/request')
 
 Page({
   data: {
@@ -67,6 +67,12 @@ Page({
         }
       })
     } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+
       wx.showToast({
         title: '详情加载失败',
         icon: 'none'
@@ -114,6 +120,12 @@ Page({
             url: '/pages/home/index'
           })
         } catch (error) {
+          if (isAuthExpiredError(error)) {
+            wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+            wx.redirectTo({ url: '/pages/home/index' })
+            return
+          }
+
           wx.showToast({
             title: '取消失败',
             icon: 'none'

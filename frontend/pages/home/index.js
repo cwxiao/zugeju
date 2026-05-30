@@ -1,4 +1,4 @@
-const { request } = require('../../utils/request')
+const { request, isAuthExpiredError } = require('../../utils/request')
 const { requestInitialSubscribePermission } = require('../../utils/subscribe')
 
 Page({
@@ -47,6 +47,11 @@ Page({
 
       this.setData({ ongoingItems })
     } catch (error) {
+      if (isAuthExpiredError(error)) {
+        this.promptRelogin()
+        return
+      }
+
       wx.showToast({
         title: '加载失败',
         icon: 'none'
@@ -82,7 +87,7 @@ Page({
       await this.loadActivities()
     } catch (error) {
       wx.showToast({
-        title: '登录失败',
+        title: isAuthExpiredError(error) ? '登录已失效，请重试' : '登录失败',
         icon: 'none'
       })
     } finally {
@@ -122,6 +127,21 @@ Page({
 
     wx.navigateTo({
       url: '/pages/bills/index'
+    })
+
+  },
+
+  promptRelogin() {
+    const profile = wx.getStorageSync('profile') || {}
+    this.setData({
+      authVisible: true,
+      ongoingItems: [],
+      authNickname: profile.nickname || '',
+      authAvatarUrl: profile.avatarUrl || ''
+    })
+    wx.showToast({
+      title: '登录已过期，请重新确认',
+      icon: 'none'
     })
   }
 })

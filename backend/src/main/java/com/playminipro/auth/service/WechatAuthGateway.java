@@ -3,6 +3,8 @@ package com.playminipro.auth.service;
 import com.playminipro.auth.dto.WechatCode2SessionResponse;
 import com.playminipro.auth.dto.WechatAccessTokenResponse;
 import com.playminipro.auth.dto.WechatPhoneNumberResponse;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playminipro.common.config.WechatProperties;
 import com.playminipro.common.exception.BusinessException;
 import java.time.Instant;
@@ -20,12 +22,15 @@ public class WechatAuthGateway {
 
     private final RestClient restClient;
 
+    private final ObjectMapper objectMapper;
+
     private volatile String cachedAccessToken;
 
     private volatile Instant accessTokenExpiresAt = Instant.EPOCH;
 
-    public WechatAuthGateway(WechatProperties wechatProperties) {
+    public WechatAuthGateway(WechatProperties wechatProperties, ObjectMapper objectMapper) {
         this.wechatProperties = wechatProperties;
+        this.objectMapper = objectMapper;
         this.restClient = RestClient.builder()
                 .baseUrl("https://api.weixin.qq.com")
                 .build();
@@ -39,7 +44,7 @@ public class WechatAuthGateway {
             throw new BusinessException(4005, "wechat app secret is not configured");
         }
 
-        WechatCode2SessionResponse response = restClient.get()
+        String responseBody = restClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .path("/sns/jscode2session")
                         .queryParam("appid", wechatProperties.getAppId())
@@ -48,11 +53,15 @@ public class WechatAuthGateway {
                         .queryParam("grant_type", "authorization_code")
                         .build())
                 .retrieve()
-                .body(WechatCode2SessionResponse.class);
+            .body(String.class);
 
-        if (response == null) {
-            throw new BusinessException(4006, "wechat login failed");
-        }
+        WechatCode2SessionResponse response = parseWechatResponse(
+            responseBody,
+            WechatCode2SessionResponse.class,
+            4006,
+            "wechat login failed"
+        );
+
         if (response.resolvedErrorCode() != null && response.resolvedErrorCode() != 0) {
             throw new BusinessException(4006, "wechat login failed: " + response.resolvedErrorMessage());
         }
@@ -74,18 +83,22 @@ public class WechatAuthGateway {
             return "13800000000";
         }
 
-        WechatPhoneNumberResponse response = restClient.post()
+        String responseBody = restClient.post()
                 .uri(uriBuilder -> uriBuilder
                         .path("/wxa/business/getuserphonenumber")
                         .queryParam("access_token", getAccessToken())
                         .build())
                 .body(Map.of("code", code))
                 .retrieve()
-                .body(WechatPhoneNumberResponse.class);
+            .body(String.class);
 
-        if (response == null) {
-            throw new BusinessException(4007, "wechat phone fetch failed");
-        }
+        WechatPhoneNumberResponse response = parseWechatResponse(
+            responseBody,
+            WechatPhoneNumberResponse.class,
+            4007,
+            "wechat phone fetch failed"
+        );
+
         if (response.resolvedErrorCode() != null && response.resolvedErrorCode() != 0) {
             throw new BusinessException(4007, "wechat phone fetch failed: " + response.resolvedErrorMessage());
         }
@@ -113,7 +126,7 @@ public class WechatAuthGateway {
                 throw new BusinessException(4005, "wechat app secret is not configured");
             }
 
-            WechatAccessTokenResponse response = restClient.get()
+                String responseBody = restClient.get()
                     .uri(uriBuilder -> uriBuilder
                             .path("/cgi-bin/token")
                             .queryParam("grant_type", "client_credential")
@@ -121,11 +134,15 @@ public class WechatAuthGateway {
                             .queryParam("secret", wechatProperties.getAppSecret())
                             .build())
                     .retrieve()
-                    .body(WechatAccessTokenResponse.class);
+                    .body(String.class);
 
-            if (response == null) {
-                throw new BusinessException(4008, "wechat access token fetch failed");
-            }
+                WechatAccessTokenResponse response = parseWechatResponse(
+                    responseBody,
+                    WechatAccessTokenResponse.class,
+                    4008,
+                    "wechat access token fetch failed"
+                );
+
             if (response.resolvedErrorCode() != null && response.resolvedErrorCode() != 0) {
                 throw new BusinessException(4008, "wechat access token fetch failed: " + response.resolvedErrorMessage());
             }
@@ -137,6 +154,18 @@ public class WechatAuthGateway {
             cachedAccessToken = response.resolvedAccessToken();
             accessTokenExpiresAt = now.plusSeconds(Math.max(60L, expiresIn - ACCESS_TOKEN_REFRESH_BUFFER_SECONDS));
             return cachedAccessToken;
+        }
+    }
+
+    private <T> T parseWechatResponse(String responseBody, Class<T> responseType, int errorCode, String errorMessage) {
+        if (!StringUtils.hasText(responseBody)) {
+            throw new BusinessException(errorCode, errorMessage);
+        }
+
+        try {
+            return objectMapper.readValue(responseBody, responseType);
+        } catch (JsonProcessingException exception) {
+            throw new BusinessException(errorCode, errorMessage + ": invalid response from wechat");
         }
     }
 }
