@@ -70,6 +70,11 @@
   color: #8b6c54;
 }
 
+.auth-subscribe-tip {
+  margin-top: 18rpx;
+  text-align: center;
+}
+
 .auth-avatar-section {
   display: flex;
   flex-direction: column;

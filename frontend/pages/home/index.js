@@ -1,4 +1,5 @@
 const { request } = require('../../utils/request')
+const { requestInitialSubscribePermission } = require('../../utils/subscribe')
 
 Page({
   data: {
@@ -72,6 +73,7 @@ Page({
     this.setData({ authLoading: true })
 
     try {
+      await requestInitialSubscribePermission()
       await getApp().loginWithConfirm({
         nickname: this.data.authNickname.trim() || '微信用户',
         avatarUrl: this.data.authAvatarUrl
