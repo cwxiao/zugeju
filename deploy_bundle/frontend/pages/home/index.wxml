@@ -1,0 +1,102 @@
+<view class="page-shell">
+  <view class="home-stage">
+    <view wx:if="{{authVisible}}" class="auth-mask">
+      <view class="auth-dialog">
+        <image class="auth-logo" src="/img/brand-logo.jpg" mode="aspectFit" />
+        <text class="auth-title">先授权，再进来整</text>
+        <text class="auth-desc">获取头像、获取昵称，然后顺手授权活动通知。数据库里没有就注册，已经有了就直接登录。</text>
+
+        <view class="auth-section auth-avatar-section">
+          <text class="auth-section-label">获取头像</text>
+          <button class="auth-avatar-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
+            <image wx:if="{{authAvatarUrl}}" class="auth-avatar-image" src="{{authAvatarUrl}}" mode="aspectFill" />
+            <view wx:else class="auth-avatar-placeholder">点这里选头像</view>
+          </button>
+          <text class="auth-section-tip">选完后会用这个微信头像展示。</text>
+        </view>
+
+        <view class="auth-section auth-nickname-section">
+          <text class="auth-section-label">获取昵称</text>
+          <input
+            class="auth-nickname-input"
+            type="nickname"
+            maxlength="20"
+            placeholder="点这里直接填微信昵称"
+            value="{{authNickname}}"
+            bindinput="handleNicknameInput"
+          />
+          <text class="auth-section-tip">键盘上方会带出微信昵称建议。</text>
+        </view>
+
+        <button class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLogin">
+          {{authLoading ? '进入中...' : '确认并进入'}}
+        </button>
+        <text class="auth-section-tip auth-subscribe-tip">确认时会一起拉起订阅消息授权，不同意也能正常进入。</text>
+      </view>
+    </view>
+
+    <view class="stage-orb stage-orb-left"></view>
+    <view class="stage-orb stage-orb-right"></view>
+    <view class="stage-ribbon stage-ribbon-top"></view>
+    <view class="stage-ribbon stage-ribbon-bottom"></view>
+    <view class="stage-spark stage-spark-a"></view>
+    <view class="stage-spark stage-spark-b"></view>
+
+    <view class="hero-stack">
+      <view class="hero-layer hero-layer-back"></view>
+      <view class="hero-layer hero-layer-mid"></view>
+      <view class="hero-card home-card home-card-theme">
+        <view class="card-accent accent-home"></view>
+        <view class="topbar">
+          <view class="brand-wrap">
+            <image class="minimal-logo" src="/img/brand-logo.jpg" mode="aspectFit" />
+            <text class="minimal-brand">来整</text>
+          </view>
+          <view class="minimal-link" bindtap="goBills">账单</view>
+        </view>
+
+        <view class="cta-panel">
+          <view>
+            <text class="hero-title">整</text>
+            <text class="hero-subtitle">想法先落下，时间地点再往里填。</text>
+          </view>
+          <view class="primary-button minimal-button" bindtap="goCreate">整一下</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="section-head">
+      <text class="section-title">我正在整的</text>
+      <text class="section-desc">点进卡片看详情</text>
+    </view>
+
+    <view class="card-list">
+      <block wx:for="{{ongoingItems}}" wx:key="id">
+        <view class="activity-card ongoing-card ongoing-theme" bindtap="goDetail" data-id="{{item.id}}">
+          <view class="card-accent accent-item"></view>
+          <view class="card-topline">
+            <view class="tag-group">
+              <text class="card-tag">{{item.tag}}</text>
+              <text class="card-mode">{{item.mode}}</text>
+            </view>
+            <text class="card-arrow">查看</text>
+          </view>
+          <text class="card-title">{{item.title}}</text>
+          <text class="card-meta">{{item.time}}</text>
+          <text class="card-meta">{{item.place}}</text>
+          <view class="card-footer">
+            <view>
+              <text class="card-status">{{item.status}}</text>
+              <text class="card-count">{{item.count}}</text>
+            </view>
+            <view class="avatar-stack">
+              <block wx:for="{{item.members}}" wx:key="*this">
+                <view class="avatar-pill">{{item}}</view>
+              </block>
+            </view>
+          </view>
+        </view>
+      </block>
+    </view>
+  </view>
+</view>

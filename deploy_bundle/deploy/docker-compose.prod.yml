@@ -1,0 +1,61 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: laizheng-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-play_minipro}
+      POSTGRES_USER: ${POSTGRES_USER:-play}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      TZ: Asia/Shanghai
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-play} -d ${POSTGRES_DB:-play_minipro}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: laizheng-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: laizheng-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-play_minipro}
+      DB_USERNAME: ${POSTGRES_USER:-play}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRE_SECONDS: ${JWT_EXPIRE_SECONDS:-604800}
+      WECHAT_MINI_APP_ID: ${WECHAT_MINI_APP_ID:-wxb8fd5841e5f0a83d}
+      WECHAT_MINI_APP_SECRET: ${WECHAT_MINI_APP_SECRET}
+      WECHAT_MOCK_LOGIN_ENABLED: ${WECHAT_MOCK_LOGIN_ENABLED:-false}
+      TZ: Asia/Shanghai
+    ports:
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  postgres_data:
+  redis_data:

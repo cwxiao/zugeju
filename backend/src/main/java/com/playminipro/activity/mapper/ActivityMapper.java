@@ -1,6 +1,8 @@
 package com.playminipro.activity.mapper;
 
 import com.playminipro.activity.dto.ActivitySummaryResponse;
+import com.playminipro.activity.dto.ActivityArchiveItemResponse;
+import com.playminipro.activity.dto.ActivityFinanceRowResponse;
 import com.playminipro.activity.entity.ActivityEntity;
 import java.util.List;
 import org.apache.ibatis.annotations.Insert;
@@ -94,6 +96,70 @@ public interface ActivityMapper {
             ORDER BY a.start_time ASC
             """)
     List<ActivitySummaryResponse> findMineOngoing(String userId);
+
+        @Select("""
+                        SELECT a.id,
+                                   a.title,
+                                   a.type_name AS typeName,
+                                   am.role,
+                                   a.status,
+                                   a.mode,
+                                   a.start_time AS startTime,
+                                   CASE WHEN am.role = 'creator' THEN a.created_at ELSE am.joined_at END AS roleTime,
+                                   COALESCE(a.venue_address, a.meetup_address, '待补充') AS place,
+                                   COALESCE(ms.joined_count, 0) AS joinedCount,
+                                   a.max_participant_count AS maxParticipantCount,
+                                   COALESCE(es.total_amount_fen, 0) AS totalAmountFen,
+                                   a.expense_mode AS expenseMode,
+                                   '' AS settlementLabel,
+                                   '' AS highlight,
+                                   '' AS overview
+                        FROM activities a
+                        JOIN activity_members am ON am.activity_id = a.id
+                         AND am.user_id = CAST(#{userId} AS UUID)
+                         AND am.join_status = 'joined'
+                        LEFT JOIN (
+                                SELECT activity_id, COUNT(1) AS joined_count
+                                FROM activity_members
+                                WHERE join_status = 'joined'
+                                GROUP BY activity_id
+                        ) ms ON ms.activity_id = a.id
+                        LEFT JOIN (
+                                SELECT activity_id, SUM(amount_fen) AS total_amount_fen
+                                FROM activity_expenses
+                                GROUP BY activity_id
+                        ) es ON es.activity_id = a.id
+                        ORDER BY CASE WHEN am.role = 'creator' THEN a.created_at ELSE am.joined_at END DESC, a.start_time DESC
+                        """)
+        List<ActivityArchiveItemResponse> findMineArchive(String userId);
+
+                        @Select("""
+                                        SELECT a.id AS activityId,
+                                                   am.role,
+                                                   a.status,
+                                                   a.start_time AS startTime,
+                                                   COALESCE(ms.joined_count, 0) AS joinedCount,
+                                                   COALESCE(es.total_amount_fen, 0) AS totalAmountFen,
+                                                   a.expense_mode AS expenseMode
+                                        FROM activities a
+                                        JOIN activity_members am ON am.activity_id = a.id
+                                         AND am.user_id = CAST(#{userId} AS UUID)
+                                         AND am.join_status = 'joined'
+                                        LEFT JOIN (
+                                                SELECT activity_id, COUNT(1) AS joined_count
+                                                FROM activity_members
+                                                WHERE join_status = 'joined'
+                                                GROUP BY activity_id
+                                        ) ms ON ms.activity_id = a.id
+                                        LEFT JOIN (
+                                                SELECT activity_id, SUM(amount_fen) AS total_amount_fen
+                                                FROM activity_expenses
+                                                GROUP BY activity_id
+                                        ) es ON es.activity_id = a.id
+                                        WHERE a.status <> 'cancelled'
+                                        ORDER BY a.start_time DESC
+                                        """)
+                        List<ActivityFinanceRowResponse> findMineFinanceRows(String userId);
 
     @Select("""
             SELECT COUNT(1)

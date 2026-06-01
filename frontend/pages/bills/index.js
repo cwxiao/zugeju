@@ -123,23 +123,41 @@ Page({
         }
       }
     })
+  },
+
+  goActivities() {
+    wx.navigateTo({
+      url: '/pages/activities/index'
+    })
   }
 })
 
 function mapSummary(summary) {
+  const settlementItems = (summary.settlementItems || []).map((item) => ({
+    ...item,
+    amountText: item.amountFen > 0 ? formatFen(item.amountFen) : '不用转',
+    roleLabel: item.role === 'creator' ? '发起人' : '成员'
+  }))
+  const participantCount = summary.joinedCount || Math.max(settlementItems.length, 1)
+  const settlementPendingCount = settlementItems.filter((item) => item.amountFen > 0).length
+
   return {
     ...summary,
     expenseModeLabel: resolveExpenseModeLabel(summary.expenseMode),
+    statusLabel: summary.activityStatus === 'finished' ? '已结束' : '进行中',
     totalAmountText: formatFen(summary.totalAmountFen),
+    perHeadAmountText: formatFen(Math.round(summary.totalAmountFen / Math.max(participantCount, 1))),
+    settlementPendingCount,
+    participantCount,
+    recordCount: (summary.expenseItems || []).length,
     expenseItems: (summary.expenseItems || []).map((item) => ({
       ...item,
       amountText: formatFen(item.amountFen)
     })),
-    settlementItems: (summary.settlementItems || []).map((item) => ({
-      ...item,
-      amountText: item.amountFen > 0 ? formatFen(item.amountFen) : '不用转',
-      roleLabel: item.role === 'creator' ? '发起人' : '成员'
-    }))
+    settlementItems,
+    settlementSummaryText: settlementPendingCount
+      ? `结束后有 ${settlementPendingCount} 个人需要转账。`
+      : '结束活动后会按到场人数均摊，没有人需要转账。'
   }
 }
 

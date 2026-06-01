@@ -1,27 +1,83 @@
-<view class="page-shell">
-  <view class="summary-card summary-panel">
-    <view class="section-title">我的活动</view>
-    <view class="chip-row tab-row">
-      <block wx:for="{{tabs}}" wx:key="*this">
-        <view class="chip">{{item}}</view>
+<view class="page-shell archive-shell">
+  <view class="summary-card archive-hero-card">
+    <text class="archive-caption">活动档案</text>
+    <view class="archive-hero-head">
+      <text class="section-title archive-title">以前整过的都在这里</text>
+      <text class="archive-summary">{{summaryText}}</text>
+    </view>
+    <text class="archive-desc">支持按身份、状态、活动起止时间和关键词回头翻某一场。点开卡片进入完整详情和账单。</text>
+  </view>
+
+  <view class="summary-card archive-filter-card">
+    <text class="archive-filter-label">身份筛选</text>
+    <view class="chip-row archive-chip-row">
+      <block wx:for="{{roleOptions}}" wx:key="value">
+        <view class="archive-chip {{roleFilter === item.value ? 'archive-chip-active' : ''}}" data-value="{{item.value}}" bindtap="selectRole">{{item.label}}</view>
       </block>
     </view>
+
+    <text class="archive-filter-label archive-filter-spacing">状态筛选</text>
+    <view class="chip-row archive-chip-row">
+      <block wx:for="{{statusOptions}}" wx:key="value">
+        <view class="archive-chip {{statusFilter === item.value ? 'archive-chip-active' : ''}}" data-value="{{item.value}}" bindtap="selectStatus">{{item.label}}</view>
+      </block>
+    </view>
+
+    <text class="archive-filter-label archive-filter-spacing">活动起止时间</text>
+    <view class="archive-date-row">
+      <picker mode="date" value="{{startDate}}" bindchange="onStartDateChange">
+        <view class="archive-date-picker">{{startDate || '开始日期'}}</view>
+      </picker>
+      <text class="archive-date-separator">至</text>
+      <picker mode="date" value="{{endDate}}" bindchange="onEndDateChange">
+        <view class="archive-date-picker">{{endDate || '结束日期'}}</view>
+      </picker>
+      <view wx:if="{{startDate || endDate}}" class="archive-date-clear" bindtap="clearDateRange">清空</view>
+    </view>
+
+    <text class="archive-filter-label archive-filter-spacing">时间排序</text>
+    <view class="chip-row archive-chip-row">
+      <block wx:for="{{timeOptions}}" wx:key="value">
+        <view class="archive-chip {{timeFilter === item.value ? 'archive-chip-active' : ''}}" data-value="{{item.value}}" bindtap="selectTime">{{item.label}}</view>
+      </block>
+    </view>
+
+    <input
+      class="archive-search"
+      placeholder="搜活动名、类型、地点"
+      placeholder-class="archive-placeholder"
+      value="{{keyword}}"
+      bindinput="onKeywordInput"
+    />
   </view>
 
-  <!--
-  <view class="ad-slot-card">
-    <text class="ad-slot-badge">广告位预留</text>
-    <text class="ad-slot-title">活动列表广告</text>
-    <text class="ad-slot-desc">列表顶部预留一个广告卡位，适合做活动推荐或联盟推广。</text>
-  </view>
-  -->
-
-  <view class="activity-listing">
-    <block wx:for="{{activities}}" wx:key="title">
-      <view class="activity-card listing-card">
+  <view class="activity-listing archive-listing">
+    <block wx:for="{{filteredRecords}}" wx:key="id">
+      <view class="activity-card archive-card" data-id="{{item.id}}" bindtap="openArchiveDetail">
+        <view class="archive-card-topline">
+          <view class="tag-group">
+            <text class="card-tag">{{item.typeName}}</text>
+            <text class="card-mode">{{item.roleLabel}}</text>
+          </view>
+          <text class="archive-status">{{item.statusLabel}}</text>
+        </view>
         <text class="listing-title">{{item.title}}</text>
-        <text class="listing-meta">{{item.meta}}</text>
+        <text class="listing-meta">{{item.startDateText}} · {{item.roleTimeLabel}}</text>
+        <text class="listing-meta">{{item.startText}} · {{item.modeLabel}} · {{item.place}}</text>
+        <view class="archive-card-footer">
+          <text class="archive-card-note">{{item.highlight}}</text>
+          <view class="archive-card-link-group">
+            <text class="archive-card-money">{{item.totalAmountText}}</text>
+            <text class="archive-card-link">详情</text>
+          </view>
+        </view>
       </view>
     </block>
   </view>
+
+  <view wx:if="{{!filteredRecords.length}}" class="summary-card archive-empty-card">
+    <text class="section-title">没筛到结果</text>
+    <text class="archive-desc">换个关键词，或者先切回“全部活动”。</text>
+  </view>
+
 </view>

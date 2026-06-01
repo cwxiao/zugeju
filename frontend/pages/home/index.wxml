@@ -49,18 +49,29 @@
         <view class="card-accent accent-home"></view>
         <view class="topbar">
           <view class="brand-wrap">
-            <image class="minimal-logo" src="/img/brand-logo.jpg" mode="aspectFit" />
+            <image class="minimal-logo" src="/img/brand-logo.jpg" mode="aspectFit" bindtap="goCreate" />
             <text class="minimal-brand">来整</text>
           </view>
-          <view class="minimal-link" bindtap="goBills">账单</view>
+          <view class="minimal-link" bindtap="goActivities">活动档案</view>
         </view>
 
         <view class="cta-panel">
           <view>
-            <text class="hero-title">整</text>
+            <text class="hero-title" bindtap="goCreate">整</text>
             <text class="hero-subtitle">想法先落下，时间地点再往里填。</text>
           </view>
-          <view class="primary-button minimal-button" bindtap="goCreate">整一下</view>
+          <view class="primary-button minimal-button" bindtap="goCreate">整!</view>
+        </view>
+
+        <view class="quick-entry-row">
+          <view class="quick-entry-card" bindtap="goActivities">
+            <text class="quick-entry-title">活动档案</text>
+            <text class="quick-entry-desc">按发起、参与和关键词回看以前的局。</text>
+          </view>
+          <view class="quick-entry-card quick-entry-card-accent" bindtap="goPersonality">
+            <text class="quick-entry-title">AI人格档案</text>
+            <text class="quick-entry-desc">把最近 30 天的整活风格做成可分享总结。</text>
+          </view>
         </view>
       </view>
     </view>

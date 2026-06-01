@@ -1,0 +1,64 @@
+<view class="page-shell">
+  <view class="detail-stage">
+    <view class="detail-orb detail-orb-left"></view>
+    <view class="detail-orb detail-orb-right"></view>
+    <view class="detail-arc detail-arc-top"></view>
+    <view class="detail-arc detail-arc-bottom"></view>
+    <view class="detail-spark detail-spark-a"></view>
+    <view class="detail-spark detail-spark-b"></view>
+
+    <view class="summary-card detail-card hero-detail-card detail-card-sunrise">
+      <view class="detail-card-accent accent-hero"></view>
+      <view class="detail-topline">
+        <view class="tag-group">
+          <text class="card-tag">{{detail.tag}}</text>
+          <text class="card-mode">{{detail.mode}}</text>
+        </view>
+        <view class="detail-top-actions">
+          <view wx:if="{{detail.isCreator && detail.rawStatus !== 'finished' && detail.rawStatus !== 'cancelled'}}" class="detail-edit-link" bindtap="goEdit">修改</view>
+          <view wx:if="{{detail.isCreator && detail.rawStatus !== 'finished' && detail.rawStatus !== 'cancelled'}}" class="detail-cancel-link" bindtap="cancelActivity">取消</view>
+          <text class="detail-count">{{detail.count}}</text>
+        </view>
+      </view>
+      <text class="detail-title">{{detail.title}}</text>
+      <text class="detail-subtitle">{{detail.status}}</text>
+      <view class="detail-meta-strip">
+        <view class="detail-meta-chip">{{detail.time}}</view>
+        <view wx:if="{{detail.mode === '线下'}}" class="detail-meta-chip">{{detail.place}}</view>
+        <view wx:if="{{detail.expenseModeLabel}}" class="detail-meta-chip">{{detail.expenseModeLabel}}</view>
+      </view>
+      <view class="avatar-stack detail-avatar-stack">
+        <block wx:for="{{detail.members}}" wx:key="id">
+          <view class="avatar-pill avatar-image-pill">
+            <image wx:if="{{item.avatarUrl}}" class="avatar-pill-image" src="{{item.avatarUrl}}" mode="aspectFill" />
+            <text wx:else>{{item.shortName}}</text>
+          </view>
+        </block>
+        <button class="avatar-pill avatar-plus-pill" open-type="share">+</button>
+      </view>
+      <view wx:if="{{detail.mode === '线下'}}" class="detail-tool-row">
+        <view class="detail-tool-link" bindtap="goBills">记账结算</view>
+      </view>
+    </view>
+
+    <view class="summary-card detail-card info-card detail-card-clay-soft">
+      <view class="detail-card-accent accent-info"></view>
+      <view class="card-caption">到场的人</view>
+      <view class="member-grid">
+        <block wx:for="{{detail.members}}" wx:key="id">
+          <view class="member-card">
+            <view class="member-avatar member-avatar-frame">
+              <image wx:if="{{item.avatarUrl}}" class="member-avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" />
+              <text wx:else>{{item.shortName}}</text>
+            </view>
+            <text class="member-name">{{item.nickname}}</text>
+          </view>
+        </block>
+        <button class="member-card member-invite-card" open-type="share">
+          <view class="member-avatar member-avatar-plus">+</view>
+          <text class="member-name">发到群聊</text>
+        </button>
+      </view>
+    </view>
+  </view>
+</view>

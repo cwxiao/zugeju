@@ -6,6 +6,7 @@ Page({
     ongoingItems: [],
     authVisible: false,
     authLoading: false,
+    silentLoginTried: false,
     authNickname: '',
     authAvatarUrl: ''
   },
@@ -14,6 +15,29 @@ Page({
     const app = getApp()
     if (!app.hasLoginState()) {
       const profile = wx.getStorageSync('profile') || {}
+
+      if (!this.data.silentLoginTried && hasCachedProfile(profile)) {
+        this.setData({
+          authVisible: false,
+          authLoading: true,
+          silentLoginTried: true,
+          authNickname: profile.nickname || '',
+          authAvatarUrl: profile.avatarUrl || ''
+        })
+
+        try {
+          await app.loginWithConfirm({
+            nickname: profile.nickname || '微信用户',
+            avatarUrl: profile.avatarUrl || ''
+          })
+          this.setData({ authLoading: false })
+          await this.loadActivities()
+          return
+        } catch (error) {
+          this.setData({ authLoading: false })
+        }
+      }
+
       this.setData({
         authVisible: true,
         ongoingItems: [],
@@ -83,7 +107,7 @@ Page({
         nickname: this.data.authNickname.trim() || '微信用户',
         avatarUrl: this.data.authAvatarUrl
       })
-      this.setData({ authVisible: false })
+      this.setData({ authVisible: false, silentLoginTried: false })
       await this.loadActivities()
     } catch (error) {
       wx.showToast({
@@ -119,6 +143,28 @@ Page({
     })
   },
 
+  goActivities() {
+    if (!getApp().hasLoginState()) {
+      this.setData({ authVisible: true })
+      return
+    }
+
+    wx.navigateTo({
+      url: '/pages/activities/index'
+    })
+  },
+
+  goPersonality() {
+    if (!getApp().hasLoginState()) {
+      this.setData({ authVisible: true })
+      return
+    }
+
+    wx.navigateTo({
+      url: '/pages/personality/index'
+    })
+  },
+
   goBills() {
     if (!getApp().hasLoginState()) {
       this.setData({ authVisible: true })
@@ -128,14 +174,15 @@ Page({
     wx.navigateTo({
       url: '/pages/bills/index'
     })
-
   },
 
   promptRelogin() {
     const profile = wx.getStorageSync('profile') || {}
     this.setData({
       authVisible: true,
+      authLoading: false,
       ongoingItems: [],
+      silentLoginTried: false,
       authNickname: profile.nickname || '',
       authAvatarUrl: profile.avatarUrl || ''
     })
@@ -145,6 +192,10 @@ Page({
     })
   }
 })
+
+function hasCachedProfile(profile) {
+  return !!(profile && (profile.nickname || profile.avatarUrl))
+}
 
 function formatTime(value) {
   if (!value) {

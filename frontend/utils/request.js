@@ -1,7 +1,50 @@
-const DEFAULT_BASE_URL = 'https://ywsfs.cn'
+const API_ENV_KEY = 'apiEnv'
+const CUSTOM_BASE_URL_KEY = 'customBaseUrl'
+
+const BASE_URL_MAP = {
+  local: 'http://127.0.0.1:8080',
+  prod: 'https://ywsfs.cn'
+}
+
+const DEFAULT_API_ENV = 'prod'
+
+function normalizeBaseUrl(value) {
+  return String(value || '').trim().replace(/\/+$/, '')
+}
+
+function getApiEnv() {
+  const env = wx.getStorageSync(API_ENV_KEY)
+  return BASE_URL_MAP[env] ? env : DEFAULT_API_ENV
+}
 
 function getBaseUrl() {
-  return DEFAULT_BASE_URL
+  const customBaseUrl = normalizeBaseUrl(wx.getStorageSync(CUSTOM_BASE_URL_KEY))
+  if (customBaseUrl) {
+    return customBaseUrl
+  }
+
+  return BASE_URL_MAP[getApiEnv()]
+}
+
+function setApiEnv(env) {
+  if (!BASE_URL_MAP[env]) {
+    throw new Error(`unsupported api env: ${env}`)
+  }
+
+  wx.setStorageSync(API_ENV_KEY, env)
+}
+
+function setCustomBaseUrl(url) {
+  const normalized = normalizeBaseUrl(url)
+  if (!normalized) {
+    throw new Error('custom base url is empty')
+  }
+
+  wx.setStorageSync(CUSTOM_BASE_URL_KEY, normalized)
+}
+
+function clearCustomBaseUrl() {
+  wx.removeStorageSync(CUSTOM_BASE_URL_KEY)
 }
 
 function request({ url, method = 'GET', data, auth = true }) {
@@ -53,7 +96,12 @@ function isAuthExpiredError(error) {
 
 module.exports = {
   request,
-  BASE_URL: DEFAULT_BASE_URL,
+  BASE_URL_MAP,
+  DEFAULT_API_ENV,
   getBaseUrl,
+  getApiEnv,
+  setApiEnv,
+  setCustomBaseUrl,
+  clearCustomBaseUrl,
   isAuthExpiredError
 }

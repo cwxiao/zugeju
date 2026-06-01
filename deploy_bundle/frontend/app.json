@@ -1,0 +1,27 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/create/index",
+    "pages/detail/index",
+    "pages/activities/index",
+    "pages/bills/index"
+  ],
+  "window": {
+    "navigationBarTitleText": "来整",
+    "navigationBarBackgroundColor": "#FFF6E9",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F7F1E8",
+    "backgroundTextStyle": "light"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于线下活动选地点与查看聚会地址"
+    }
+  },
+  "requiredPrivateInfos": [
+    "chooseLocation"
+  ],
+  "lazyCodeLoading": "requiredComponents",
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

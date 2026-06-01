@@ -1,12 +1,15 @@
 package com.playminipro.activity.controller;
 
 import com.playminipro.activity.dto.ActivityDetailResponse;
+import com.playminipro.activity.dto.ActivityArchiveItemResponse;
 import com.playminipro.activity.dto.ActivityExpenseSummaryResponse;
 import com.playminipro.activity.dto.ActivitySummaryResponse;
 import com.playminipro.activity.dto.AddActivityExpenseRequest;
 import com.playminipro.activity.dto.CreateActivityRequest;
 import com.playminipro.activity.dto.CreateActivityResponse;
+import com.playminipro.activity.dto.PersonalityReportResponse;
 import com.playminipro.activity.service.ActivityExpenseService;
+import com.playminipro.activity.service.ActivityInsightService;
 import com.playminipro.activity.service.ActivityService;
 import com.playminipro.common.response.ApiResponse;
 import jakarta.validation.Valid;
@@ -28,10 +31,14 @@ public class ActivityController {
 
     private final ActivityExpenseService activityExpenseService;
 
+    private final ActivityInsightService activityInsightService;
+
     public ActivityController(ActivityService activityService,
-                              ActivityExpenseService activityExpenseService) {
+                              ActivityExpenseService activityExpenseService,
+                              ActivityInsightService activityInsightService) {
         this.activityService = activityService;
         this.activityExpenseService = activityExpenseService;
+        this.activityInsightService = activityInsightService;
     }
 
     @PostMapping
@@ -56,6 +63,16 @@ public class ActivityController {
     @GetMapping("/mine/ongoing")
     public ApiResponse<List<ActivitySummaryResponse>> listMineOngoing(Authentication authentication) {
         return ApiResponse.success(activityService.listMineOngoing(authentication.getName()));
+    }
+
+    @GetMapping("/mine/archive")
+    public ApiResponse<List<ActivityArchiveItemResponse>> listMineArchive(Authentication authentication) {
+        return ApiResponse.success(activityInsightService.listMineArchive(authentication.getName()));
+    }
+
+    @GetMapping("/mine/personality-report")
+    public ApiResponse<PersonalityReportResponse> personalityReport(Authentication authentication) {
+        return ApiResponse.success(activityInsightService.getPersonalityReport(authentication.getName()));
     }
 
     @GetMapping("/{id}")

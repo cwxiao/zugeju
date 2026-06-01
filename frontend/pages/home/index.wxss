@@ -293,6 +293,40 @@
   margin-top: 42rpx;
 }
 
+.quick-entry-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16rpx;
+  margin-top: 26rpx;
+}
+
+.quick-entry-card {
+  min-height: 156rpx;
+  padding: 22rpx;
+  border-radius: 28rpx 44rpx 30rpx 40rpx;
+  background: rgba(255, 250, 244, 0.72);
+  border: 1rpx solid rgba(177, 125, 71, 0.12);
+}
+
+.quick-entry-card-accent {
+  background: linear-gradient(145deg, rgba(232, 248, 255, 0.92) 0%, rgba(255, 234, 213, 0.88) 100%);
+}
+
+.quick-entry-title {
+  display: block;
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #2f2218;
+}
+
+.quick-entry-desc {
+  display: block;
+  margin-top: 12rpx;
+  font-size: 22rpx;
+  line-height: 1.6;
+  color: #7a6856;
+}
+
 .hero-title {
   display: block;
   font-size: 72rpx;

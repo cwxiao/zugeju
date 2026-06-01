@@ -4,6 +4,9 @@
     "pages/create/index",
     "pages/detail/index",
     "pages/activities/index",
+    "pages/archive-detail/index",
+    "pages/personality/index",
+    "pages/personality-poster/index",
     "pages/bills/index"
   ],
   "window": {

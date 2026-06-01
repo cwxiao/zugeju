@@ -1,0 +1,19 @@
+<view class="page-shell">
+  <view class="summary-card summary-panel">
+    <view class="section-title">我的活动</view>
+    <view class="chip-row tab-row">
+      <block wx:for="{{tabs}}" wx:key="*this">
+        <view class="chip">{{item}}</view>
+      </block>
+    </view>
+  </view>
+
+  <view class="activity-listing">
+    <block wx:for="{{activities}}" wx:key="title">
+      <view class="activity-card listing-card">
+        <text class="listing-title">{{item.title}}</text>
+        <text class="listing-meta">{{item.meta}}</text>
+      </view>
+    </block>
+  </view>
+</view>

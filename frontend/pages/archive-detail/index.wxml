@@ -1,0 +1,109 @@
+<view class="page-shell archive-detail-shell">
+  <view wx:if="{{loading}}" class="summary-card archive-detail-card">
+    <text class="archive-detail-muted">正在加载档案详情...</text>
+  </view>
+
+  <view wx:elif="{{detail && bill}}" class="archive-detail-stack">
+    <view class="summary-card archive-detail-card archive-detail-hero">
+      <view class="archive-detail-topline">
+        <view class="tag-group">
+          <text class="card-tag">{{detail.typeName}}</text>
+          <text class="card-mode">{{detail.modeLabel}}</text>
+        </view>
+        <text class="archive-detail-status">{{detail.statusLabel}}</text>
+      </view>
+      <text class="archive-detail-title">{{detail.title}}</text>
+      <text class="archive-detail-desc">{{detail.description || '这场活动没有额外备注。'}}</text>
+      <view class="archive-detail-grid">
+        <view class="archive-detail-metric">
+          <text class="archive-detail-label">活动时间</text>
+          <text class="archive-detail-value">{{detail.timeText}}</text>
+        </view>
+        <view class="archive-detail-metric">
+          <text class="archive-detail-label">活动地点</text>
+          <text class="archive-detail-value">{{detail.placeText}}</text>
+        </view>
+        <view class="archive-detail-metric">
+          <text class="archive-detail-label">到场人数</text>
+          <text class="archive-detail-value">{{detail.memberCountText}}</text>
+        </view>
+        <view class="archive-detail-metric">
+          <text class="archive-detail-label">费用模式</text>
+          <text class="archive-detail-value">{{detail.expenseModeLabel}}</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="summary-card archive-detail-card archive-detail-bill-card">
+      <view class="archive-detail-section-head">
+        <view>
+          <text class="archive-detail-label">账单总览</text>
+          <text class="archive-detail-total">{{bill.totalAmountText}}</text>
+        </view>
+        <view class="archive-detail-bill-button" bindtap="goBills">打开结算页</view>
+      </view>
+      <view class="archive-detail-grid archive-detail-bill-grid">
+        <view class="archive-detail-metric">
+          <text class="archive-detail-label">消费笔数</text>
+          <text class="archive-detail-value">{{bill.recordCount}} 笔</text>
+        </view>
+        <view class="archive-detail-metric">
+          <text class="archive-detail-label">人均参考</text>
+          <text class="archive-detail-value">{{bill.perHeadAmountText}}</text>
+        </view>
+      </view>
+      <text class="archive-detail-note">{{bill.settlementNote}}</text>
+    </view>
+
+    <view class="summary-card archive-detail-card">
+      <view class="archive-detail-section-head">
+        <text class="archive-detail-section-title">每一笔支出</text>
+        <text class="archive-detail-pill">{{bill.recordCount}} 笔</text>
+      </view>
+      <view wx:if="{{bill.expenseItems.length}}" class="archive-detail-list">
+        <block wx:for="{{bill.expenseItems}}" wx:key="id">
+          <view class="archive-detail-row">
+            <view>
+              <text class="archive-detail-row-title">{{item.itemName}}</text>
+              <text class="archive-detail-row-meta">付款人 {{item.payerNickname}}</text>
+            </view>
+            <text class="archive-detail-row-amount">{{item.amountText}}</text>
+          </view>
+        </block>
+      </view>
+      <text wx:else class="archive-detail-muted">这场活动还没有登记支出。</text>
+    </view>
+
+    <view class="summary-card archive-detail-card">
+      <view class="archive-detail-section-head">
+        <text class="archive-detail-section-title">结算追溯</text>
+        <text class="archive-detail-pill">{{bill.expenseModeLabel}}</text>
+      </view>
+      <view wx:if="{{bill.settlementItems.length}}" class="archive-detail-list">
+        <block wx:for="{{bill.settlementItems}}" wx:key="userId">
+          <view class="archive-detail-row">
+            <view>
+              <text class="archive-detail-row-title">{{item.nickname}}</text>
+              <text class="archive-detail-row-meta">{{item.roleLabel}}</text>
+            </view>
+            <text class="archive-detail-row-amount {{item.amountFen > 0 ? 'archive-detail-row-amount-strong' : ''}}">{{item.amountText}}</text>
+          </view>
+        </block>
+      </view>
+      <text wx:else class="archive-detail-muted">这场活动没有需要展示的结算项。</text>
+    </view>
+
+    <view class="summary-card archive-detail-card">
+      <text class="archive-detail-section-title">参与成员</text>
+      <view class="archive-detail-member-grid">
+        <block wx:for="{{detail.members}}" wx:key="userId">
+          <view class="archive-detail-member">
+            <view class="archive-detail-avatar">{{item.shortName}}</view>
+            <text class="archive-detail-member-name">{{item.nickname}}</text>
+            <text class="archive-detail-row-meta">{{item.roleLabel}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </view>
+</view>

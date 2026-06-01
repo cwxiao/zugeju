@@ -1,0 +1,55 @@
+<view wx:if="{{report}}" class="poster-page-shell">
+  <view class="poster-stage">
+    <view class="poster-glow poster-glow-a"></view>
+    <view class="poster-glow poster-glow-b"></view>
+
+    <view class="poster-card">
+      <text class="poster-kicker">AI Personality Poster</text>
+      <text class="poster-name">{{report.nickname}}</text>
+      <text class="poster-title">{{report.posterTitle}}</text>
+      <text class="poster-desc">{{report.coverCaption}}</text>
+
+      <view class="poster-score-row">
+        <view>
+          <text class="poster-score">{{report.score}}</text>
+          <text class="poster-score-label">整活指数</text>
+        </view>
+        <view class="poster-beat-pill">击败 {{report.surpassPercent}}% 用户</view>
+      </view>
+
+      <view class="poster-quote-box">
+        <text class="poster-quote-mark">“</text>
+        <text class="poster-quote-text">{{report.sharpComments[0]}}</text>
+      </view>
+
+      <view class="poster-metric-grid">
+        <block wx:for="{{report.summaryStats}}" wx:key="label">
+          <view class="poster-metric-card">
+            <text class="poster-metric-value">{{item.value}}</text>
+            <text class="poster-metric-label">{{item.label}}</text>
+          </view>
+        </block>
+      </view>
+
+      <view class="poster-dna-section">
+        <text class="poster-section-title">兴趣 DNA</text>
+        <block wx:for="{{report.dnaList}}" wx:key="name">
+          <view class="poster-dna-row">
+            <text class="poster-dna-name">{{item.name}}</text>
+            <view class="poster-dna-track">
+              <view class="poster-dna-bar" style="width: {{item.width}};"></view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <view class="poster-footer">
+        <view>
+          <text class="poster-animal">动物人格：{{report.animalName}}</text>
+          <text class="poster-footnote">{{report.animalDescription}}</text>
+        </view>
+        <view class="poster-badge">适合截图分享</view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,7 +1,9 @@
-<view class="page-shell">
+<view class="page-shell bill-page-shell">
   <view wx:if="{{!activityId}}" class="bill-card bill-shell bill-empty-card">
-    <view class="section-title">记账结算</view>
-    <text class="bill-meta">从活动详情点进来，再录消费和结算。</text>
+    <text class="bill-empty-badge">记账结算</text>
+    <view class="section-title">先从具体活动进入账单</view>
+    <text class="bill-meta">账单会跟着某一场活动走。你可以先去活动档案里找那场局，再从详情进入结算页。</text>
+    <button class="primary-button bill-empty-button" bindtap="goActivities">去活动档案</button>
     <!--
     <view class="ad-slot-card">
       <text class="ad-slot-badge">广告位预留</text>
@@ -13,25 +15,38 @@
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
     <view class="bill-card bill-item bill-summary-card">
-      <view class="section-title">{{summary.activityTitle}}</view>
-      <view class="bill-chip-row">
-        <view class="bill-chip">{{summary.expenseModeLabel}}</view>
-        <view class="bill-chip">{{summary.activityStatus === 'finished' ? '已结束' : '进行中'}}</view>
+      <view class="bill-hero-topline">
+        <view>
+          <text class="bill-eyebrow">我的账单</text>
+          <view class="section-title bill-hero-title">{{summary.activityTitle}}</view>
+        </view>
+        <view class="bill-chip-row">
+          <view class="bill-chip">{{summary.expenseModeLabel}}</view>
+          <view class="bill-chip">{{summary.statusLabel}}</view>
+        </view>
       </view>
       <text class="bill-total">总消费 {{summary.totalAmountText}}</text>
-      <text class="bill-meta">{{summary.settlementNote}}</text>
+      <text class="bill-meta">{{summary.settlementSummaryText}}</text>
+      <view class="bill-metric-grid">
+        <view class="bill-metric-card">
+          <text class="bill-metric-label">消费笔数</text>
+          <text class="bill-metric-value">{{summary.recordCount}} 笔</text>
+        </view>
+        <view class="bill-metric-card">
+          <text class="bill-metric-label">到场人数</text>
+          <text class="bill-metric-value">{{summary.participantCount}} 人</text>
+        </view>
+        <view class="bill-metric-card bill-metric-card-wide">
+          <text class="bill-metric-label">人均参考</text>
+          <text class="bill-metric-value">{{summary.perHeadAmountText}}</text>
+        </view>
+      </view>
+      <text class="bill-note-text">{{summary.settlementNote}}</text>
     </view>
 
-    <!--
-    <view class="ad-slot-card">
-      <text class="ad-slot-badge">广告位预留</text>
-      <text class="ad-slot-title">结算合作位</text>
-      <text class="ad-slot-desc">记账摘要下方预留广告位，方便后面放优惠券、支付引导或品牌合作内容。</text>
-    </view>
-    -->
-
-    <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item">
+    <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item bill-compose-card">
       <text class="bill-title">记一笔消费</text>
+      <text class="bill-helper">支持持续补录，账单会实时刷新。</text>
       <input
         class="bill-input"
         placeholder="比如：烧烤食材"
@@ -47,11 +62,14 @@
         value="{{amountYuan}}"
         bindinput="onAmountInput"
       />
-      <button class="primary-button" bindtap="submitExpense">记上去</button>
+      <button class="primary-button bill-submit-button" bindtap="submitExpense">记上去</button>
     </view>
 
-    <view class="bill-card bill-item">
-      <text class="bill-title">消费记录</text>
+    <view class="bill-card bill-item bill-section-card">
+      <view class="bill-section-head">
+        <text class="bill-title">消费记录</text>
+        <text class="bill-count-pill">{{summary.recordCount}} 笔</text>
+      </view>
       <view wx:if="{{summary.expenseItems.length}}" class="bill-record-list">
         <block wx:for="{{summary.expenseItems}}" wx:key="id">
           <view class="bill-record-row">
@@ -66,8 +84,11 @@
       <text wx:else class="bill-meta">还没记消费项。</text>
     </view>
 
-    <view class="bill-card bill-item">
-      <text class="bill-title">结算结果</text>
+    <view class="bill-card bill-item bill-section-card">
+      <view class="bill-section-head">
+        <text class="bill-title">结算结果</text>
+        <text class="bill-count-pill">待转 {{summary.settlementPendingCount}} 人</text>
+      </view>
       <view wx:if="{{summary.settlementItems.length}}" class="bill-record-list">
         <block wx:for="{{summary.settlementItems}}" wx:key="userId">
           <view class="bill-record-row">
@@ -82,8 +103,12 @@
       <text wx:else class="bill-meta">这场目前没有需要转账的人。</text>
     </view>
 
-    <view wx:if="{{summary.creatorView && summary.canFinish}}" class="bill-action-wrap">
-      <button class="primary-button" bindtap="finishActivity">结束活动并结算</button>
+    <view wx:if="{{summary.creatorView && summary.canFinish}}" class="bill-card bill-item bill-action-card">
+      <text class="bill-title">结束活动并结算</text>
+      <text class="bill-helper">确认后会按当前到场人数出最终结算结果。</text>
+      <view class="bill-action-wrap">
+        <button class="primary-button bill-finish-button" bindtap="finishActivity">结束活动并结算</button>
+      </view>
     </view>
   </view>
 </view>

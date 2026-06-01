@@ -1,0 +1,166 @@
+<view class="page-shell personality-shell" wx:if="{{report}}">
+  <view class="summary-card personality-cover-card">
+    <text class="personality-cover-kicker">AI Personality Report</text>
+    <text class="personality-cover-title">{{report.coverHeadline}}</text>
+    <text class="personality-cover-desc">{{report.coverCaption}}</text>
+    <view class="personality-cover-footer">
+      <view>
+        <text class="personality-cover-meta">{{report.periodLabel}}</text>
+        <text class="personality-cover-meta">可分享的人格总结已生成</text>
+      </view>
+      <view class="personality-score-pill">{{report.score}} 分</view>
+    </view>
+  </view>
+
+  <view class="summary-card personality-score-card">
+    <text class="personality-section-label">整活指数</text>
+    <view class="personality-score-row">
+      <view>
+        <text class="personality-score-value">{{report.score}}</text>
+        <text class="personality-score-meta">击败 {{report.surpassPercent}}% 用户</text>
+      </view>
+      <view class="personality-score-ring" bindtap="toggleHeatmap">
+        <text class="personality-score-ring-text">热力</text>
+      </view>
+    </view>
+  </view>
+
+  <view wx:if="{{heatmapVisible}}" class="summary-card personality-radar-card">
+    <view class="personality-radar-head">
+      <text class="personality-section-label">六维热力</text>
+      <text class="personality-radar-close" bindtap="toggleHeatmap">收起</text>
+    </view>
+    <view class="personality-radar-wrap">
+      <view class="personality-radar-grid"></view>
+      <view class="personality-radar-fill" style="clip-path: {{report.radarPolygon}};"></view>
+      <block wx:for="{{report.radarMetrics}}" wx:key="key">
+        <view class="personality-radar-axis {{item.axisClass}}">
+          <text class="personality-radar-label">{{item.label}}</text>
+          <text class="personality-radar-percent">{{item.percentText}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="summary-card personality-title-card">
+    <text class="personality-section-label">人格称号</text>
+    <text class="personality-main-title">{{report.title}}</text>
+    <text class="personality-main-desc">{{report.titleReason}}</text>
+  </view>
+
+  <view class="summary-card personality-dna-card">
+    <text class="personality-section-label">兴趣 DNA</text>
+    <block wx:for="{{report.dnaList}}" wx:key="name">
+      <view class="dna-row">
+        <text class="dna-name">{{item.name}}</text>
+        <view class="dna-bar-track">
+          <view class="dna-bar-fill" style="width: {{item.width}};"></view>
+        </view>
+        <text class="dna-percent">{{item.percent}}%</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="summary-card personality-social-card">
+    <text class="personality-section-label">社交属性</text>
+    <text class="personality-main-title personality-subtitle">{{report.socialLabel}}</text>
+    <text class="personality-main-desc">{{report.socialDescription}}</text>
+    <view class="personality-stat-grid">
+      <block wx:for="{{report.summaryStats}}" wx:key="label">
+        <view class="personality-stat-card">
+          <text class="personality-stat-label">{{item.label}}</text>
+          <text class="personality-stat-value">{{item.value}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="summary-card personality-activity-card">
+    <text class="personality-section-label">活动统计</text>
+    <view class="personality-activity-grid">
+      <view class="personality-activity-item">
+        <text class="personality-stat-label">总场次</text>
+        <text class="personality-stat-value">{{report.activityStats.total}} 场</text>
+      </view>
+      <view class="personality-activity-item">
+        <text class="personality-stat-label">最常主题</text>
+        <text class="personality-stat-value">{{report.activityStats.favoriteCategory}}</text>
+      </view>
+      <view class="personality-activity-item personality-activity-item-wide">
+        <text class="personality-stat-label">高频时间段</text>
+        <text class="personality-stat-value">夜场占比 {{report.nightPercent}}%</text>
+      </view>
+      <view class="personality-activity-item personality-activity-item-wide">
+        <text class="personality-stat-label">最近一次活跃</text>
+        <text class="personality-stat-value">{{report.activityStats.latestTime}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="summary-card personality-finance-card">
+    <text class="personality-section-label">我的财报</text>
+    <text class="personality-finance-total">{{report.financeReport.totalSpentText}}</text>
+    <text class="personality-main-desc">从开始使用小程序以来，AA 支出和自己请客都会计入总花费。</text>
+    <view class="personality-finance-grid">
+      <view class="personality-stat-card">
+        <text class="personality-stat-label">请客次数</text>
+        <text class="personality-stat-value">{{report.financeReport.treatCount}} 次</text>
+      </view>
+      <view class="personality-stat-card">
+        <text class="personality-stat-label">请客花费</text>
+        <text class="personality-stat-value">{{report.financeReport.treatSpentText}}</text>
+      </view>
+      <view class="personality-stat-card personality-finance-wide">
+        <text class="personality-stat-label">AA 花费</text>
+        <text class="personality-stat-value">{{report.financeReport.aaSpentText}}</text>
+      </view>
+    </view>
+    <view class="chip-row personality-finance-tabs">
+      <block wx:for="{{financePeriods}}" wx:key="value">
+        <view class="personality-finance-tab {{financePeriod === item.value ? 'personality-finance-tab-active' : ''}}" data-value="{{item.value}}" bindtap="selectFinancePeriod">{{item.label}}</view>
+      </block>
+    </view>
+    <view wx:if="{{currentFinanceBuckets.length}}" class="personality-finance-list">
+      <block wx:for="{{currentFinanceBuckets}}" wx:key="key">
+        <view class="personality-finance-row">
+          <view>
+            <text class="personality-finance-label">{{item.label}}</text>
+            <text class="personality-stat-label">{{item.activityCount}} 场活动</text>
+          </view>
+          <text class="personality-finance-amount">{{item.spentText}}</text>
+        </view>
+      </block>
+    </view>
+    <text wx:else class="personality-main-desc">当前维度还没有可统计的花费。</text>
+  </view>
+
+  <view class="summary-card personality-sharp-card">
+    <text class="personality-section-label">AI锐评</text>
+    <block wx:for="{{report.sharpComments}}" wx:key="*this">
+      <text class="personality-quote">{{index + 1}}. {{item}}</text>
+    </block>
+  </view>
+
+  <view class="summary-card personality-honor-card">
+    <text class="personality-section-label">荣誉成就</text>
+    <view class="chip-row personality-honor-row">
+      <block wx:for="{{report.honors}}" wx:key="*this">
+        <view class="personality-honor-chip">{{item}}</view>
+      </block>
+    </view>
+  </view>
+
+  <view class="summary-card personality-animal-card">
+    <text class="personality-section-label">动物人格</text>
+    <text class="personality-main-title personality-subtitle">{{report.animalName}}</text>
+    <text class="personality-main-desc">{{report.animalDescription}}</text>
+  </view>
+
+  <view class="summary-card personality-poster-card">
+    <text class="personality-section-label">分享海报文案</text>
+    <text class="personality-poster-title">{{report.posterTitle}}</text>
+    <text class="personality-poster-desc">{{report.posterText}}</text>
+    <view class="personality-poster-footer">{{report.shareCallout}}</view>
+    <view class="primary-button personality-poster-button" bindtap="goPoster">打开截图海报</view>
+  </view>
+</view>
