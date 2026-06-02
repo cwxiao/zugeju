@@ -3,6 +3,7 @@ package com.playminipro.activity.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.playminipro.activity.dto.ActivityDetailResponse;
+import com.playminipro.activity.dto.JoinActivityResponse;
 import com.playminipro.activity.dto.ActivitySummaryResponse;
 import com.playminipro.activity.dto.CreateActivityRequest;
 import com.playminipro.activity.dto.CreateActivityResponse;
@@ -25,12 +26,16 @@ public class ActivityService {
 
     private final ObjectMapper objectMapper;
 
+    private final ActivityNotificationService notificationService;
+
     public ActivityService(ActivityMapper activityMapper,
                            ActivityMemberMapper activityMemberMapper,
-                           ObjectMapper objectMapper) {
+                           ObjectMapper objectMapper,
+                           ActivityNotificationService notificationService) {
         this.activityMapper = activityMapper;
         this.activityMemberMapper = activityMemberMapper;
         this.objectMapper = objectMapper;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -141,11 +146,15 @@ public class ActivityService {
         if (activity == null) {
             throw new BusinessException(4004, "activity not found");
         }
-        if (activityMapper.existsMember(activityId, userId) == 0) {
-            throw new BusinessException(4003, "forbidden");
-        }
 
         int joinedCount = activityMapper.countJoinedMembers(activityId);
+        boolean currentUserJoined = userId != null && activityMemberMapper.existsJoinedMember(activityId, userId) > 0;
+        boolean currentUserCreator = userId != null && activityMemberMapper.existsJoinedCreator(activityId, userId) > 0;
+        boolean canJoin = !currentUserJoined
+                && userId != null
+                && "recruiting".equals(activity.getStatus())
+                && joinedCount < activity.getMaxParticipantCount();
+
         return new ActivityDetailResponse(
                 activity.getId(),
                 activity.getTitle(),
@@ -165,8 +174,46 @@ public class ActivityService {
                 Boolean.TRUE.equals(activity.getAllowMemberAddExpense()),
                 joinedCount,
                 activity.getMaxParticipantCount(),
+                currentUserJoined,
+                currentUserCreator,
+                canJoin,
                 activityMemberMapper.findJoinedMembers(activityId)
         );
+    }
+
+    @Transactional
+    public JoinActivityResponse join(String userId, String activityId) {
+        ActivityEntity activity = activityMapper.findById(activityId);
+        if (activity == null) {
+            throw new BusinessException(4004, "activity not found");
+        }
+        if (!"recruiting".equals(activity.getStatus()) && !"full".equals(activity.getStatus())) {
+            throw new BusinessException(4001, "activity is not joinable");
+        }
+        if (activityMemberMapper.existsJoinedMember(activityId, userId) == 0
+                && activityMapper.countJoinedMembers(activityId) >= activity.getMaxParticipantCount()) {
+            throw new BusinessException(4001, "activity is full");
+        }
+
+        int insertedOrUpdated = activityMemberMapper.joinAsMember(UUID.randomUUID().toString(), activityId, userId);
+        int joinedCount = activityMapper.countJoinedMembers(activityId);
+        activityMapper.markFullIfNeeded(activityId);
+
+        if (insertedOrUpdated > 0) {
+            notificationService.recordMemberJoined(activity, userId);
+        }
+
+        return new JoinActivityResponse(activityId, true, joinedCount, activity.getMaxParticipantCount());
+    }
+
+    @Transactional
+    public CreateActivityResponse decline(String userId, String activityId) {
+        ActivityEntity activity = activityMapper.findById(activityId);
+        if (activity == null) {
+            throw new BusinessException(4004, "activity not found");
+        }
+        activityMemberMapper.decline(activityId, userId);
+        return new CreateActivityResponse(activityId);
     }
 
     private String writeJson(CreateActivityRequest request) {

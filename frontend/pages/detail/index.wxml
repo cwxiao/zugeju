@@ -36,6 +36,10 @@
         </block>
         <button class="avatar-pill avatar-plus-pill" open-type="share">+</button>
       </view>
+      <view wx:if="{{detail.canJoin}}" class="invite-action-row">
+        <button class="invite-accept-button" loading="{{joining}}" bindtap="acceptInvite">接受邀请</button>
+        <button class="invite-decline-button" bindtap="declineInvite">婉拒</button>
+      </view>
       <view wx:if="{{detail.mode === '线下'}}" class="detail-tool-row">
         <view class="detail-tool-link" bindtap="goBills">记账结算</view>
       </view>

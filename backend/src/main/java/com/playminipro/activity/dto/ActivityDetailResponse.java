@@ -22,6 +22,9 @@ public record ActivityDetailResponse(
         boolean allowMemberAddExpense,
         int joinedCount,
         int maxParticipantCount,
+        boolean currentUserJoined,
+        boolean currentUserCreator,
+        boolean canJoin,
         List<ActivityMemberResponse> members
 ) {
 }

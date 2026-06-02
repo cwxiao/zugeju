@@ -32,6 +32,9 @@
           {{authLoading ? '进入中...' : '确认并进入'}}
         </button>
         <text class="auth-section-tip auth-subscribe-tip">确认时会一起拉起订阅消息授权，不同意也能正常进入。</text>
+        <view class="auth-close-row" bindtap="closeAuthDialog">
+          <text class="auth-close-text">先随便看看</text>
+        </view>
       </view>
     </view>
 
@@ -90,7 +93,12 @@
       <text class="section-desc">点进卡片看详情</text>
     </view>
 
-    <view class="card-list">
+    <view wx:if="{{!loggedIn}}" class="summary-card home-login-hint-card">
+      <text class="section-title">登录后查看你的活动</text>
+      <text class="section-desc">创建或参与活动需要先登录，点击上方“整！”或功能入口即可触发登录。</text>
+    </view>
+
+    <view wx:if="{{loggedIn}}" class="card-list">
       <block wx:for="{{ongoingItems}}" wx:key="id">
         <view class="activity-card ongoing-card ongoing-theme" bindtap="goDetail" data-id="{{item.id}}">
           <view class="card-accent accent-item"></view>

@@ -1,7 +1,13 @@
 const { request, isAuthExpiredError } = require('../../utils/request')
+const { requestInitialSubscribePermission } = require('../../utils/subscribe')
+
+const MEMBER_REFRESH_INTERVAL = 10000
 
 Page({
   data: {
+    loading: false,
+    joining: false,
+    inviteSource: '',
     detail: {
       id: '',
       title: '详情',
@@ -14,26 +20,59 @@ Page({
       status: '',
       count: '',
       isCreator: false,
+      canJoin: false,
+      currentUserJoined: false,
       members: []
     }
   },
+  refreshTimer: null,
 
   async onLoad(options) {
-    if (!getApp().hasLoginState()) {
-      wx.showToast({
-        title: '请先确认登录',
-        icon: 'none'
-      })
-      wx.redirectTo({
-        url: '/pages/home/index'
-      })
+    const activityId = options.id || ''
+    const inviteSource = options.source || ''
+
+    if (!activityId) {
+      wx.showToast({ title: '活动不存在', icon: 'none' })
       return
     }
 
+    this.setData({ inviteSource })
+    await this.loadDetail(activityId)
+    if (getApp().hasLoginState()) {
+      this.startMemberRefresh()
+    }
+  },
+
+  onShow() {
+    if (this.data.detail.id && getApp().hasLoginState()) {
+      this.startMemberRefresh()
+    }
+  },
+
+  onHide() {
+    this.stopMemberRefresh()
+  },
+
+  onUnload() {
+    this.stopMemberRefresh()
+  },
+
+  async loadDetail(activityId, silent = false) {
+    if (!activityId) {
+      wx.showToast({ title: '活动不存在', icon: 'none' })
+      return
+    }
+
+    if (!silent) {
+      this.setData({ loading: true })
+    }
+
     try {
-      const localUser = wx.getStorageSync('user') || {}
+      const hasLogin = getApp().hasLoginState()
+      const localUser = hasLogin ? (wx.getStorageSync('user') || {}) : {}
       const detail = await request({
-        url: `/api/activities/${options.id}`
+        url: `/api/activities/${activityId}`,
+        auth: hasLogin
       })
 
       wx.showShareMenu({
@@ -41,7 +80,11 @@ Page({
         menus: ['shareAppMessage']
       })
 
-      const isCreator = (detail.members || []).some((member) => member.userId === localUser.id && member.role === 'creator')
+      const isCreator = detail.currentUserCreator || (detail.members || []).some((member) => member.userId === localUser.id && member.role === 'creator')
+
+      const showJoinButton = hasLogin
+        ? detail.canJoin
+        : (detail.status === 'recruiting' && detail.joinedCount < detail.maxParticipantCount)
 
       this.setData({
         detail: {
@@ -58,6 +101,8 @@ Page({
           status: resolveActivityStatusText(detail.status, detail.joinedCount, detail.maxParticipantCount),
           count: `${detail.joinedCount} / ${detail.maxParticipantCount}`,
           isCreator,
+          canJoin: showJoinButton,
+          currentUserJoined: detail.currentUserJoined,
           members: (detail.members || []).map((member) => ({
             id: member.userId,
             nickname: member.nickname || '友',
@@ -77,6 +122,10 @@ Page({
         title: '详情加载失败',
         icon: 'none'
       })
+    } finally {
+      if (!silent) {
+        this.setData({ loading: false })
+      }
     }
   },
 
@@ -84,7 +133,82 @@ Page({
     const { detail } = this.data
     return {
       title: `${detail.title}，来整一下`,
-      path: `/pages/detail/index?id=${detail.id}`
+      path: `/pages/detail/index?id=${detail.id}&source=invite`
+    }
+  },
+
+  async acceptInvite() {
+    if (!this.data.detail.id || this.data.joining) {
+      return
+    }
+
+    if (!getApp().hasLoginState()) {
+      const activityId = this.data.detail.id
+      const inviteSource = this.data.inviteSource
+      wx.setStorageSync('pendingInvitePath', `/pages/detail/index?id=${activityId}&source=${inviteSource || 'invite'}`)
+      wx.showToast({ title: '请先登录后再加入', icon: 'none' })
+      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
+      return
+    }
+
+    this.setData({ joining: true })
+    try {
+      await requestInitialSubscribePermission()
+      await request({
+        url: `/api/activities/${this.data.detail.id}/join`,
+        method: 'POST'
+      })
+      wx.showToast({ title: '已加入', icon: 'success' })
+      await this.loadDetail(this.data.detail.id, true)
+    } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+
+      wx.showToast({ title: error.message || '加入失败', icon: 'none' })
+    } finally {
+      this.setData({ joining: false })
+    }
+  },
+
+  async declineInvite() {
+    if (!this.data.detail.id) {
+      return
+    }
+
+    try {
+      await request({
+        url: `/api/activities/${this.data.detail.id}/decline`,
+        method: 'POST'
+      })
+    } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+    }
+
+    wx.showToast({ title: '已婉拒', icon: 'none' })
+    wx.redirectTo({ url: '/pages/home/index' })
+  },
+
+  startMemberRefresh() {
+    this.stopMemberRefresh()
+    this.refreshTimer = setInterval(() => {
+      const activityId = this.data.detail.id
+      if (activityId) {
+        this.loadDetail(activityId, true)
+      }
+    }, MEMBER_REFRESH_INTERVAL)
+  },
+
+  stopMemberRefresh() {
+    if (this.refreshTimer) {
+      clearInterval(this.refreshTimer)
+      this.refreshTimer = null
     }
   },
 

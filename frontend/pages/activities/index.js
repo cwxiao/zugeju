@@ -35,16 +35,15 @@ Page({
   },
 
   onShow() {
+    if (!getApp().hasLoginState()) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
+      return
+    }
     this.loadArchive()
   },
 
   async loadArchive() {
-    if (!getApp().hasLoginState()) {
-      wx.showToast({ title: '请先确认登录', icon: 'none' })
-      wx.redirectTo({ url: '/pages/home/index' })
-      return
-    }
-
     try {
       const archiveRecords = await request({
         url: '/api/activities/mine/archive'

@@ -19,8 +19,8 @@ Page({
 
   async onShow() {
     if (!getApp().hasLoginState()) {
-      wx.showToast({ title: '请先确认登录', icon: 'none' })
-      wx.redirectTo({ url: '/pages/home/index' })
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
       return
     }
 

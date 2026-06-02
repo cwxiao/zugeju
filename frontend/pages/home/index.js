@@ -4,11 +4,19 @@ const { requestInitialSubscribePermission } = require('../../utils/subscribe')
 Page({
   data: {
     ongoingItems: [],
+    loggedIn: false,
     authVisible: false,
     authLoading: false,
     silentLoginTried: false,
     authNickname: '',
-    authAvatarUrl: ''
+    authAvatarUrl: '',
+    pendingShowAuth: false
+  },
+
+  onLoad(options) {
+    if (options && options.showAuth === '1') {
+      this.setData({ pendingShowAuth: true })
+    }
   },
 
   async onShow() {
@@ -18,8 +26,6 @@ Page({
 
       if (!this.data.silentLoginTried && hasCachedProfile(profile)) {
         this.setData({
-          authVisible: false,
-          authLoading: true,
           silentLoginTried: true,
           authNickname: profile.nickname || '',
           authAvatarUrl: profile.avatarUrl || ''
@@ -30,24 +36,29 @@ Page({
             nickname: profile.nickname || '微信用户',
             avatarUrl: profile.avatarUrl || ''
           })
-          this.setData({ authLoading: false })
+          this.setData({ loggedIn: true, authVisible: false })
           await this.loadActivities()
+          this.consumePendingInvitePath()
           return
         } catch (error) {
-          this.setData({ authLoading: false })
+          // silent login failed, let user browse
         }
       }
 
       this.setData({
-        authVisible: true,
+        loggedIn: false,
+        authVisible: !!this.data.pendingShowAuth,
         ongoingItems: [],
         authNickname: profile.nickname || '',
         authAvatarUrl: profile.avatarUrl || ''
       })
+      if (this.data.pendingShowAuth) {
+        this.setData({ pendingShowAuth: false })
+      }
       return
     }
 
-    this.setData({ authVisible: false })
+    this.setData({ loggedIn: true, authVisible: false })
     await this.loadActivities()
   },
 
@@ -98,6 +109,10 @@ Page({
     this.setData({ authAvatarUrl: avatarUrl })
   },
 
+  closeAuthDialog() {
+    this.setData({ authVisible: false })
+  },
+
   async confirmLogin() {
     this.setData({ authLoading: true })
 
@@ -107,8 +122,9 @@ Page({
         nickname: this.data.authNickname.trim() || '微信用户',
         avatarUrl: this.data.authAvatarUrl
       })
-      this.setData({ authVisible: false, silentLoginTried: false })
+      this.setData({ authVisible: false, loggedIn: true, silentLoginTried: false })
       await this.loadActivities()
+      this.consumePendingInvitePath()
     } catch (error) {
       wx.showToast({
         title: isAuthExpiredError(error) ? '登录已失效，请重试' : '登录失败',
@@ -181,6 +197,7 @@ Page({
     this.setData({
       authVisible: true,
       authLoading: false,
+      loggedIn: false,
       ongoingItems: [],
       silentLoginTried: false,
       authNickname: profile.nickname || '',
@@ -189,6 +206,18 @@ Page({
     wx.showToast({
       title: '登录已过期，请重新确认',
       icon: 'none'
+    })
+  },
+
+  consumePendingInvitePath() {
+    const pendingPath = wx.getStorageSync('pendingInvitePath')
+    if (!pendingPath) {
+      return
+    }
+
+    wx.removeStorageSync('pendingInvitePath')
+    wx.navigateTo({
+      url: pendingPath
     })
   }
 })

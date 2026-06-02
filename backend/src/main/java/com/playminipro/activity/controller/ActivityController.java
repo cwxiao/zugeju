@@ -7,6 +7,7 @@ import com.playminipro.activity.dto.ActivitySummaryResponse;
 import com.playminipro.activity.dto.AddActivityExpenseRequest;
 import com.playminipro.activity.dto.CreateActivityRequest;
 import com.playminipro.activity.dto.CreateActivityResponse;
+import com.playminipro.activity.dto.JoinActivityResponse;
 import com.playminipro.activity.dto.PersonalityReportResponse;
 import com.playminipro.activity.service.ActivityExpenseService;
 import com.playminipro.activity.service.ActivityInsightService;
@@ -14,6 +15,7 @@ import com.playminipro.activity.service.ActivityService;
 import com.playminipro.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,8 +78,19 @@ public class ActivityController {
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ActivityDetailResponse> detail(Authentication authentication, @PathVariable String id) {
-        return ApiResponse.success(activityService.getDetail(authentication.getName(), id));
+    public ApiResponse<ActivityDetailResponse> detail(@Nullable Authentication authentication, @PathVariable String id) {
+        String userId = authentication != null ? authentication.getName() : null;
+        return ApiResponse.success(activityService.getDetail(userId, id));
+    }
+
+    @PostMapping("/{id}/join")
+    public ApiResponse<JoinActivityResponse> join(Authentication authentication, @PathVariable String id) {
+        return ApiResponse.success(activityService.join(authentication.getName(), id));
+    }
+
+    @PostMapping("/{id}/decline")
+    public ApiResponse<CreateActivityResponse> decline(Authentication authentication, @PathVariable String id) {
+        return ApiResponse.success(activityService.decline(authentication.getName(), id));
     }
 
     @GetMapping("/{id}/expenses/summary")

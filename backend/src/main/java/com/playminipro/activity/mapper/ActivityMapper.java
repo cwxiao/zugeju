@@ -69,6 +69,30 @@ public interface ActivityMapper {
             """)
     int cancel(String creatorId, String activityId);
 
+    @Update("""
+            UPDATE activities
+            SET status = 'full',
+                updated_at = NOW()
+            WHERE id = CAST(#{activityId} AS UUID)
+              AND status = 'recruiting'
+              AND (
+                  SELECT COUNT(1)
+                  FROM activity_members
+                  WHERE activity_id = CAST(#{activityId} AS UUID)
+                    AND join_status = 'joined'
+              ) >= max_participant_count
+            """)
+    int markFullIfNeeded(String activityId);
+
+    @Update("""
+            UPDATE activities
+            SET status = 'cancelled',
+                updated_at = NOW()
+            WHERE id = CAST(#{activityId} AS UUID)
+              AND status IN ('draft', 'recruiting', 'full', 'pending_start')
+            """)
+    int autoCancel(String activityId);
+
                 @Update("""
                                                 UPDATE activities
                                                 SET status = 'finished',
@@ -178,4 +202,21 @@ public interface ActivityMapper {
               AND join_status = 'joined'
             """)
     int countJoinedMembers(String activityId);
+
+    @Select("""
+            SELECT a.id, a.creator_id, a.type_code, a.type_name, a.title, a.description, a.mode, a.status,
+                   a.target_participant_count, a.max_participant_count, a.start_time, a.end_time,
+                   a.meetup_time, a.meetup_address, a.venue_address, a.online_join_info::text AS online_join_info,
+                   a.expense_mode, a.expense_flag, a.allow_member_add_expense, a.created_at, a.updated_at
+            FROM activities a
+            WHERE a.status IN ('draft', 'recruiting', 'full', 'pending_start')
+              AND a.start_time <= NOW() - INTERVAL '150 minutes'
+              AND (
+                  SELECT COUNT(1)
+                  FROM activity_members am
+                  WHERE am.activity_id = a.id
+                    AND am.join_status = 'joined'
+              ) = 1
+            """)
+    List<ActivityEntity> findSoloActivitiesNeedingAutoCancelFlow();
 }

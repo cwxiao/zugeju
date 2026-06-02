@@ -502,3 +502,19 @@
   text-align: center;
   box-sizing: border-box;
 }
+
+.home-login-hint-card {
+  margin: 20rpx 32rpx;
+  padding: 36rpx 28rpx;
+  text-align: center;
+}
+
+.auth-close-row {
+  margin-top: 20rpx;
+  text-align: center;
+}
+
+.auth-close-text {
+  font-size: 26rpx;
+  color: #9a8977;
+}

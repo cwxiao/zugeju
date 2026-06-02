@@ -220,6 +220,37 @@
   margin-top: 24rpx;
 }
 
+.invite-action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16rpx;
+  margin-top: 24rpx;
+}
+
+.invite-accept-button,
+.invite-decline-button {
+  height: 76rpx;
+  border: none;
+  border-radius: 22rpx 30rpx 20rpx 28rpx;
+  font-size: 26rpx;
+  line-height: 76rpx;
+}
+
+.invite-accept-button {
+  background: #c96f2d;
+  color: #fffaf3;
+}
+
+.invite-decline-button {
+  background: rgba(255, 250, 243, 0.76);
+  color: #7a5634;
+}
+
+.invite-accept-button::after,
+.invite-decline-button::after {
+  border: none;
+}
+
 .detail-tool-row {
   display: flex;
   justify-content: flex-end;
