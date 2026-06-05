@@ -1,4 +1,5 @@
 <view wx:if="{{report}}" class="poster-page-shell">
+  <image class="page-bg-img" src="/img/city-bg.png" mode="aspectFill" />
   <view class="poster-stage">
     <view class="poster-glow poster-glow-a"></view>
     <view class="poster-glow poster-glow-b"></view>

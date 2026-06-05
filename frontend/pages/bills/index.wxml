@@ -1,4 +1,5 @@
 <view class="page-shell bill-page-shell">
+  <image class="page-bg-img" src="/img/city-bg.png" mode="aspectFill" />
   <view wx:if="{{!activityId}}" class="bill-card bill-shell bill-empty-card">
     <text class="bill-empty-badge">记账结算</text>
     <view class="section-title">先从具体活动进入账单</view>
