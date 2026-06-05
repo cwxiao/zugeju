@@ -1,12 +1,12 @@
 <view class="page-shell archive-shell">
   <view class="summary-card archive-hero-card">
-    <image class="archive-decor-headset" src="/img/ui-headset.png" mode="aspectFit" />
+    <image class="archive-decor-headset" src="/img/ui-headset.jpg" mode="aspectFit" />
     <text class="archive-caption">活动档案</text>
     <view class="archive-hero-head">
       <text class="section-title archive-title">以前整过的都在这里</text>
       <text class="archive-summary">{{summaryText}}</text>
     </view>
-    <text class="archive-desc">支持按身份、状态、活动起止时间和关键词回头翻某一场。点开卡片进入完整详情和账单。</text>
+    <text class="archive-desc">按身份、状态、时间或关键词回看某一场，点开卡片进详情。</text>
   </view>
 
   <view class="summary-card archive-filter-card">
@@ -78,7 +78,7 @@
 
   <view wx:if="{{!filteredRecords.length}}" class="summary-card archive-empty-card">
     <text class="section-title">没筛到结果</text>
-    <text class="archive-desc">换个关键词，或者先切回“全部活动”。</text>
+    <text class="archive-desc">换个关键词试试，或切回“全部活动”。</text>
   </view>
 
 </view>

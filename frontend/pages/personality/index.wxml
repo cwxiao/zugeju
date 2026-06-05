@@ -1,6 +1,6 @@
 <view class="page-shell personality-shell" wx:if="{{report}}">
   <view class="summary-card personality-cover-card">
-    <image class="personality-decor-character" src="/img/ui-character.png" mode="aspectFit" />
+    <image class="personality-decor-character" src="/img/ui-character.jpg" mode="aspectFit" />
     <text class="personality-cover-kicker">AI Personality Report</text>
     <text class="personality-cover-title">{{report.coverHeadline}}</text>
     <text class="personality-cover-desc">{{report.coverCaption}}</text>
@@ -101,7 +101,7 @@
   <view class="summary-card personality-finance-card">
     <text class="personality-section-label">我的财报</text>
     <text class="personality-finance-total">{{report.financeReport.totalSpentText}}</text>
-    <text class="personality-main-desc">从开始使用小程序以来，AA 支出和自己请客都会计入总花费。</text>
+    <text class="personality-main-desc">AA 支出与请客花费累计。</text>
     <view class="personality-finance-grid">
       <view class="personality-stat-card">
         <text class="personality-stat-label">请客次数</text>
@@ -132,7 +132,7 @@
         </view>
       </block>
     </view>
-    <text wx:else class="personality-main-desc">当前维度还没有可统计的花费。</text>
+    <text wx:else class="personality-main-desc">暂无可统计的花费。</text>
   </view>
 
   <view class="summary-card personality-sharp-card">

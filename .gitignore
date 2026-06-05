@@ -1,3 +1,4 @@
 backend/target/
 *.tar.gz
 *.tar.gz.b64
+node_modules/

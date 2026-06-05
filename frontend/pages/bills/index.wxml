@@ -2,7 +2,7 @@
   <view wx:if="{{!activityId}}" class="bill-card bill-shell bill-empty-card">
     <text class="bill-empty-badge">记账结算</text>
     <view class="section-title">先从具体活动进入账单</view>
-    <text class="bill-meta">账单会跟着某一场活动走。你可以先去活动档案里找那场局，再从详情进入结算页。</text>
+    <text class="bill-meta">账单跟着活动走，可从活动档案进入。</text>
     <button class="primary-button bill-empty-button" bindtap="goActivities">去活动档案</button>
     <!--
     <view class="ad-slot-card">
@@ -15,7 +15,7 @@
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
     <view class="bill-card bill-item bill-summary-card">
-      <image class="bill-decor-beer" src="/img/ui-beer-skewer.png" mode="aspectFit" />
+      <image class="bill-decor-beer" src="/img/ui-beer-skewer.jpg" mode="aspectFit" />
       <view class="bill-hero-topline">
         <view>
           <text class="bill-eyebrow">我的账单</text>
@@ -47,7 +47,7 @@
 
     <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item bill-compose-card">
       <text class="bill-title">记一笔消费</text>
-      <text class="bill-helper">支持持续补录，账单会实时刷新。</text>
+      <text class="bill-helper">可随时补录，实时更新。</text>
       <input
         class="bill-input"
         placeholder="比如：烧烤食材"
@@ -106,7 +106,7 @@
 
     <view wx:if="{{summary.creatorView && summary.canFinish}}" class="bill-card bill-item bill-action-card">
       <text class="bill-title">结束活动并结算</text>
-      <text class="bill-helper">确认后会按当前到场人数出最终结算结果。</text>
+      <text class="bill-helper">确认后按到场人数出最终结算。</text>
       <view class="bill-action-wrap">
         <button class="primary-button bill-finish-button" bindtap="finishActivity">结束活动并结算</button>
       </view>

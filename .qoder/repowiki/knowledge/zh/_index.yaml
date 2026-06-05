@@ -2,7 +2,7 @@
 schema_version: 1
 locale: zh-CN
 branch: main
-exported_at: "2026-06-02T10:26:42Z"
+exported_at: "2026-06-05T08:24:31Z"
 modules:
     "":
         dir_name: 朋友组局小程序全栈平台
@@ -10,27 +10,28 @@ modules:
         scope:
             - .gitignore
             - .qoder\repowiki\knowledge\zh\_index.yaml
-            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\_module.yaml
-            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\技术栈.md
-            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\架构设计.md
-            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\概述.md
-            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\特殊配置与命令.md
-            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\编码规范.md
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\_module.yaml
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\技术栈.md
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\架构设计.md
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\概述.md
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\编码规范.md
             - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\_module.yaml
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\技术栈.md
             - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\架构设计.md
             - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\概述.md
+            - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\特殊配置与命令.md
             - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\编码规范.md
-            - .qoder\repowiki\knowledge\zh\来整小程序后端服务\_module.yaml
-            - .qoder\repowiki\knowledge\zh\来整小程序后端服务\技术栈.md
-            - .qoder\repowiki\knowledge\zh\来整小程序后端服务\架构设计.md
-            - .qoder\repowiki\knowledge\zh\来整小程序后端服务\概述.md
-            - .qoder\repowiki\knowledge\zh\来整小程序后端服务\特殊配置与命令.md
-            - .qoder\repowiki\knowledge\zh\来整小程序后端服务\编码规范.md
-            - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\_module.yaml
-            - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\技术栈.md
-            - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\架构设计.md
-            - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\概述.md
-            - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\编码规范.md
+            - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\_module.yaml
+            - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\技术栈.md
+            - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\架构设计.md
+            - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\概述.md
+            - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\特殊配置与命令.md
+            - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\编码规范.md
+            - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\_module.yaml
+            - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\技术栈.md
+            - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\架构设计.md
+            - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\概述.md
+            - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\编码规范.md
             - .qoder\repowiki\zh\content\API接口文档\API接口文档.md
             - .qoder\repowiki\zh\content\API接口文档\个人画像接口.md
             - .qoder\repowiki\zh\content\API接口文档\成员管理接口.md
@@ -111,6 +112,12 @@ modules:
             - .qoder\repowiki\zh\content\部署运维\部署运维.md
             - .qoder\repowiki\zh\content\项目概述.md
             - .qoder\repowiki\zh\meta\repowiki-metadata.json
+            - UI资源\UI组件图.png
+            - UI资源\element_1.png
+            - UI资源\啤酒烤串.png
+            - UI资源\手柄.png
+            - UI资源\耳机.png
+            - UI资源\角色.png
             - backend\.idea\.gitignore
             - backend\.idea\compiler.xml
             - backend\.idea\encodings.xml
@@ -340,6 +347,10 @@ modules:
             - frontend\app.wxss
             - frontend\data\ongoing.js
             - frontend\img\brand-logo.jpg
+            - frontend\img\ui-beer-skewer.png
+            - frontend\img\ui-character.png
+            - frontend\img\ui-controller.png
+            - frontend\img\ui-headset.png
             - frontend\pages\activities\index.js
             - frontend\pages\activities\index.json
             - frontend\pages\activities\index.wxml
@@ -379,10 +390,6 @@ modules:
             - frontend\utils\auth.js
             - frontend\utils\request.js
             - frontend\utils\subscribe.js
-            - play-minipro-backend-deploy.tar.gz
-            - play-minipro-backend-deploy.tar.gz.b64
-            - play-minipro-deploy.tar.gz
-            - play-minipro-deploy.tar.gz.b64
             - 服务器资源\portal_web.pem
             - 服务器资源\ywsfs.cn_nginx\ywsfs.cn.csr
             - 服务器资源\服务器配置信息.md
@@ -399,7 +406,6 @@ modules:
         children: []
         depends_on: []
         related_to:
-            - path: doc
             - path: frontend
     doc:
         dir_name: 朋友组局小程序产品与技术规格
@@ -409,17 +415,14 @@ modules:
         source_files: []
         children: []
         depends_on: []
-        related_to:
-            - path: backend
-            - path: frontend
+        related_to: []
     frontend:
-        dir_name: 社交活动管理与用户画像小程序
-        title: 社交活动管理与用户画像小程序
+        dir_name: 微信小程序前端应用
+        title: 微信小程序前端应用
         scope:
             - frontend/
         source_files: []
         children: []
         depends_on: []
         related_to:
-            - path: doc
             - path: backend
