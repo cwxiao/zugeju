@@ -15,6 +15,7 @@
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
     <view class="bill-card bill-item bill-summary-card">
+      <image class="bill-decor-beer" src="/img/ui-beer-skewer.png" mode="aspectFit" />
       <view class="bill-hero-topline">
         <view>
           <text class="bill-eyebrow">我的账单</text>

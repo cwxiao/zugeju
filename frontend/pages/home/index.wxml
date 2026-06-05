@@ -63,7 +63,10 @@
             <text class="hero-title" bindtap="goCreate">整</text>
             <text class="hero-subtitle">想法先落下，时间地点再往里填。</text>
           </view>
-          <view class="primary-button minimal-button" bindtap="goCreate">整!</view>
+          <view class="hero-cta-right">
+            <image class="hero-character-img" src="/img/ui-character.png" mode="aspectFit" />
+            <view class="primary-button minimal-button" bindtap="goCreate">整!</view>
+          </view>
         </view>
 
         <view class="quick-entry-row">

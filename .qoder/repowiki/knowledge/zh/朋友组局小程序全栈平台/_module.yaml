@@ -3,7 +3,108 @@ module_path: ""
 title: 朋友组局小程序全栈平台
 scope:
     - .gitignore
-    - play-minipro-backend-deploy.tar.gz.b64
+    - .qoder\repowiki\knowledge\zh\_index.yaml
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\_module.yaml
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\技术栈.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\架构设计.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\概述.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\特殊配置与命令.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与工程文档\编码规范.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\_module.yaml
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\架构设计.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\概述.md
+    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\编码规范.md
+    - .qoder\repowiki\knowledge\zh\来整小程序后端服务\_module.yaml
+    - .qoder\repowiki\knowledge\zh\来整小程序后端服务\技术栈.md
+    - .qoder\repowiki\knowledge\zh\来整小程序后端服务\架构设计.md
+    - .qoder\repowiki\knowledge\zh\来整小程序后端服务\概述.md
+    - .qoder\repowiki\knowledge\zh\来整小程序后端服务\特殊配置与命令.md
+    - .qoder\repowiki\knowledge\zh\来整小程序后端服务\编码规范.md
+    - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\_module.yaml
+    - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\技术栈.md
+    - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\架构设计.md
+    - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\概述.md
+    - .qoder\repowiki\knowledge\zh\社交活动管理小程序前端\编码规范.md
+    - .qoder\repowiki\zh\content\API接口文档\API接口文档.md
+    - .qoder\repowiki\zh\content\API接口文档\个人画像接口.md
+    - .qoder\repowiki\zh\content\API接口文档\成员管理接口.md
+    - .qoder\repowiki\zh\content\API接口文档\活动管理接口.md
+    - .qoder\repowiki\zh\content\API接口文档\认证接口.md
+    - .qoder\repowiki\zh\content\API接口文档\费用管理接口.md
+    - .qoder\repowiki\zh\content\前端开发\UI设计与样式.md
+    - .qoder\repowiki\zh\content\前端开发\前端开发.md
+    - .qoder\repowiki\zh\content\前端开发\工具模块开发\HTTP请求封装模块.md
+    - .qoder\repowiki\zh\content\前端开发\工具模块开发\工具模块开发.md
+    - .qoder\repowiki\zh\content\前端开发\工具模块开发\微信消息订阅模块.md
+    - .qoder\repowiki\zh\content\前端开发\工具模块开发\本地数据管理模块.md
+    - .qoder\repowiki\zh\content\前端开发\工具模块开发\活动洞察分析模块.md
+    - .qoder\repowiki\zh\content\前端开发\工具模块开发\用户认证模块.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\个人画像海报页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\个人画像页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\归档详情页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\活动列表页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\活动创建页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\活动详情页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\账单管理页面开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\页面组件开发.md
+    - .qoder\repowiki\zh\content\前端开发\页面组件开发\首页开发.md
+    - .qoder\repowiki\zh\content\前端开发\项目结构与配置.md
+    - .qoder\repowiki\zh\content\后端开发\后端开发.md
+    - .qoder\repowiki\zh\content\后端开发\异常处理机制.md
+    - .qoder\repowiki\zh\content\后端开发\数据访问层.md
+    - .qoder\repowiki\zh\content\后端开发\活动管理模块\成员招募系统.md
+    - .qoder\repowiki\zh\content\后端开发\活动管理模块\活动CRUD操作.md
+    - .qoder\repowiki\zh\content\后端开发\活动管理模块\活动状态管理.md
+    - .qoder\repowiki\zh\content\后端开发\活动管理模块\活动管理模块.md
+    - .qoder\repowiki\zh\content\后端开发\活动管理模块\活动类型规则集.md
+    - .qoder\repowiki\zh\content\后端开发\活动管理模块\自动取消调度器.md
+    - .qoder\repowiki\zh\content\后端开发\认证授权模块\JWT令牌管理.md
+    - .qoder\repowiki\zh\content\后端开发\认证授权模块\安全过滤器系统.md
+    - .qoder\repowiki\zh\content\后端开发\认证授权模块\微信登录集成.md
+    - .qoder\repowiki\zh\content\后端开发\认证授权模块\用户会话管理.md
+    - .qoder\repowiki\zh\content\后端开发\认证授权模块\认证授权模块.md
+    - .qoder\repowiki\zh\content\后端开发\费用管理模块\结算生成机制.md
+    - .qoder\repowiki\zh\content\后端开发\费用管理模块\财务洞察分析.md
+    - .qoder\repowiki\zh\content\后端开发\费用管理模块\费用分摊算法.md
+    - .qoder\repowiki\zh\content\后端开发\费用管理模块\费用数据模型.md
+    - .qoder\repowiki\zh\content\后端开发\费用管理模块\费用管理模块.md
+    - .qoder\repowiki\zh\content\后端开发\项目架构设计.md
+    - .qoder\repowiki\zh\content\开发指南\代码规范.md
+    - .qoder\repowiki\zh\content\开发指南\开发指南.md
+    - .qoder\repowiki\zh\content\开发指南\开发流程.md
+    - .qoder\repowiki\zh\content\开发指南\故障排查与调试.md
+    - .qoder\repowiki\zh\content\开发指南\文档规范.md
+    - .qoder\repowiki\zh\content\开发指南\测试策略.md
+    - .qoder\repowiki\zh\content\快速开始.md
+    - .qoder\repowiki\zh\content\故障排除.md
+    - .qoder\repowiki\zh\content\数据库设计\性能优化.md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\数据库架构.md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\数据库约束与索引.md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\核心数据表\成员关系表(activity_members).md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\核心数据表\核心数据表.md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\核心数据表\活动表(activities).md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\核心数据表\用户表(users).md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\费用管理表.md
+    - .qoder\repowiki\zh\content\数据库设计\数据库架构\通知事件表.md
+    - .qoder\repowiki\zh\content\数据库设计\数据库设计.md
+    - .qoder\repowiki\zh\content\数据库设计\数据迁移.md
+    - .qoder\repowiki\zh\content\架构设计\前端架构设计.md
+    - .qoder\repowiki\zh\content\架构设计\后端架构设计.md
+    - .qoder\repowiki\zh\content\架构设计\数据架构设计.md
+    - .qoder\repowiki\zh\content\架构设计\架构设计.md
+    - .qoder\repowiki\zh\content\架构设计\部署架构设计.md
+    - .qoder\repowiki\zh\content\部署运维\备份与恢复.md
+    - .qoder\repowiki\zh\content\部署运维\开发环境部署.md
+    - .qoder\repowiki\zh\content\部署运维\生产环境部署\Docker Compose生产配置.md
+    - .qoder\repowiki\zh\content\部署运维\生产环境部署\Nginx反向代理配置.md
+    - .qoder\repowiki\zh\content\部署运维\生产环境部署\SSL证书管理.md
+    - .qoder\repowiki\zh\content\部署运维\生产环境部署\环境变量配置.md
+    - .qoder\repowiki\zh\content\部署运维\生产环境部署\生产环境部署.md
+    - .qoder\repowiki\zh\content\部署运维\生产环境部署\监控与日志.md
+    - .qoder\repowiki\zh\content\部署运维\监控与日志.md
+    - .qoder\repowiki\zh\content\部署运维\部署运维.md
+    - .qoder\repowiki\zh\content\项目概述.md
+    - .qoder\repowiki\zh\meta\repowiki-metadata.json
     - backend\.idea\.gitignore
     - backend\.idea\compiler.xml
     - backend\.idea\encodings.xml
@@ -225,6 +326,7 @@ scope:
     - doc\改进文档\202606012206改进需求.md
     - doc\改进文档\202606021041工程改进设计与调试说明.md
     - doc\改进文档\202606021041改进需求.md
+    - doc\改进文档\202606021450整改需求.md
     - doc\改进文档\调整建议.md
     - frontend\README.md
     - frontend\app.js
@@ -272,6 +374,7 @@ scope:
     - frontend\utils\request.js
     - frontend\utils\subscribe.js
     - play-minipro-backend-deploy.tar.gz
+    - play-minipro-backend-deploy.tar.gz.b64
     - play-minipro-deploy.tar.gz
     - play-minipro-deploy.tar.gz.b64
     - 服务器资源\portal_web.pem

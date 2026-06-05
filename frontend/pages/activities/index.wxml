@@ -1,5 +1,6 @@
 <view class="page-shell archive-shell">
   <view class="summary-card archive-hero-card">
+    <image class="archive-decor-headset" src="/img/ui-headset.png" mode="aspectFit" />
     <text class="archive-caption">活动档案</text>
     <view class="archive-hero-head">
       <text class="section-title archive-title">以前整过的都在这里</text>

@@ -48,6 +48,19 @@
 
 .bill-summary-card {
   background: linear-gradient(145deg, rgba(237, 248, 255, 0.98) 0%, rgba(255, 237, 215, 0.96) 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.bill-decor-beer {
+  position: absolute;
+  bottom: 10rpx;
+  right: 16rpx;
+  width: 130rpx;
+  height: 130rpx;
+  opacity: 0.5;
+  transform: rotate(-6deg);
+  pointer-events: none;
 }
 
 .bill-hero-topline,

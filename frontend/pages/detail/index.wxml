@@ -8,6 +8,7 @@
     <view class="detail-spark detail-spark-b"></view>
 
     <view class="summary-card detail-card hero-detail-card detail-card-sunrise">
+      <image class="detail-decor-character" src="/img/ui-character.png" mode="aspectFit" />
       <view class="detail-card-accent accent-hero"></view>
       <view class="detail-topline">
         <view class="tag-group">

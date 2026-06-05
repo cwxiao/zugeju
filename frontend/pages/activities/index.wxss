@@ -13,6 +13,18 @@
 .archive-hero-card {
   padding: 30rpx;
   background: linear-gradient(145deg, rgba(236, 248, 255, 0.98) 0%, rgba(255, 236, 214, 0.96) 100%);
+  position: relative;
+}
+
+.archive-decor-headset {
+  position: absolute;
+  top: 16rpx;
+  right: 20rpx;
+  width: 140rpx;
+  height: 140rpx;
+  opacity: 0.5;
+  transform: rotate(-8deg);
+  pointer-events: none;
 }
 
 .archive-caption {

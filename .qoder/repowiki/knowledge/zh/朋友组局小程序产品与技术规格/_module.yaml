@@ -1,0 +1,10 @@
+schema_version: 1
+module_path: doc
+title: 朋友组局小程序产品与技术规格
+scope:
+    - doc/
+source_files: []
+depends_on: []
+related_to:
+    - path: backend
+    - path: frontend

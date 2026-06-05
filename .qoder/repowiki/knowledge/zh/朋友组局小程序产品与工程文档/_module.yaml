@@ -1,8 +1,0 @@
-schema_version: 1
-module_path: doc
-title: 朋友组局小程序产品与工程文档
-scope:
-    - doc/
-source_files: []
-depends_on: []
-related_to: []

@@ -293,6 +293,26 @@
   margin-top: 42rpx;
 }
 
+.hero-cta-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+}
+
+.hero-character-img {
+  width: 200rpx;
+  height: 200rpx;
+  opacity: 0.92;
+  transform: rotate(-4deg);
+  animation: heroFloat 3.2s ease-in-out infinite;
+}
+
+@keyframes heroFloat {
+  0%, 100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-14rpx) rotate(-2deg); }
+}
+
 .quick-entry-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

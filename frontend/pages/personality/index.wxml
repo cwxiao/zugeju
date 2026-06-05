@@ -1,5 +1,6 @@
 <view class="page-shell personality-shell" wx:if="{{report}}">
   <view class="summary-card personality-cover-card">
+    <image class="personality-decor-character" src="/img/ui-character.png" mode="aspectFit" />
     <text class="personality-cover-kicker">AI Personality Report</text>
     <text class="personality-cover-title">{{report.coverHeadline}}</text>
     <text class="personality-cover-desc">{{report.coverCaption}}</text>

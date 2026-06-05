@@ -125,6 +125,19 @@
 .hero-detail-card {
   background: linear-gradient(135deg, rgba(255, 246, 234, 0.98) 0%, rgba(242, 223, 199, 0.92) 100%);
   border-radius: 38rpx 112rpx 44rpx 84rpx;
+  position: relative;
+}
+
+.detail-decor-character {
+  position: absolute;
+  top: -8rpx;
+  right: 10rpx;
+  width: 150rpx;
+  height: 150rpx;
+  opacity: 0.4;
+  transform: rotate(6deg);
+  pointer-events: none;
+  z-index: 1;
 }
 
 .info-card {
