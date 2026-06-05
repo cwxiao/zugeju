@@ -29,6 +29,7 @@
   width: 120rpx;
   height: 120rpx;
   border-radius: 30rpx;
+  box-shadow: 0 6rpx 20rpx rgba(19, 155, 215, 0.18), 0 0 0 4rpx rgba(255, 255, 255, 0.9);
 }
 
 .auth-title {
@@ -375,7 +376,8 @@
 .minimal-logo {
   width: 84rpx;
   height: 84rpx;
-  border-radius: 24rpx;
+  border-radius: 22rpx;
+  box-shadow: 0 4rpx 14rpx rgba(19, 155, 215, 0.15), 0 0 0 3rpx rgba(255, 255, 255, 0.85);
 }
 
 .minimal-brand {

@@ -2,7 +2,7 @@
   <view class="home-stage">
     <view wx:if="{{authVisible}}" class="auth-mask">
       <view class="auth-dialog">
-        <image class="auth-logo" src="/img/brand-logo.jpg" mode="aspectFit" />
+        <image class="auth-logo" src="/img/brand-logo.png" mode="aspectFit" />
         <text class="auth-title">先授权，再进来整</text>
         <text class="auth-desc">授权头像和昵称后即可使用，同时开启活动通知。</text>
 
@@ -52,7 +52,7 @@
         <view class="card-accent accent-home"></view>
         <view class="topbar">
           <view class="brand-wrap">
-            <image class="minimal-logo" src="/img/brand-logo.jpg" mode="aspectFit" bindtap="goCreate" />
+            <image class="minimal-logo" src="/img/brand-logo.png" mode="aspectFit" bindtap="goCreate" />
             <text class="minimal-brand">来整</text>
           </view>
           <view class="minimal-link" bindtap="goActivities">活动档案</view>
