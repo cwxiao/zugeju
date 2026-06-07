@@ -66,7 +66,8 @@
           </view>
           <view class="hero-cta-right">
             <image class="hero-character-img" src="/img/ui-character.jpg" mode="aspectFit" />
-            <view class="primary-button minimal-button" bindtap="goCreate">整!</view>
+            <view class="primary-button minimal-button charge-btn {{charging ? 'charge-active' : ''}}" catchtouchstart="onChargeStart" catchtouchend="onChargeEnd">整!</view>
+            <view wx:if="{{charging}}" class="charge-hint">蓄力中...</view>
           </view>
         </view>
 
@@ -97,9 +98,35 @@
       <text class="section-desc">点进卡片看详情</text>
     </view>
 
-    <view wx:if="{{!loggedIn}}" class="summary-card home-login-hint-card">
-      <text class="section-title">登录后查看你的活动</text>
-      <text class="section-desc">登录后即可查看你的活动。</text>
+    <view wx:if="{{!loggedIn}}" class="browse-mode">
+      <view class="feature-cards">
+        <view class="feature-card">
+          <text class="feature-icon">🎯</text>
+          <text class="feature-title">发起活动</text>
+          <text class="feature-desc">聚餐、运动、游戏、旅行...一键发起，轻松邀约</text>
+        </view>
+        
+        <view class="feature-card">
+          <text class="feature-icon">👥</text>
+          <text class="feature-title">邀请好友</text>
+          <text class="feature-desc">生成邀请链接，微信一键分享，好友秒加入</text>
+        </view>
+        
+        <view class="feature-card">
+          <text class="feature-icon">📊</text>
+          <text class="feature-title">智能统计</text>
+          <text class="feature-desc">自动统计人数、AA付款、活动档案，省心省力</text>
+        </view>
+      </view>
+
+      <view class="browse-cta" bindtap="showAuth">
+        <view class="ok-btn">
+          <text class="ok-letter ok-o">o</text>
+          <text class="ok-letter ok-k">k</text>
+          <text class="ok-bang">!</text>
+        </view>
+        <text class="cta-hint">点这里登录</text>
+      </view>
     </view>
 
     <view wx:if="{{loggedIn}}" class="card-list">

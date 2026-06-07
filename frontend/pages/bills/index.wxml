@@ -15,8 +15,11 @@
   </view>
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
-    <view class="bill-card bill-item bill-summary-card">
+    <view class="bill-card bill-item bill-summary-card receipt-card">
       <image class="bill-decor-beer" src="/img/ui-beer-skewer.jpg" mode="aspectFit" />
+      <view class="receipt-header">
+        <text class="receipt-label">— 来整小票 —</text>
+      </view>
       <view class="bill-hero-topline">
         <view>
           <text class="bill-eyebrow">我的账单</text>
@@ -27,23 +30,28 @@
           <view class="bill-chip">{{summary.statusLabel}}</view>
         </view>
       </view>
-      <text class="bill-total">总消费 {{summary.totalAmountText}}</text>
+      <text class="bill-total receipt-total">{{summary.totalAmountText}}</text>
       <text class="bill-meta">{{summary.settlementSummaryText}}</text>
+      <view class="receipt-divider"></view>
       <view class="bill-metric-grid">
-        <view class="bill-metric-card">
+        <view class="bill-metric-card receipt-metric">
           <text class="bill-metric-label">消费笔数</text>
           <text class="bill-metric-value">{{summary.recordCount}} 笔</text>
         </view>
-        <view class="bill-metric-card">
+        <view class="bill-metric-card receipt-metric">
           <text class="bill-metric-label">到场人数</text>
           <text class="bill-metric-value">{{summary.participantCount}} 人</text>
         </view>
-        <view class="bill-metric-card bill-metric-card-wide">
+        <view class="bill-metric-card bill-metric-card-wide receipt-metric">
           <text class="bill-metric-label">人均参考</text>
           <text class="bill-metric-value">{{summary.perHeadAmountText}}</text>
         </view>
       </view>
       <text class="bill-note-text">{{summary.settlementNote}}</text>
+      <view wx:if="{{summary.activityStatus === 'finished'}}" class="receipt-stamp">
+        <text>已结清</text>
+      </view>
+      <view class="receipt-tear"></view>
     </view>
 
     <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item bill-compose-card">

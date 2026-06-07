@@ -29,20 +29,42 @@
         <view wx:if="{{detail.mode === '线下'}}" class="detail-meta-chip">{{detail.place}}</view>
         <view wx:if="{{detail.expenseModeLabel}}" class="detail-meta-chip">{{detail.expenseModeLabel}}</view>
       </view>
-      <view class="avatar-stack detail-avatar-stack">
-        <block wx:for="{{detail.members}}" wx:key="id">
-          <view class="avatar-pill avatar-image-pill">
-            <image wx:if="{{item.avatarUrl}}" class="avatar-pill-image" src="{{item.avatarUrl}}" mode="aspectFill" />
-            <text wx:else>{{item.shortName}}</text>
+
+      <view wx:if="{{detail.rawStatus !== 'cancelled'}}" class="reaction-zone">
+        <view class="reaction-bar">
+          <block wx:for="{{reactions}}" wx:key="emoji">
+            <view class="reaction-btn {{item.count > 0 ? 'reaction-used' : ''}}" data-emoji="{{item.emoji}}" data-label="{{item.label}}" catchtap="sendReaction">
+              <text class="reaction-emoji">{{item.emoji}}</text>
+              <text wx:if="{{item.count > 0}}" class="reaction-count">{{item.count}}</text>
+            </view>
+          </block>
+        </view>
+      </view>
+      <view class="reaction-float-layer">
+        <block wx:for="{{floatingReactions}}" wx:key="id">
+          <view class="reaction-float-bubble" style="left:{{item.left}}%;animation-delay:{{item.delay}}ms">
+            <text>{{item.emoji}}</text>
+            <text class="float-label">{{item.label}}</text>
           </view>
         </block>
-        <button class="avatar-pill avatar-plus-pill" open-type="share">+</button>
       </view>
+        <view class="avatar-stack detail-avatar-stack">
+          <block wx:for="{{detail.members}}" wx:key="id">
+            <view class="avatar-pill avatar-image-pill" style="background: {{item.avatarUrl && !item.avatarError ? 'transparent' : (item.avatarBg || '#e8d2b8')}}; border-color: {{item.avatarUrl && !item.avatarError ? '#fffaf3' : (item.avatarBg || '#e8d2b8')}};">
+              <image wx:if="{{item.avatarUrl && !item.avatarError}}" class="avatar-pill-image" src="{{item.avatarUrl}}" mode="aspectFill" binderror="onAvatarError" data-index="{{index}}" />
+              <text wx:else style="color: {{item.avatarFg || '#5d4127'}};">{{item.shortName}}</text>
+            </view>
+          </block>
+          <button class="avatar-pill avatar-plus-pill" open-type="share">+</button>
+        </view>
       <view wx:if="{{detail.canJoin}}" class="invite-action-row">
         <button class="invite-accept-button" loading="{{joining}}" bindtap="acceptInvite">接受邀请</button>
         <button class="invite-decline-button" bindtap="declineInvite">婉拒</button>
       </view>
-      <view wx:if="{{detail.mode === '线下'}}" class="detail-tool-row">
+      <view wx:if="{{detail.currentUserJoined && !detail.isCreator && detail.rawStatus !== 'finished' && detail.rawStatus !== 'cancelled'}}" class="invite-action-row-single">
+        <button class="invite-decline-button invite-quit-button" bindtap="quitActivity">退出活动</button>
+      </view>
+      <view wx:if="{{detail.mode === '线下' && detail.currentUserJoined}}" class="detail-tool-row">
         <view class="detail-tool-link" bindtap="goBills">记账结算</view>
       </view>
     </view>
@@ -59,19 +81,23 @@
     <view class="summary-card detail-card info-card detail-card-clay-soft">
       <view class="detail-card-accent accent-info"></view>
       <view class="card-caption">到场的人</view>
-      <view class="member-grid">
-        <block wx:for="{{detail.members}}" wx:key="id">
-          <view class="member-card">
-            <view class="member-avatar member-avatar-frame">
-              <image wx:if="{{item.avatarUrl}}" class="member-avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" />
-              <text wx:else>{{item.shortName}}</text>
+      <view class="round-table">
+        <view class="round-table-center">
+          <text class="round-table-emoji">🔥</text>
+          <text class="round-table-label">{{detail.members.length}}人围坐</text>
+        </view>
+        <block wx:for="{{roundTablePositions}}" wx:key="id">
+          <view class="round-seat" style="left:{{item.x}};top:{{item.y}};">
+            <view class="member-avatar member-avatar-frame" style="background: {{item.avatarBg || '#e8d2b8'}};">
+              <image wx:if="{{item.avatarUrl && !item.avatarError}}" class="member-avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" binderror="onRoundAvatarError" data-index="{{index}}" />
+              <text wx:else style="color: {{item.avatarFg || '#5d4127'}};">{{item.shortName}}</text>
             </view>
             <text class="member-name">{{item.nickname}}</text>
           </view>
         </block>
-        <button class="member-card member-invite-card" open-type="share">
+        <button class="round-seat round-seat-invite" open-type="share">
           <view class="member-avatar member-avatar-plus">+</view>
-          <text class="member-name">发到群聊</text>
+          <text class="member-name">邀请</text>
         </button>
       </view>
     </view>

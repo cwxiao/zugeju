@@ -245,6 +245,48 @@
   margin-top: 26rpx;
 }
 
+.type-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.dice-roll-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 20rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, rgba(255, 187, 68, 0.2) 0%, rgba(255, 132, 35, 0.16) 100%);
+  border: 1rpx solid rgba(255, 132, 35, 0.2);
+  transition: transform 0.15s ease;
+}
+
+.dice-roll-trigger:active {
+  transform: scale(0.95);
+}
+
+.dice-icon {
+  font-size: 28rpx;
+}
+
+.dice-text {
+  font-size: 22rpx;
+  color: #b35d23;
+}
+
+@keyframes diceShake {
+  0%, 100% { transform: rotate(0deg); }
+  20% { transform: rotate(-18deg) scale(1.1); }
+  40% { transform: rotate(14deg) scale(1.1); }
+  60% { transform: rotate(-12deg) scale(1.05); }
+  80% { transform: rotate(10deg) scale(1.05); }
+}
+
+.dice-shaking {
+  animation: diceShake 0.3s ease-in-out infinite;
+}
+
 .type-chip-row {
   display: flex;
   flex-wrap: wrap;

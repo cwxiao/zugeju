@@ -10,7 +10,9 @@ Page({
     silentLoginTried: false,
     authNickname: '',
     authAvatarUrl: '',
-    pendingShowAuth: false
+    pendingShowAuth: false,
+    charging: false,
+    canBrowse: true  // 新增：允许浏览模式
   },
 
   onLoad(options) {
@@ -20,46 +22,22 @@ Page({
   },
 
   async onShow() {
-    const app = getApp()
-    if (!app.hasLoginState()) {
-      const profile = wx.getStorageSync('profile') || {}
-
-      if (!this.data.silentLoginTried && hasCachedProfile(profile)) {
-        this.setData({
-          silentLoginTried: true,
-          authNickname: profile.nickname || '',
-          authAvatarUrl: profile.avatarUrl || ''
-        })
-
-        try {
-          await app.loginWithConfirm({
-            nickname: profile.nickname || '微信用户',
-            avatarUrl: profile.avatarUrl || ''
-          })
-          this.setData({ loggedIn: true, authVisible: false })
-          await this.loadActivities()
-          this.consumePendingInvitePath()
-          return
-        } catch (error) {
-          // silent login failed, let user browse
-        }
-      }
-
-      this.setData({
-        loggedIn: false,
-        authVisible: !!this.data.pendingShowAuth,
-        ongoingItems: [],
-        authNickname: profile.nickname || '',
-        authAvatarUrl: profile.avatarUrl || ''
-      })
-      if (this.data.pendingShowAuth) {
-        this.setData({ pendingShowAuth: false })
-      }
+    // 已登录的情况
+    if (getApp().hasLoginState()) {
+      this.setData({ loggedIn: true, authVisible: false })
+      await this.loadActivities()
+      this.consumePendingInvitePath()
       return
     }
 
-    this.setData({ loggedIn: true, authVisible: false })
-    await this.loadActivities()
+    // 未登录：只设置 loggedIn: false，不弹授权框
+    // 让用户先浏览，需要时再提示登录
+    this.setData({
+      loggedIn: false,
+      authVisible: false,  // 绝对不自动弹授权框
+      ongoingItems: [],
+      silentLoginTried: true  // 标记已尝试，避免重复逻辑
+    })
   },
 
   async loadActivities() {
@@ -146,6 +124,20 @@ Page({
     })
   },
 
+  onChargeStart() {
+    this.setData({ charging: true })
+    wx.vibrateShort({ type: 'light' })
+  },
+
+  onChargeEnd() {
+    if (!this.data.charging) {
+      return
+    }
+    this.setData({ charging: false })
+    wx.vibrateShort({ type: 'heavy' })
+    this.goCreate()
+  },
+
   goDetail(event) {
     if (!getApp().hasLoginState()) {
       this.setData({ authVisible: true })
@@ -179,6 +171,10 @@ Page({
     wx.navigateTo({
       url: '/pages/personality/index'
     })
+  },
+
+  showAuth() {
+    this.setData({ authVisible: true })
   },
 
   goBills() {

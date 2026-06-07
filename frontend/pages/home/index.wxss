@@ -396,6 +396,49 @@
   box-shadow: 0 18rpx 40rpx rgba(76, 55, 30, 0.12);
 }
 
+.charge-btn {
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, background 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.charge-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle at 50% 50%, rgba(255, 200, 60, 0.5) 0%, rgba(255, 132, 35, 0) 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.charge-active {
+  transform: scale(1.12);
+  box-shadow: 0 24rpx 60rpx rgba(255, 132, 35, 0.35), 0 0 40rpx rgba(255, 187, 68, 0.25);
+  background: linear-gradient(135deg, #ff8c23 0%, #ff6012 100%) !important;
+}
+
+.charge-active::before {
+  opacity: 1;
+  animation: chargePulse 0.6s ease-in-out infinite;
+}
+
+@keyframes chargePulse {
+  0%, 100% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1.2); opacity: 1; }
+}
+
+.charge-hint {
+  font-size: 20rpx;
+  color: #b35d23;
+  animation: chargeHintBlink 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes chargeHintBlink {
+  0% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
 .section-head {
   display: flex;
   align-items: baseline;
@@ -539,4 +582,124 @@
 .auth-close-text {
   font-size: 26rpx;
   color: #9a8977;
+}
+
+.browse-mode {
+  padding: 20rpx 0;
+}
+
+.feature-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+  margin-top: 24rpx;
+}
+
+.feature-card {
+  padding: 32rpx 28rpx;
+  border-radius: 32rpx 48rpx 36rpx 52rpx;
+  background: linear-gradient(145deg, rgba(235, 248, 255, 0.92) 0%, rgba(255, 234, 213, 0.88) 100%);
+  box-shadow: 0 8rpx 24rpx rgba(31, 110, 161, 0.08);
+}
+
+.feature-icon {
+  display: block;
+  font-size: 48rpx;
+  margin-bottom: 12rpx;
+}
+
+.feature-title {
+  display: block;
+  font-size: 30rpx;
+  font-weight: 700;
+  color: #2f2218;
+  margin-bottom: 8rpx;
+}
+
+.feature-desc {
+  display: block;
+  font-size: 24rpx;
+  line-height: 1.6;
+  color: #7a6856;
+}
+
+.browse-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48rpx;
+  padding: 48rpx 28rpx 36rpx;
+  border-radius: 36rpx 64rpx 40rpx 68rpx;
+  background: linear-gradient(145deg, rgba(255, 248, 238, 0.96) 0%, rgba(255, 225, 195, 0.92) 100%);
+  box-shadow: 0 16rpx 40rpx rgba(31, 111, 161, 0.12);
+}
+
+.ok-btn {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  padding: 12rpx 56rpx 20rpx;
+  border-radius: 32rpx 56rpx 36rpx 64rpx;
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.7) 0%, rgba(255, 238, 218, 0.5) 100%);
+  box-shadow: 0 6rpx 24rpx rgba(255, 125, 33, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.ok-btn::before {
+  content: '';
+  position: absolute;
+  top: -40%;
+  left: 10%;
+  width: 80%;
+  height: 60%;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 200, 80, 0.3) 0%, rgba(255, 200, 80, 0) 70%);
+  pointer-events: none;
+}
+
+.ok-letter {
+  display: inline-block;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.ok-o {
+  font-size: 80rpx;
+  background: linear-gradient(160deg, #1198d4 0%, #0ec5e8 50%, #13b5f0 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-right: 4rpx;
+  transform: rotate(-6deg) translateY(-4rpx);
+  text-shadow: 0 4rpx 16rpx rgba(17, 152, 212, 0.2);
+}
+
+.ok-k {
+  font-size: 72rpx;
+  background: linear-gradient(160deg, #ff9d3a 0%, #ff7d21 50%, #ff5e14 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  transform: rotate(4deg) translateY(6rpx);
+  text-shadow: 0 4rpx 16rpx rgba(255, 125, 33, 0.2);
+}
+
+.ok-bang {
+  display: inline-block;
+  font-size: 96rpx;
+  font-weight: 900;
+  line-height: 1;
+  background: linear-gradient(160deg, #ff7d21 0%, #ff4e10 100%);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-left: 6rpx;
+  transform: rotate(12deg) translateY(-8rpx);
+  text-shadow: 0 4rpx 16rpx rgba(255, 78, 16, 0.2);
+}
+
+.cta-hint {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #9a8977;
+  letter-spacing: 4rpx;
 }

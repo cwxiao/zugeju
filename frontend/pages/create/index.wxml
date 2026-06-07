@@ -41,11 +41,17 @@
         </view>
 
         <view class="type-selector-block">
-          <text class="field-label">活动类型</text>
+          <view class="type-label-row">
+            <text class="field-label">活动类型</text>
+            <view class="dice-roll-trigger {{diceRolling ? 'dice-shaking' : ''}}" bindtap="rollDice">
+              <text class="dice-icon">🎲</text>
+              <text class="dice-text">{{diceRolling ? '摇...' : '不知道整啥？'}}</text>
+            </view>
+          </view>
           <view class="type-chip-row">
             <block wx:for="{{activityTypes}}" wx:key="code">
               <view
-                class="type-chip {{activityTypeIndex === index ? 'type-chip-active' : ''}}"
+                class="type-chip {{(diceRolling ? diceDisplayIndex : activityTypeIndex) === index ? 'type-chip-active' : ''}}"
                 data-index="{{index}}"
                 bindtap="chooseActivityType"
               >{{item.name}}</view>

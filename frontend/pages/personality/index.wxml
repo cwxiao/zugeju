@@ -154,8 +154,18 @@
 
   <view class="summary-card personality-animal-card">
     <text class="personality-section-label">动物人格</text>
-    <text class="personality-main-title personality-subtitle">{{report.animalName}}</text>
-    <text class="personality-main-desc">{{report.animalDescription}}</text>
+    <view class="animal-showcase">
+      <view class="animal-emoji-ring">
+        <text class="animal-big-emoji">{{report.animalEmoji}}</text>
+      </view>
+      <view class="animal-info">
+        <text class="personality-main-title personality-subtitle">{{report.animalName}}</text>
+        <text class="personality-main-desc">{{report.animalDescription}}</text>
+      </view>
+    </view>
+    <view class="animal-trait-row">
+      <view wx:for="{{report.animalTraits}}" wx:key="*this" class="animal-trait-chip">{{item}}</view>
+    </view>
   </view>
 
   <view class="summary-card personality-poster-card">

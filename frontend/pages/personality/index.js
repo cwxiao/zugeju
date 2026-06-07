@@ -77,6 +77,20 @@ Page({
   }
 })
 
+const ANIMAL_EMOJI_MAP = {
+  '哈士奇': '🐕‍🦺',
+  '金毛': '🐕',
+  '猫': '🐱',
+  '狼': '🐺'
+}
+
+const ANIMAL_TRAITS = {
+  '哈士奇': ['社牛', '夜猫子', '气氛组'],
+  '金毛': ['靠谱', '人脉广', '组局王'],
+  '猫': ['佛系', '精准出击', '舒适区'],
+  '狼': ['高效', '选局准', '执行力']
+}
+
 function mapReport(report) {
   const radarMetrics = (report.radarMetrics || []).map((item, index) => ({
     ...item,
@@ -84,8 +98,14 @@ function mapReport(report) {
     percentText: `${item.percent}%`
   }))
 
+  const animalName = report.animalName || ''
+  const animalEmoji = ANIMAL_EMOJI_MAP[animalName] || '🐾'
+  const animalTraits = ANIMAL_TRAITS[animalName] || []
+
   return {
     ...report,
+    animalEmoji,
+    animalTraits,
     radarMetrics,
     radarPolygon: buildRadarPolygon(radarMetrics),
     financeReport: report.financeReport || buildEmptyFinanceReport()

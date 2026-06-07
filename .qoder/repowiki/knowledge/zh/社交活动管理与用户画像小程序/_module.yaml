@@ -1,9 +1,9 @@
 schema_version: 1
 module_path: frontend
-title: 微信小程序前端应用
+title: 社交活动管理与用户画像小程序
 scope:
     - frontend/
 source_files: []
 depends_on: []
 related_to:
-    - path: backend
+    - path: doc

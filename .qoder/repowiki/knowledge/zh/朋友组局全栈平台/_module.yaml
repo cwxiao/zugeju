@@ -1,38 +1,39 @@
 schema_version: 1
 module_path: ""
-title: 朋友组局小程序全栈平台
+title: 朋友组局全栈平台
 scope:
     - .gitignore
     - .qoder\repowiki\knowledge\zh\_index.yaml
+    - .qoder\repowiki\knowledge\zh\微信小程序前端应用\_module.yaml
+    - .qoder\repowiki\knowledge\zh\微信小程序前端应用\技术栈.md
+    - .qoder\repowiki\knowledge\zh\微信小程序前端应用\架构设计.md
+    - .qoder\repowiki\knowledge\zh\微信小程序前端应用\概述.md
+    - .qoder\repowiki\knowledge\zh\微信小程序前端应用\编码规范.md
+    - .qoder\repowiki\knowledge\zh\朋友组局全栈平台\_module.yaml
+    - .qoder\repowiki\knowledge\zh\朋友组局全栈平台\技术栈.md
+    - .qoder\repowiki\knowledge\zh\朋友组局全栈平台\架构设计.md
+    - .qoder\repowiki\knowledge\zh\朋友组局全栈平台\概述.md
+    - .qoder\repowiki\knowledge\zh\朋友组局全栈平台\特殊配置与命令.md
+    - .qoder\repowiki\knowledge\zh\朋友组局全栈平台\编码规范.md
     - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\_module.yaml
     - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\技术栈.md
     - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\架构设计.md
     - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\概述.md
     - .qoder\repowiki\knowledge\zh\朋友组局小程序产品与技术规格\编码规范.md
-    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\_module.yaml
-    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\技术栈.md
-    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\架构设计.md
-    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\概述.md
-    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\特殊配置与命令.md
-    - .qoder\repowiki\knowledge\zh\朋友组局小程序全栈平台\编码规范.md
     - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\_module.yaml
     - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\技术栈.md
     - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\架构设计.md
     - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\概述.md
     - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\特殊配置与命令.md
     - .qoder\repowiki\knowledge\zh\活动管理与微信认证后端服务\编码规范.md
-    - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\_module.yaml
-    - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\技术栈.md
-    - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\架构设计.md
-    - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\概述.md
-    - .qoder\repowiki\knowledge\zh\社交活动管理与用户画像小程序\编码规范.md
     - .qoder\repowiki\zh\content\API接口文档\API接口文档.md
     - .qoder\repowiki\zh\content\API接口文档\个人画像接口.md
     - .qoder\repowiki\zh\content\API接口文档\成员管理接口.md
     - .qoder\repowiki\zh\content\API接口文档\活动管理接口.md
     - .qoder\repowiki\zh\content\API接口文档\认证接口.md
     - .qoder\repowiki\zh\content\API接口文档\费用管理接口.md
-    - .qoder\repowiki\zh\content\前端开发\UI设计与样式.md
+    - .qoder\repowiki\zh\content\前端开发\UI设计与样式\UI设计与样式.md
+    - .qoder\repowiki\zh\content\前端开发\UI设计与样式\图像资源管理与优化.md
     - .qoder\repowiki\zh\content\前端开发\前端开发.md
     - .qoder\repowiki\zh\content\前端开发\工具模块开发\HTTP请求封装模块.md
     - .qoder\repowiki\zh\content\前端开发\工具模块开发\工具模块开发.md
@@ -340,11 +341,12 @@ scope:
     - frontend\app.json
     - frontend\app.wxss
     - frontend\data\ongoing.js
-    - frontend\img\brand-logo.jpg
-    - frontend\img\ui-beer-skewer.png
-    - frontend\img\ui-character.png
-    - frontend\img\ui-controller.png
-    - frontend\img\ui-headset.png
+    - frontend\img\brand-logo.png
+    - frontend\img\city-bg.png
+    - frontend\img\ui-beer-skewer.jpg
+    - frontend\img\ui-character.jpg
+    - frontend\img\ui-controller.jpg
+    - frontend\img\ui-headset.jpg
     - frontend\pages\activities\index.js
     - frontend\pages\activities\index.json
     - frontend\pages\activities\index.wxml

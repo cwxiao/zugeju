@@ -42,9 +42,12 @@ public class ActivityExpenseService {
     @Transactional
     public ActivityExpenseSummaryResponse addExpense(String userId, String activityId, AddActivityExpenseRequest request) {
         ActivityEntity activity = getAccessibleActivity(userId, activityId);
-        assertCreator(userId, activity);
         assertOfflineActivity(activity);
         assertEditableStatus(activity);
+
+        if (!userId.equals(activity.getCreatorId()) && !Boolean.TRUE.equals(activity.getAllowMemberAddExpense())) {
+            throw new BusinessException(4003, "only creator can add expenses for this activity");
+        }
 
         ActivityExpenseEntity expense = new ActivityExpenseEntity();
         expense.setId(UUID.randomUUID().toString());

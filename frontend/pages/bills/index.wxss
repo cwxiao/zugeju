@@ -52,6 +52,74 @@
   overflow: hidden;
 }
 
+.receipt-card {
+  background: linear-gradient(180deg, #fffdf8 0%, #fef9f0 100%);
+  border: 2rpx dashed rgba(176, 125, 71, 0.25);
+  padding-bottom: 40rpx;
+}
+
+.receipt-header {
+  text-align: center;
+  margin-bottom: 20rpx;
+}
+
+.receipt-label {
+  font-size: 24rpx;
+  color: #a08060;
+  letter-spacing: 8rpx;
+}
+
+.receipt-total {
+  font-family: "Courier New", "Menlo", monospace;
+  letter-spacing: 2rpx;
+}
+
+.receipt-divider {
+  margin: 20rpx 0;
+  border-top: 2rpx dashed rgba(176, 125, 71, 0.2);
+}
+
+.receipt-metric {
+  border-radius: 0;
+  background: transparent;
+  padding: 16rpx 0;
+  border-bottom: 1rpx dotted rgba(176, 125, 71, 0.15);
+}
+
+.receipt-metric .bill-metric-value {
+  font-family: "Courier New", "Menlo", monospace;
+}
+
+.receipt-stamp {
+  position: absolute;
+  top: 50%;
+  right: 30rpx;
+  transform: translateY(-50%) rotate(-18deg);
+  padding: 12rpx 28rpx;
+  border: 4rpx solid rgba(200, 50, 30, 0.6);
+  border-radius: 12rpx;
+  color: rgba(200, 50, 30, 0.6);
+  font-size: 36rpx;
+  font-weight: 700;
+  letter-spacing: 6rpx;
+  pointer-events: none;
+}
+
+.receipt-tear {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 16rpx;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent 0rpx,
+    transparent 16rpx,
+    rgba(176, 125, 71, 0.12) 16rpx,
+    rgba(176, 125, 71, 0.12) 18rpx
+  );
+}
+
 .bill-decor-beer {
   position: absolute;
   bottom: 10rpx;
@@ -171,7 +239,7 @@
   justify-content: space-between;
   gap: 18rpx;
   padding: 22rpx 0;
-  border-bottom: 1rpx solid #f0e6d8;
+  border-bottom: 1rpx dotted rgba(176, 125, 71, 0.18);
 }
 
 .bill-record-title {
@@ -190,6 +258,7 @@
 .bill-record-amount {
   font-size: 28rpx;
   color: #6b5e4f;
+  font-family: "Courier New", "Menlo", monospace;
 }
 
 .bill-record-amount-strong {

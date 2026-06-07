@@ -378,3 +378,45 @@
 .personality-poster-button {
   margin-top: 22rpx;
 }
+
+.animal-showcase {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  margin-top: 18rpx;
+}
+
+.animal-emoji-ring {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 999rpx;
+  background: linear-gradient(135deg, rgba(255,200,120,0.25) 0%, rgba(180,220,255,0.25) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.animal-big-emoji {
+  font-size: 64rpx;
+}
+
+.animal-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.animal-trait-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+  margin-top: 18rpx;
+}
+
+.animal-trait-chip {
+  padding: 8rpx 18rpx;
+  border-radius: 999rpx;
+  background: rgba(255,180,100,0.15);
+  color: #a0622a;
+  font-size: 22rpx;
+}

@@ -24,6 +24,8 @@ Page({
     activityTypeIndex: 0,
     activityRuleHint: '',
     modeRequiredTip: '',
+    diceRolling: false,
+    diceDisplayIndex: 0,
     locationRequired: false,
     locationTip: '',
     form: {
@@ -157,6 +159,9 @@ Page({
   },
 
   chooseActivityType(event) {
+    if (this.data.diceRolling) {
+      return
+    }
     const activityTypeIndex = Number(event.currentTarget.dataset.index)
     const selectedType = this.data.activityTypes[activityTypeIndex]
     const nextTitle = selectedType.presetTitle || this.data.form.title
@@ -201,6 +206,30 @@ Page({
     this.setData({
       'form.note': event.detail.value
     })
+  },
+
+  rollDice() {
+    if (this.data.diceRolling) {
+      return
+    }
+    const types = this.data.activityTypes
+    this.setData({ diceRolling: true })
+
+    let tick = 0
+    const maxTicks = 12
+    const rollInterval = setInterval(() => {
+      tick++
+      const randomIndex = Math.floor(Math.random() * types.length)
+      this.setData({ diceDisplayIndex: randomIndex })
+
+      if (tick >= maxTicks) {
+        clearInterval(rollInterval)
+        const finalIndex = Math.floor(Math.random() * types.length)
+        this.setData({ diceRolling: false, diceDisplayIndex: 0 })
+        this.chooseActivityType({ currentTarget: { dataset: { index: finalIndex } } })
+        wx.vibrateShort({ type: 'heavy' })
+      }
+    }, 70)
   },
 
   async submit() {

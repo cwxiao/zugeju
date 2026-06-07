@@ -42,7 +42,7 @@ management:
 app:
   jwt:
     secret: ${JWT_SECRET:play-minipro-dev-secret-play-minipro-dev-secret-2026}
-    expire-seconds: ${JWT_EXPIRE_SECONDS:604800}
+    expire-seconds: ${JWT_EXPIRE_SECONDS:10800}
   wechat:
     app-id: ${WECHAT_MINI_APP_ID:wxb8fd5841e5f0a83d}
     app-secret: ${WECHAT_MINI_APP_SECRET:}
