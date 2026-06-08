@@ -89,7 +89,7 @@ public class ActivityInsightService {
                 surpassPercent,
                 titleDecision.name(),
                 titleDecision.reason(),
-                nickname + " 的 AI 人格档案",
+                nickname + " 的活动分析报告",
                 resolveCoverCaption(titleDecision.name(), score),
                 dnaList,
                 radarMetrics,

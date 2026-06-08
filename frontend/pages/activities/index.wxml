@@ -1,7 +1,7 @@
 <view class="page-shell archive-shell">
   <image class="page-bg-img" src="/img/city-bg.png" mode="aspectFill" />
   <view class="summary-card archive-hero-card">
-    <image class="archive-decor-headset" src="/img/ui-headset.jpg" mode="aspectFit" />
+    <image class="archive-decor-headset" src="/img/ui-headset.webp" mode="aspectFit" />
     <text class="archive-caption">活动档案</text>
     <view class="archive-hero-head">
       <text class="section-title archive-title">以前整过的都在这里</text>

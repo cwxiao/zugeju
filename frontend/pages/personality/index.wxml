@@ -1,14 +1,14 @@
 <view class="page-shell personality-shell" wx:if="{{report}}">
   <image class="page-bg-img" src="/img/city-bg.png" mode="aspectFill" />
   <view class="summary-card personality-cover-card">
-    <image class="personality-decor-character" src="/img/ui-character.jpg" mode="aspectFit" />
-    <text class="personality-cover-kicker">AI Personality Report</text>
+    <image class="personality-decor-character" src="/img/ui-character.webp" mode="aspectFit" />
+    <text class="personality-cover-kicker">Activity Report</text>
     <text class="personality-cover-title">{{report.coverHeadline}}</text>
     <text class="personality-cover-desc">{{report.coverCaption}}</text>
     <view class="personality-cover-footer">
       <view>
         <text class="personality-cover-meta">{{report.periodLabel}}</text>
-        <text class="personality-cover-meta">可分享的人格总结已生成</text>
+        <text class="personality-cover-meta">可分享的活动总结已生成</text>
       </view>
       <view class="personality-score-pill">{{report.score}} 分</view>
     </view>
@@ -45,7 +45,7 @@
   </view>
 
   <view class="summary-card personality-title-card">
-    <text class="personality-section-label">人格称号</text>
+    <text class="personality-section-label">整活称号</text>
     <text class="personality-main-title">{{report.title}}</text>
     <text class="personality-main-desc">{{report.titleReason}}</text>
   </view>
@@ -137,7 +137,7 @@
   </view>
 
   <view class="summary-card personality-sharp-card">
-    <text class="personality-section-label">AI锐评</text>
+    <text class="personality-section-label">数据点评</text>
     <block wx:for="{{report.sharpComments}}" wx:key="*this">
       <text class="personality-quote">{{index + 1}}. {{item}}</text>
     </block>
@@ -153,7 +153,7 @@
   </view>
 
   <view class="summary-card personality-animal-card">
-    <text class="personality-section-label">动物人格</text>
+    <text class="personality-section-label">活动标签</text>
     <view class="animal-showcase">
       <view class="animal-emoji-ring">
         <text class="animal-big-emoji">{{report.animalEmoji}}</text>

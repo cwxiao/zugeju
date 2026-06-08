@@ -5,7 +5,7 @@
     <view class="poster-glow poster-glow-b"></view>
 
     <view class="poster-card">
-      <text class="poster-kicker">AI Personality Poster</text>
+      <text class="poster-kicker">Activity Report</text>
       <text class="poster-name">{{report.nickname}}</text>
       <text class="poster-title">{{report.posterTitle}}</text>
       <text class="poster-desc">{{report.coverCaption}}</text>
@@ -46,7 +46,7 @@
 
       <view class="poster-footer">
         <view>
-          <text class="poster-animal">动物人格：{{report.animalName}}</text>
+          <text class="poster-animal">活动标签：{{report.animalName}}</text>
           <text class="poster-footnote">{{report.animalDescription}}</text>
         </view>
         <view class="poster-badge">适合截图分享</view>

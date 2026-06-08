@@ -160,7 +160,7 @@ function buildPersonalityReport(records, nickname) {
     surpassPercent,
     title: title.name,
     titleReason: title.reason,
-    coverHeadline: `${safeNickname} 的 AI 人格档案`,
+    coverHeadline: `${safeNickname} 的活动分析报告`,
     coverCaption: resolveCoverCaption(title.name, score),
     dnaList: categoryStats,
     socialLabel: socialProfile.name,

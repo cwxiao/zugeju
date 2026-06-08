@@ -65,7 +65,7 @@
             <text class="hero-subtitle">想法先落下，时间地点再往里填。</text>
           </view>
           <view class="hero-cta-right">
-            <image class="hero-character-img" src="/img/ui-character.jpg" mode="aspectFit" />
+            <image class="hero-character-img" src="/img/ui-character.webp" mode="aspectFit" />
             <view class="primary-button minimal-button charge-btn {{charging ? 'charge-active' : ''}}" catchtouchstart="onChargeStart" catchtouchend="onChargeEnd">整!</view>
             <view wx:if="{{charging}}" class="charge-hint">蓄力中...</view>
           </view>
@@ -77,7 +77,7 @@
             <text class="quick-entry-desc">回看以前整过的局。</text>
           </view>
           <view class="quick-entry-card quick-entry-card-accent" bindtap="goPersonality">
-            <text class="quick-entry-title">AI人格档案</text>
+            <text class="quick-entry-title">活动分析</text>
             <text class="quick-entry-desc">30 天整活风格总结。</text>
           </view>
         </view>

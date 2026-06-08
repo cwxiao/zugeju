@@ -45,7 +45,7 @@ Page({
         return
       }
 
-      wx.showToast({ title: '人格档案加载失败', icon: 'none' })
+      wx.showToast({ title: '活动分析加载失败', icon: 'none' })
     }
   },
 
@@ -53,7 +53,7 @@ Page({
     const report = this.data.report || {}
 
     return {
-      title: report.shareCallout || '来看看我的 AI 人格档案',
+      title: report.shareCallout || '来看看我的活动分析',
       path: '/pages/personality/index'
     }
   },
