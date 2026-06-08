@@ -48,7 +48,7 @@ function loginWithWechat(profile = {}) {
 }
 
 function isRemoteAvatarUrl(value) {
-  return /^https?:\/\//.test(value || '')
+  return /^https?:\/\//.test(value || '') && !value.startsWith('http://tmp')
 }
 
 module.exports = {

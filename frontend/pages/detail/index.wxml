@@ -55,7 +55,7 @@
               <text wx:else style="color: {{item.avatarFg || '#5d4127'}};">{{item.shortName}}</text>
             </view>
           </block>
-          <button class="avatar-pill avatar-plus-pill" open-type="share">
+          <button class="avatar-plus-pill" open-type="share">
             <text class="avatar-plus-icon">+</text>
           </button>
         </view>

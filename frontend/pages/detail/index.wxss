@@ -405,14 +405,13 @@
   display: block;
 }
 
-.avatar-plus-pill {
+button.avatar-plus-pill {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 60rpx;
-  min-width: 60rpx;
   height: 60rpx;
-  margin-left: -12rpx;
+  margin: 0 0 0 -12rpx;
   padding: 0;
   border: none;
   border-radius: 50%;
@@ -423,6 +422,10 @@
   box-sizing: border-box;
   box-shadow: 0 4rpx 16rpx rgba(232, 120, 40, 0.35);
   animation: plus-pulse 2s ease-in-out infinite;
+}
+
+button.avatar-plus-pill::after {
+  border: none;
 }
 
 .avatar-plus-icon {
@@ -611,7 +614,13 @@
 }
 
 .round-seat-invite {
-  /* 邀请按钮，同样用绝对定位 */
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  line-height: normal;
+  left: 50%;
+  top: 88%;
 }
 
 .member-name {

@@ -1,4 +1,4 @@
-const { request, isAuthExpiredError } = require('../../utils/request')
+const { request, isAuthExpiredError, getBaseUrl } = require('../../utils/request')
 const { requestInitialSubscribePermission } = require('../../utils/subscribe')
 
 Page({
@@ -96,10 +96,64 @@ Page({
 
     try {
       await requestInitialSubscribePermission()
-      await getApp().loginWithConfirm({
+      const loginData = await getApp().loginWithConfirm({
         nickname: this.data.authNickname.trim() || '微信用户',
-        avatarUrl: this.data.authAvatarUrl
+        avatarUrl: ''
       })
+
+      // 登录成功后，如果选择了临时头像，上传到后端获取远程 URL
+      const tmpAvatarUrl = this.data.authAvatarUrl
+      if (tmpAvatarUrl && tmpAvatarUrl.startsWith('http://tmp')) {
+        try {
+          const uploadRes = await new Promise((resolve, reject) => {
+            wx.uploadFile({
+              url: getBaseUrl() + '/api/files/upload',
+              filePath: tmpAvatarUrl,
+              name: 'file',
+              header: {
+                'Authorization': 'Bearer ' + loginData.token
+              },
+              success: resolve,
+              fail: reject
+            })
+          })
+
+          const result = JSON.parse(uploadRes.data)
+          if (result.data) {
+            const remoteUrl = getBaseUrl() + result.data
+            // 更新后端用户头像
+            await request({
+              url: '/api/users/avatar',
+              method: 'PUT',
+              data: { avatarUrl: remoteUrl }
+            })
+            // 更新本地存储
+            const user = wx.getStorageSync('user') || {}
+            user.avatarUrl = remoteUrl
+            wx.setStorageSync('user', user)
+            getApp().globalData.user = user
+          }
+        } catch (uploadErr) {
+          console.error('头像上传失败', uploadErr)
+          // 上传失败不影响登录流程
+        }
+      } else if (tmpAvatarUrl && tmpAvatarUrl.startsWith('http')) {
+        // 已经是远程 URL（如微信头像），直接更新后端
+        try {
+          await request({
+            url: '/api/users/avatar',
+            method: 'PUT',
+            data: { avatarUrl: tmpAvatarUrl }
+          })
+          const user = wx.getStorageSync('user') || {}
+          user.avatarUrl = tmpAvatarUrl
+          wx.setStorageSync('user', user)
+          getApp().globalData.user = user
+        } catch (e) {
+          console.error('头像更新失败', e)
+        }
+      }
+
       this.setData({ authVisible: false, loggedIn: true, silentLoginTried: false })
       await this.loadActivities()
       this.consumePendingInvitePath()

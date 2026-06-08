@@ -24,6 +24,10 @@ spring:
     time-zone: Asia/Shanghai
     serialization:
       write-dates-as-timestamps: false
+  servlet:
+    multipart:
+      max-file-size: 2MB
+      max-request-size: 2MB
 
 mybatis:
   configuration:
@@ -47,6 +51,8 @@ app:
     app-id: ${WECHAT_MINI_APP_ID:wxb8fd5841e5f0a83d}
     app-secret: ${WECHAT_MINI_APP_SECRET:}
     mock-login-enabled: ${WECHAT_MOCK_LOGIN_ENABLED:true}
+  upload:
+    path: ${UPLOAD_PATH:./uploads}
 
 logging:
   level:
