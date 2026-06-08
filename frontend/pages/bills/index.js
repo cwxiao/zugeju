@@ -6,7 +6,21 @@ Page({
     loading: true,
     itemName: '',
     amountYuan: '',
-    summary: null
+    summary: null,
+    // 付款人选择
+    payerOptions: [],
+    payerIndex: 0,
+    // 编辑弹窗
+    editVisible: false,
+    editExpenseId: '',
+    editItemName: '',
+    editAmountYuan: '',
+    editPayerOptions: [],
+    editPayerIndex: 0,
+    // 左滑
+    touchStartX: 0,
+    touchStartY: 0,
+    swipeIndex: -1
   },
 
   async onLoad(options) {
@@ -32,8 +46,25 @@ Page({
       const summary = await request({
         url: `/api/activities/${this.data.activityId}/expenses/summary`
       })
+      const mapped = mapSummary(summary)
+
+      // 构建付款人选项
+      const payerOptions = (summary.memberBalances || []).map(m => ({
+        userId: m.userId,
+        nickname: m.nickname
+      }))
+      if (payerOptions.length === 0) {
+        // 兼容：如果没有 memberBalances，从 settlementItems 构建
+        const items = summary.settlementItems || []
+        items.forEach(item => {
+          payerOptions.push({ userId: item.userId, nickname: item.nickname })
+        })
+      }
+
       this.setData({
-        summary: mapSummary(summary),
+        summary: mapped,
+        payerOptions,
+        payerIndex: 0,
         loading: false
       })
     } catch (error) {
@@ -56,6 +87,10 @@ Page({
     this.setData({ amountYuan: event.detail.value })
   },
 
+  onPayerChange(event) {
+    this.setData({ payerIndex: Number(event.detail.value) })
+  },
+
   async submitExpense() {
     const itemName = this.data.itemName.trim()
     const amountFen = parseAmountToFen(this.data.amountYuan)
@@ -69,19 +104,25 @@ Page({
       return
     }
 
+    const payerOptions = this.data.payerOptions
+    const payerIndex = this.data.payerIndex
+    const payerUserId = payerOptions[payerIndex] ? payerOptions[payerIndex].userId : null
+
     try {
       const summary = await request({
         url: `/api/activities/${this.data.activityId}/expenses`,
         method: 'POST',
         data: {
           itemName,
-          amountFen
+          amountFen,
+          payerUserId
         }
       })
       this.setData({
         itemName: '',
         amountYuan: '',
-        summary: mapSummary(summary)
+        summary: mapSummary(summary),
+        payerIndex: 0
       })
       wx.showToast({ title: '已记一笔', icon: 'success' })
     } catch (error) {
@@ -95,15 +136,166 @@ Page({
     }
   },
 
+  // ===== 左滑操作 =====
+
+  onTouchStart(e) {
+    this.setData({
+      touchStartX: e.touches[0].clientX,
+      touchStartY: e.touches[0].clientY
+    })
+  },
+
+  onTouchMove(e) {
+    const deltaX = e.touches[0].clientX - this.data.touchStartX
+    const deltaY = Math.abs(e.touches[0].clientY - this.data.touchStartY)
+    // 水平左滑大于垂直滑动才触发
+    if (deltaX < -40 && deltaY < 40) {
+      const index = e.currentTarget.dataset.index
+      if (this.data.swipeIndex !== index) {
+        this.setData({ swipeIndex: index })
+      }
+    } else if (deltaX > 40 && deltaY < 40) {
+      // 右滑关闭
+      this.setData({ swipeIndex: -1 })
+    }
+  },
+
+  onTouchEnd() {
+    // 滑动状态已设置
+  },
+
+  // 点击空白区域收起左滑
+  closeSwipe() {
+    if (this.data.swipeIndex !== -1) {
+      this.setData({ swipeIndex: -1 })
+    }
+  },
+
+  // ===== 删除消费 =====
+
+  onDeleteExpense(e) {
+    const index = e.currentTarget.dataset.index
+    const item = this.data.summary.expenseItems[index]
+    if (!item) return
+
+    wx.showModal({
+      title: '删除消费',
+      content: `确定删除「${item.itemName}」(${item.amountText})？`,
+      confirmText: '删除',
+      confirmColor: '#e74c3c',
+      success: async (res) => {
+        if (!res.confirm) return
+
+        try {
+          const summary = await request({
+            url: `/api/activities/${this.data.activityId}/expenses/${item.id}`,
+            method: 'DELETE'
+          })
+          this.setData({
+            summary: mapSummary(summary),
+            swipeIndex: -1
+          })
+          wx.showToast({ title: '已删除', icon: 'success' })
+        } catch (error) {
+          if (isAuthExpiredError(error)) {
+            wx.showToast({ title: '登录已过期', icon: 'none' })
+            wx.redirectTo({ url: '/pages/home/index' })
+            return
+          }
+          wx.showToast({ title: '删除失败', icon: 'none' })
+        }
+      }
+    })
+  },
+
+  // ===== 编辑消费 =====
+
+  onEditExpense(e) {
+    const index = e.currentTarget.dataset.index
+    const item = this.data.summary.expenseItems[index]
+    if (!item) return
+
+    // 构建编辑弹窗的付款人选项
+    const editPayerOptions = this.data.payerOptions
+    let editPayerIndex = editPayerOptions.findIndex(p => p.userId === item.payerUserId)
+    if (editPayerIndex < 0) editPayerIndex = 0
+
+    this.setData({
+      editVisible: true,
+      editExpenseId: item.id,
+      editItemName: item.itemName,
+      editAmountYuan: (item.amountFen / 100).toFixed(2),
+      editPayerOptions,
+      editPayerIndex,
+      swipeIndex: -1
+    })
+  },
+
+  onEditItemNameInput(e) {
+    this.setData({ editItemName: e.detail.value })
+  },
+
+  onEditAmountInput(e) {
+    this.setData({ editAmountYuan: e.detail.value })
+  },
+
+  onEditPayerChange(e) {
+    this.setData({ editPayerIndex: Number(e.detail.value) })
+  },
+
+  closeEditModal() {
+    this.setData({ editVisible: false })
+  },
+
+  async confirmEdit() {
+    const itemName = this.data.editItemName.trim()
+    const amountFen = parseAmountToFen(this.data.editAmountYuan)
+
+    if (!itemName) {
+      wx.showToast({ title: '项目名不能为空', icon: 'none' })
+      return
+    }
+    if (!amountFen) {
+      wx.showToast({ title: '金额要大于0', icon: 'none' })
+      return
+    }
+
+    const payerOptions = this.data.editPayerOptions
+    const editPayerIndex = this.data.editPayerIndex
+    const payerUserId = payerOptions[editPayerIndex] ? payerOptions[editPayerIndex].userId : null
+
+    try {
+      const summary = await request({
+        url: `/api/activities/${this.data.activityId}/expenses/${this.data.editExpenseId}`,
+        method: 'PUT',
+        data: {
+          itemName,
+          amountFen,
+          payerUserId
+        }
+      })
+      this.setData({
+        editVisible: false,
+        summary: mapSummary(summary)
+      })
+      wx.showToast({ title: '已修改', icon: 'success' })
+    } catch (error) {
+      if (isAuthExpiredError(error)) {
+        wx.showToast({ title: '登录已过期', icon: 'none' })
+        wx.redirectTo({ url: '/pages/home/index' })
+        return
+      }
+      wx.showToast({ title: '修改失败', icon: 'none' })
+    }
+  },
+
   finishActivity() {
     wx.showModal({
       title: '结束活动',
       content: '结束后会按当前到场人数计算每个人该转多少钱。',
       confirmText: '确认结束',
       success: async (res) => {
-        if (!res.confirm) {
-          return
-        }
+        if (!res.confirm) return
 
         try {
           const summary = await request({
@@ -141,6 +333,24 @@ function mapSummary(summary) {
   const participantCount = summary.joinedCount || Math.max(settlementItems.length, 1)
   const settlementPendingCount = settlementItems.filter((item) => item.amountFen > 0).length
 
+  // 每人收支明细
+  const memberBalances = (summary.memberBalances || []).map((item) => ({
+    ...item,
+    paidText: formatFen(item.paidAmountFen),
+    shareText: formatFen(item.shareAmountFen),
+    balanceText: item.balanceFen > 0
+      ? `收 ${formatFen(item.balanceFen)}`
+      : item.balanceFen < 0
+        ? `付 ${formatFen(Math.abs(item.balanceFen))}`
+        : '已平'
+  }))
+
+  // 转账指令
+  const transferItems = (summary.transferItems || []).map((item) => ({
+    ...item,
+    amountText: formatFen(item.amountFen)
+  }))
+
   return {
     ...summary,
     expenseModeLabel: resolveExpenseModeLabel(summary.expenseMode),
@@ -155,9 +365,13 @@ function mapSummary(summary) {
       amountText: formatFen(item.amountFen)
     })),
     settlementItems,
-    settlementSummaryText: settlementPendingCount
-      ? `结束后有 ${settlementPendingCount} 个人需要转账。`
-      : '结束活动后会按到场人数均摊，没有人需要转账。'
+    transferItems,
+    memberBalances,
+    settlementSummaryText: transferItems.length
+      ? `${transferItems.length} 笔转账，多退少补自动算好。`
+      : settlementPendingCount
+          ? `结束后有 ${settlementPendingCount} 个人需要转账。`
+          : '结束活动后会按到场人数均摊，没有人需要转账。'
   }
 }
 

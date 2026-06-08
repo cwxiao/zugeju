@@ -5,13 +5,6 @@
     <view class="section-title">先从具体活动进入账单</view>
     <text class="bill-meta">账单跟着活动走，可从活动档案进入。</text>
     <button class="primary-button bill-empty-button" bindtap="goActivities">去活动档案</button>
-    <!--
-    <view class="ad-slot-card">
-      <text class="ad-slot-badge">广告位预留</text>
-      <text class="ad-slot-title">账单页广告</text>
-      <text class="ad-slot-desc">这里预留结算页广告位，后续可以接本地消费返券或支付相关合作内容。</text>
-    </view>
-    -->
   </view>
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
@@ -54,6 +47,7 @@
       <view class="receipt-tear"></view>
     </view>
 
+    <!-- 记一笔消费 —— 发起人可添加，且支持选付款人 -->
     <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item bill-compose-card">
       <text class="bill-title">记一笔消费</text>
       <text class="bill-helper">可随时补录，实时更新。</text>
@@ -72,34 +66,95 @@
         value="{{amountYuan}}"
         bindinput="onAmountInput"
       />
+      <!-- 付款人选择 -->
+      <view class="bill-payer-row">
+        <text class="bill-payer-label">付款人</text>
+        <picker mode="selector" range="{{payerOptions}}" range-key="nickname" value="{{payerIndex}}" bindchange="onPayerChange">
+          <view class="bill-payer-picker">
+            <text>{{payerOptions[payerIndex].nickname}}</text>
+            <text class="bill-payer-arrow">▸</text>
+          </view>
+        </picker>
+      </view>
       <button class="primary-button bill-submit-button" bindtap="submitExpense">记上去</button>
     </view>
 
-    <view class="bill-card bill-item bill-section-card">
+    <!-- 消费记录 —— 所有成员可见，左滑可删除/编辑（仅发起人） -->
+    <view class="bill-card bill-item bill-section-card" bindtap="closeSwipe">
       <view class="bill-section-head">
         <text class="bill-title">消费记录</text>
         <text class="bill-count-pill">{{summary.recordCount}} 笔</text>
       </view>
       <view wx:if="{{summary.expenseItems.length}}" class="bill-record-list">
         <block wx:for="{{summary.expenseItems}}" wx:key="id">
-          <view class="bill-record-row">
-            <view>
-              <text class="bill-record-title">{{item.itemName}}</text>
-              <text class="bill-record-meta">{{item.payerNickname}}</text>
+          <view class="bill-swipe-wrap">
+            <!-- 操作按钮（露出层） -->
+            <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-swipe-actions">
+              <view class="bill-swipe-btn bill-swipe-edit" catchtap="onEditExpense" data-index="{{index}}">编辑</view>
+              <view class="bill-swipe-btn bill-swipe-delete" catchtap="onDeleteExpense" data-index="{{index}}">删除</view>
             </view>
-            <text class="bill-record-amount">{{item.amountText}}</text>
+            <!-- 消费行（滑动层） -->
+            <view class="bill-swipe-content {{swipeIndex === index ? 'bill-swipe-open' : ''}}"
+                  bindtouchstart="onTouchStart" bindtouchend="onTouchEnd" bindtouchmove="onTouchMove" data-index="{{index}}">
+              <view class="bill-record-row">
+                <view>
+                  <text class="bill-record-title">{{item.itemName}}</text>
+                  <text class="bill-record-meta">{{item.payerNickname}} 付款</text>
+                </view>
+                <text class="bill-record-amount">{{item.amountText}}</text>
+              </view>
+            </view>
           </view>
         </block>
       </view>
       <text wx:else class="bill-meta">还没记消费项。</text>
     </view>
 
-    <view class="bill-card bill-item bill-section-card">
+    <!-- 每人收支明细 —— 所有成员可见 -->
+    <view wx:if="{{summary.memberBalances.length}}" class="bill-card bill-item bill-section-card">
+      <view class="bill-section-head">
+        <text class="bill-title">每人收支</text>
+      </view>
+      <view class="bill-record-list">
+        <block wx:for="{{summary.memberBalances}}" wx:key="userId">
+          <view class="bill-record-row">
+            <view>
+              <text class="bill-record-title">{{item.nickname}}</text>
+              <text class="bill-record-meta">已付 {{item.paidText}} · 应摊 {{item.shareText}}</text>
+            </view>
+            <text class="bill-record-amount {{item.balanceFen > 0 ? 'bill-record-amount-positive' : item.balanceFen < 0 ? 'bill-record-amount-strong' : ''}}">{{item.balanceText}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 转账指令 —— 所有成员可见 -->
+    <view wx:if="{{summary.transferItems.length}}" class="bill-card bill-item bill-section-card">
+      <view class="bill-section-head">
+        <text class="bill-title">转账安排</text>
+        <text class="bill-count-pill">{{summary.transferItems.length}} 笔</text>
+      </view>
+      <view class="bill-record-list">
+        <block wx:for="{{summary.transferItems}}" wx:key="index">
+          <view class="bill-transfer-row">
+            <view class="bill-transfer-flow">
+              <text class="bill-transfer-name">{{item.fromNickname}}</text>
+              <text class="bill-transfer-arrow">转给</text>
+              <text class="bill-transfer-name">{{item.toNickname}}</text>
+            </view>
+            <text class="bill-record-amount bill-record-amount-strong">{{item.amountText}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <!-- 旧版结算结果（兼容，仅当无转账指令时显示） -->
+    <view wx:if="{{!summary.transferItems.length && summary.settlementItems.length}}" class="bill-card bill-item bill-section-card">
       <view class="bill-section-head">
         <text class="bill-title">结算结果</text>
         <text class="bill-count-pill">待转 {{summary.settlementPendingCount}} 人</text>
       </view>
-      <view wx:if="{{summary.settlementItems.length}}" class="bill-record-list">
+      <view class="bill-record-list">
         <block wx:for="{{summary.settlementItems}}" wx:key="userId">
           <view class="bill-record-row">
             <view>
@@ -110,7 +165,6 @@
           </view>
         </block>
       </view>
-      <text wx:else class="bill-meta">这场目前没有需要转账的人。</text>
     </view>
 
     <view wx:if="{{summary.creatorView && summary.canFinish}}" class="bill-card bill-item bill-action-card">
@@ -118,6 +172,42 @@
       <text class="bill-helper">确认后按到场人数出最终结算。</text>
       <view class="bill-action-wrap">
         <button class="primary-button bill-finish-button" bindtap="finishActivity">结束活动并结算</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 编辑消费弹窗 -->
+  <view wx:if="{{editVisible}}" class="bill-modal-mask" bindtap="closeEditModal">
+    <view class="bill-modal" catchtap="">
+      <text class="bill-modal-title">编辑消费</text>
+      <input
+        class="bill-input"
+        placeholder="项目名称"
+        placeholder-class="input-placeholder"
+        value="{{editItemName}}"
+        bindinput="onEditItemNameInput"
+      />
+      <input
+        class="bill-input"
+        type="digit"
+        placeholder="金额，单位元"
+        placeholder-class="input-placeholder"
+        value="{{editAmountYuan}}"
+        bindinput="onEditAmountInput"
+      />
+      <!-- 付款人选择 -->
+      <view class="bill-payer-row">
+        <text class="bill-payer-label">付款人</text>
+        <picker mode="selector" range="{{editPayerOptions}}" range-key="nickname" value="{{editPayerIndex}}" bindchange="onEditPayerChange">
+          <view class="bill-payer-picker">
+            <text>{{editPayerOptions[editPayerIndex].nickname}}</text>
+            <text class="bill-payer-arrow">▸</text>
+          </view>
+        </picker>
+      </view>
+      <view class="bill-modal-actions">
+        <button class="bill-modal-cancel" bindtap="closeEditModal">取消</button>
+        <button class="primary-button bill-modal-confirm" bindtap="confirmEdit">保存</button>
       </view>
     </view>
   </view>

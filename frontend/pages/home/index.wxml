@@ -114,7 +114,7 @@
         
         <view class="feature-card">
           <text class="feature-icon">📊</text>
-          <text class="feature-title">智能统计</text>
+          <text class="feature-title">活动统计</text>
           <text class="feature-desc">自动统计人数、AA付款、活动档案，省心省力</text>
         </view>
       </view>

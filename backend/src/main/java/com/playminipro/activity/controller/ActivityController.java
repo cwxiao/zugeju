@@ -12,11 +12,13 @@ import com.playminipro.activity.dto.PersonalityReportResponse;
 import com.playminipro.activity.service.ActivityExpenseService;
 import com.playminipro.activity.service.ActivityInsightService;
 import com.playminipro.activity.service.ActivityService;
+import com.playminipro.activity.dto.UpdateActivityExpenseRequest;
 import com.playminipro.common.response.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -104,6 +106,21 @@ public class ActivityController {
                                                                  @PathVariable String id,
                                                                  @Valid @RequestBody AddActivityExpenseRequest request) {
         return ApiResponse.success(activityExpenseService.addExpense(authentication.getName(), id, request));
+    }
+
+    @DeleteMapping("/{id}/expenses/{expenseId}")
+    public ApiResponse<ActivityExpenseSummaryResponse> deleteExpense(Authentication authentication,
+                                                                     @PathVariable String id,
+                                                                     @PathVariable String expenseId) {
+        return ApiResponse.success(activityExpenseService.deleteExpense(authentication.getName(), id, expenseId));
+    }
+
+    @PutMapping("/{id}/expenses/{expenseId}")
+    public ApiResponse<ActivityExpenseSummaryResponse> updateExpense(Authentication authentication,
+                                                                     @PathVariable String id,
+                                                                     @PathVariable String expenseId,
+                                                                     @Valid @RequestBody UpdateActivityExpenseRequest request) {
+        return ApiResponse.success(activityExpenseService.updateExpense(authentication.getName(), id, expenseId, request));
     }
 
     @PostMapping("/{id}/finish")

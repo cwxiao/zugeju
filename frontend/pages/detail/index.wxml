@@ -55,7 +55,9 @@
               <text wx:else style="color: {{item.avatarFg || '#5d4127'}};">{{item.shortName}}</text>
             </view>
           </block>
-          <button class="avatar-pill avatar-plus-pill" open-type="share">+</button>
+          <button class="avatar-pill avatar-plus-pill" open-type="share">
+            <text class="avatar-plus-icon">+</text>
+          </button>
         </view>
       <view wx:if="{{detail.canJoin}}" class="invite-action-row">
         <button class="invite-accept-button" loading="{{joining}}" bindtap="acceptInvite">接受邀请</button>
@@ -96,7 +98,9 @@
           </view>
         </block>
         <button class="round-seat round-seat-invite" open-type="share">
-          <view class="member-avatar member-avatar-plus">+</view>
+          <view class="member-avatar member-avatar-plus">
+            <text class="round-plus-icon">+</text>
+          </view>
           <text class="member-name">邀请</text>
         </button>
       </view>

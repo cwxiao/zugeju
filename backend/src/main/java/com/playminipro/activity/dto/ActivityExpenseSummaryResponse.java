@@ -14,6 +14,8 @@ public record ActivityExpenseSummaryResponse(
         boolean canFinish,
         String settlementNote,
         List<ActivityExpenseItemResponse> expenseItems,
-        List<ActivitySettlementItemResponse> settlementItems
+        List<ActivitySettlementItemResponse> settlementItems,
+        List<ActivityTransferItemResponse> transferItems,
+        List<ActivityMemberBalanceResponse> memberBalances
 ) {
 }

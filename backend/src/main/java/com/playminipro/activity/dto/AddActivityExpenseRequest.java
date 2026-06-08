@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 
 public record AddActivityExpenseRequest(
         @NotBlank(message = "itemName is required") @Size(max = 64) String itemName,
-        @NotNull(message = "amountFen is required") @Min(value = 1, message = "amountFen must be greater than 0") Integer amountFen
+        @NotNull(message = "amountFen is required") @Min(value = 1, message = "amountFen must be greater than 0") Integer amountFen,
+        String payerUserId
 ) {
 }
