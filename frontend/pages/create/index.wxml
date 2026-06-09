@@ -28,15 +28,8 @@
       <view class="topic-panel">
         <view class="field-block first-field compact-header-field">
           <text class="field-label">活动主题</text>
-          <view class="header-input-shell">
-            <input
-              class="header-input-control"
-              placeholder="比如：这次先整一个"
-              placeholder-class="input-placeholder"
-              value="{{form.title}}"
-              bindinput="onTitleInput"
-              maxlength="30"
-            />
+          <view class="header-input-shell header-input-readonly">
+            <text class="header-input-control">{{form.title || '选择类型后自动生成'}}</text>
           </view>
         </view>
 
@@ -133,18 +126,6 @@
 
     <view class="form-card create-card input-card create-card-sand-deep">
       <view class="create-card-accent accent-input"></view>
-      <view class="card-caption">补充一句</view>
-      <view class="field-block first-field">
-        <text class="field-label">备注</text>
-        <textarea
-          class="textarea-field"
-          placeholder="补充一点说明"
-          placeholder-class="input-placeholder"
-          value="{{form.note}}"
-          bindinput="onNoteInput"
-          maxlength="200"
-        />
-      </view>
       <view class="button-stack">
         <button class="primary-button create-submit-button" bindtap="submit">{{submitLabel}}</button>
       </view>

@@ -15,11 +15,40 @@ Page({
     ],
     expenseOptionIndex: 1,
     activityTypes: [
-      { code: 'custom', name: '自定义', presetTitle: '' },
-      { code: 'dinner', name: '吃饭', presetTitle: '一起吃个饭' },
+      { code: 'coffee', name: '喝咖啡', presetTitle: '一起喝杯咖啡' },
+      { code: 'dinner', name: '约饭', presetTitle: '一起吃个饭' },
+      { code: 'hotpot', name: '火锅', presetTitle: '一起涮个火锅' },
+      { code: 'bbq', name: '烧烤', presetTitle: '一起撸个串' },
       { code: 'game', name: '开黑', presetTitle: '一起开黑' },
-      { code: 'sports', name: '运动', presetTitle: '一起动一动' },
-      { code: 'coffee', name: '咖啡', presetTitle: '一起喝杯咖啡' }
+      { code: 'mahjong', name: '搓麻', presetTitle: '一起搓个麻将' },
+      { code: 'ktv', name: 'K歌', presetTitle: '一起去K歌' },
+      { code: 'movie', name: '看电影', presetTitle: '一起看个电影' },
+      { code: 'script_kill', name: '剧本杀', presetTitle: '一起来剧本杀' },
+      { code: 'board_game', name: '桌游', presetTitle: '一起来桌游' },
+      { code: 'escape_room', name: '密室逃脱', presetTitle: '一起密室逃脱' },
+      { code: 'hiking', name: '徒步', presetTitle: '一起去徒步' },
+      { code: 'cycling', name: '骑行', presetTitle: '一起去骑行' },
+      { code: 'running', name: '跑步', presetTitle: '一起去跑步' },
+      { code: 'badminton', name: '羽毛球', presetTitle: '一起打羽毛球' },
+      { code: 'basketball', name: '篮球', presetTitle: '一起打篮球' },
+      { code: 'swimming', name: '游泳', presetTitle: '一起去游泳' },
+      { code: 'fitness', name: '健身', presetTitle: '一起去健身' },
+      { code: 'yoga', name: '瑜伽', presetTitle: '一起练瑜伽' },
+      { code: 'fishing', name: '钓鱼', presetTitle: '一起去钓鱼' },
+      { code: 'camping', name: '露营', presetTitle: '一起去露营' },
+      { code: 'picnic', name: '野餐', presetTitle: '一起去野餐' },
+      { code: 'shopping', name: '逛街', presetTitle: '一起去逛街' },
+      { code: 'bar', name: '小酌', presetTitle: '一起去小酌' },
+      { code: 'tea', name: '喝茶', presetTitle: '一起喝个茶' },
+      { code: 'photo', name: '拍照', presetTitle: '一起拍个照' },
+      { code: 'concert', name: '演唱会', presetTitle: '一起看演唱会' },
+      { code: 'museum', name: '逛展', presetTitle: '一起去逛展' },
+      { code: 'park', name: '逛公园', presetTitle: '一起去逛公园' },
+      { code: 'pet', name: '遛狗', presetTitle: '一起去遛狗' },
+      { code: 'diy', name: '手工', presetTitle: '一起做手工' },
+      { code: 'cooking', name: '做饭', presetTitle: '一起做个饭' },
+      { code: 'study', name: '自习', presetTitle: '一起自习' },
+      { code: 'online_game', name: '网游', presetTitle: '一起网游' }
     ],
     activityTypeIndex: 0,
     activityRuleHint: '',
@@ -35,8 +64,7 @@ Page({
       location: '',
       locationAddress: '',
       locationLatitude: null,
-      locationLongitude: null,
-      note: ''
+      locationLongitude: null
     }
   },
 
@@ -65,11 +93,15 @@ Page({
     }
 
     const now = new Date()
-    const ruleState = buildRuleState(this.data.activityTypes, this.data.activityTypeIndex)
+    const defaultIndex = 0
+    const defaultType = this.data.activityTypes[defaultIndex]
+    const ruleState = buildRuleState(this.data.activityTypes, defaultIndex)
     this.setData({
+      activityTypeIndex: defaultIndex,
       ...ruleState,
       form: {
         ...this.data.form,
+        title: defaultType.presetTitle,
         date: formatDate(now),
         time: formatTime(now)
       }
@@ -86,6 +118,7 @@ Page({
       const startTime = detail.startTime ? detail.startTime.slice(11, 16) : ''
       const activityTypeIndex = resolveActivityTypeIndex(this.data.activityTypes, detail.typeCode, detail.typeName)
       const ruleState = buildRuleState(this.data.activityTypes, activityTypeIndex)
+      const selectedType = this.data.activityTypes[activityTypeIndex] || this.data.activityTypes[0]
 
       this.setData({
         pageTitle: '修改活动',
@@ -97,14 +130,13 @@ Page({
         activityTypeIndex,
         ...ruleState,
         form: {
-          title: detail.title || '',
+          title: selectedType.presetTitle,
           date: startDate,
           time: startTime,
           location: isOffline ? (detail.venueAddress || detail.meetupAddress || '') : '',
           locationAddress: isOffline ? (detail.venueAddress || detail.meetupAddress || '') : '',
           locationLatitude: isOffline ? (detail.latitude || null) : null,
-          locationLongitude: isOffline ? (detail.longitude || null) : null,
-          note: detail.description || ''
+          locationLongitude: isOffline ? (detail.longitude || null) : null
         }
       })
     } catch (error) {
@@ -188,12 +220,6 @@ Page({
     })
   },
 
-  onTitleInput(event) {
-    this.setData({
-      'form.title': event.detail.value
-    })
-  },
-
   chooseLocation() {
     wx.chooseLocation({
       success: (res) => {
@@ -214,12 +240,6 @@ Page({
           icon: 'none'
         })
       }
-    })
-  },
-
-  onNoteInput(event) {
-    this.setData({
-      'form.note': event.detail.value
     })
   },
 
@@ -293,7 +313,7 @@ Page({
         typeCode: selectedType.code,
         typeName: selectedType.name,
         title: form.title.trim(),
-        description: form.note || '',
+        description: '',
         mode: isOffline ? 'offline' : 'online',
         targetParticipantCount: participantCount,
         maxParticipantCount: participantCount,
