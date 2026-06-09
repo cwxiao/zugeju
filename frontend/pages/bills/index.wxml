@@ -50,14 +50,29 @@
     <!-- 记一笔消费 —— 发起人可添加，且支持选付款人 -->
     <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-card bill-item bill-compose-card">
       <text class="bill-title">记一笔消费</text>
-      <text class="bill-helper">可随时补录，实时更新。</text>
-      <input
-        class="bill-input"
-        placeholder="比如：烧烤食材"
-        placeholder-class="input-placeholder"
-        value="{{itemName}}"
-        bindinput="onItemNameInput"
-      />
+      <text class="bill-helper">选择消费项目，填入金额即可。</text>
+
+      <!-- 消费项目卡片选择 -->
+      <view class="bill-expense-cats">
+        <block wx:for="{{expenseCategories}}" wx:key="label">
+          <view class="bill-expense-cat">
+            <text class="bill-expense-cat-label">{{item.label}}</text>
+            <view class="bill-expense-chips">
+              <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
+                class="bill-expense-chip {{itemName === name ? 'bill-expense-chip-active' : ''}}"
+                bindtap="chooseExpenseItem" data-name="{{name}}">
+                {{name}}
+              </view>
+            </view>
+          </view>
+        </block>
+      </view>
+
+      <view class="bill-selected-item" wx:if="{{itemName}}">
+        <text class="bill-selected-label">已选：</text>
+        <text class="bill-selected-name">{{itemName}}</text>
+      </view>
+
       <input
         class="bill-input"
         type="digit"
@@ -180,13 +195,30 @@
   <view wx:if="{{editVisible}}" class="bill-modal-mask" bindtap="closeEditModal">
     <view class="bill-modal" catchtap="">
       <text class="bill-modal-title">编辑消费</text>
-      <input
-        class="bill-input"
-        placeholder="项目名称"
-        placeholder-class="input-placeholder"
-        value="{{editItemName}}"
-        bindinput="onEditItemNameInput"
-      />
+
+      <!-- 消费项目卡片选择 -->
+      <scroll-view scroll-y class="bill-edit-scroll">
+        <view class="bill-expense-cats bill-edit-cats">
+          <block wx:for="{{expenseCategories}}" wx:key="label">
+            <view class="bill-expense-cat">
+              <text class="bill-expense-cat-label">{{item.label}}</text>
+              <view class="bill-expense-chips">
+                <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
+                  class="bill-expense-chip {{editItemName === name ? 'bill-expense-chip-active' : ''}}"
+                  bindtap="chooseEditExpenseItem" data-name="{{name}}">
+                  {{name}}
+                </view>
+              </view>
+            </view>
+          </block>
+        </view>
+      </scroll-view>
+
+      <view class="bill-selected-item" wx:if="{{editItemName}}">
+        <text class="bill-selected-label">已选：</text>
+        <text class="bill-selected-name">{{editItemName}}</text>
+      </view>
+
       <input
         class="bill-input"
         type="digit"

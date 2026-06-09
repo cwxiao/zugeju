@@ -442,3 +442,81 @@
   height: 88rpx;
   margin-top: 0;
 }
+
+/* ===== 消费项目卡片选择 ===== */
+
+.bill-expense-cats {
+  margin-top: 18rpx;
+}
+
+.bill-expense-cat {
+  margin-bottom: 16rpx;
+}
+
+.bill-expense-cat-label {
+  display: block;
+  font-size: 22rpx;
+  color: #8b735d;
+  margin-bottom: 10rpx;
+  font-weight: 600;
+}
+
+.bill-expense-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12rpx;
+}
+
+.bill-expense-chip {
+  padding: 12rpx 22rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 251, 246, 0.78);
+  border: 1rpx solid rgba(176, 125, 71, 0.14);
+  color: #5d4e3f;
+  font-size: 24rpx;
+  transition: all 0.15s ease;
+}
+
+.bill-expense-chip:active {
+  transform: scale(0.95);
+  opacity: 0.85;
+}
+
+.bill-expense-chip-active {
+  background: linear-gradient(135deg, rgba(40, 182, 241, 0.16) 0%, rgba(255, 142, 45, 0.22) 100%);
+  border-color: rgba(56, 151, 197, 0.25);
+  color: #2e241b;
+  font-weight: 600;
+}
+
+.bill-selected-item {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-top: 14rpx;
+  padding: 14rpx 22rpx;
+  border-radius: 18rpx;
+  background: rgba(255, 142, 45, 0.08);
+}
+
+.bill-selected-label {
+  font-size: 22rpx;
+  color: #8b735d;
+}
+
+.bill-selected-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: #b86122;
+}
+
+/* ===== 编辑弹窗内消费卡片 ===== */
+
+.bill-edit-scroll {
+  max-height: 360rpx;
+  margin-bottom: 12rpx;
+}
+
+.bill-edit-cats .bill-expense-cat {
+  margin-bottom: 12rpx;
+}

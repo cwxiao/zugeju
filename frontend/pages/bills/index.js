@@ -10,6 +10,17 @@ Page({
     // 付款人选择
     payerOptions: [],
     payerIndex: 0,
+    // 消费项目预设
+    expenseCategories: [
+      { label: '餐饮', items: ['吃饭', '火锅', '烧烤', '自助餐', '聚餐', '外卖', '宵夜', '下午茶', '工作餐', '团建餐'] },
+      { label: '饮品', items: ['买水', '奶茶', '咖啡', '啤酒', '酒水', '果汁', '茶饮'] },
+      { label: '娱乐', items: ['KTV', '电影票', '剧本杀', '桌游', '密室', '网费', '游戏币', '棋牌', '演出票'] },
+      { label: '运动', items: ['场地费', '教练费', '器材费', '球费', '健身卡', '更衣柜'] },
+      { label: '交通', items: ['打车', '油费', '停车费', '过路费', '地铁', '公交', '高铁票', '机票'] },
+      { label: '住宿', items: ['房费', '民宿', '露营位', '酒店'] },
+      { label: '购物', items: ['食材', '零食', '水果', '饮料', '装备', '日用品', '礼物'] },
+      { label: '其他', items: ['门票', '小费', '杂费', '押金', '快递费', '包间费', '服务费', '清洁费'] }
+    ],
     // 编辑弹窗
     editVisible: false,
     editExpenseId: '',
@@ -88,6 +99,11 @@ Page({
 
   onItemNameInput(event) {
     this.setData({ itemName: event.detail.value })
+  },
+
+  chooseExpenseItem(e) {
+    const name = e.currentTarget.dataset.name
+    this.setData({ itemName: name })
   },
 
   onAmountInput(event) {
@@ -240,6 +256,11 @@ Page({
 
   onEditItemNameInput(e) {
     this.setData({ editItemName: e.detail.value })
+  },
+
+  chooseEditExpenseItem(e) {
+    const name = e.currentTarget.dataset.name
+    this.setData({ editItemName: name })
   },
 
   onEditAmountInput(e) {
