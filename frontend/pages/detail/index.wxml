@@ -26,7 +26,7 @@
       <text class="detail-subtitle">{{detail.status}}</text>
       <view class="detail-meta-strip">
         <view class="detail-meta-chip">{{detail.time}}</view>
-        <view wx:if="{{detail.mode === '线下'}}" class="detail-meta-chip">{{detail.place}}</view>
+        <view wx:if="{{detail.mode === '线下'}}" class="detail-meta-chip detail-meta-chip-location" bindtap="openNavigation">{{detail.place}}</view>
         <view wx:if="{{detail.expenseModeLabel}}" class="detail-meta-chip">{{detail.expenseModeLabel}}</view>
       </view>
 

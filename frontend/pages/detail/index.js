@@ -27,6 +27,9 @@ Page({
       time: '',
       mode: '',
       place: '',
+      placeName: '',
+      latitude: null,
+      longitude: null,
       expenseModeLabel: '',
       status: '',
       count: '',
@@ -88,7 +91,7 @@ Page({
 
       wx.showShareMenu({
         withShareTicket: true,
-        menus: ['shareAppMessage']
+        menus: ['shareAppMessage', 'shareTimeline']
       })
 
       const isCreator = detail.currentUserCreator || (detail.members || []).some((member) => member.userId === localUser.id && member.role === 'creator')
@@ -126,6 +129,11 @@ Page({
           place: detail.mode === 'offline'
             ? (detail.venueAddress || detail.meetupAddress || '待补充')
             : '线上无需地点',
+          placeName: detail.mode === 'offline'
+            ? (detail.venueAddress || detail.meetupAddress || '待补充')
+            : '',
+          latitude: detail.latitude || null,
+          longitude: detail.longitude || null,
           expenseModeLabel: resolveExpenseModeLabel(detail.expenseMode),
           status: resolveActivityStatusText(detail.status, detail.joinedCount, detail.maxParticipantCount),
           count: `${detail.joinedCount} / ${detail.maxParticipantCount}`,
@@ -159,6 +167,14 @@ Page({
     return {
       title: `${detail.title}，来整一下`,
       path: `/pages/detail/index?id=${detail.id}&source=invite`
+    }
+  },
+
+  onShareTimeline() {
+    const { detail } = this.data
+    return {
+      title: `${detail.title}，来整一下`,
+      query: `id=${detail.id}&source=invite`
     }
   },
 
@@ -276,6 +292,21 @@ Page({
   goBills() {
     wx.navigateTo({
       url: `/pages/bills/index?id=${this.data.detail.id}`
+    })
+  },
+
+  openNavigation() {
+    const { latitude, longitude, placeName } = this.data.detail
+    if (!latitude || !longitude) {
+      wx.showToast({ title: '没有位置信息，无法导航', icon: 'none' })
+      return
+    }
+    wx.openLocation({
+      latitude,
+      longitude,
+      name: placeName || '',
+      address: placeName || '',
+      scale: 16
     })
   },
 

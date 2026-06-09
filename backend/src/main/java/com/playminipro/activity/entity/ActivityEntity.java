@@ -34,6 +34,10 @@ public class ActivityEntity {
 
     private String venueAddress;
 
+    private Double latitude;
+
+    private Double longitude;
+
     private String onlineJoinInfo;
 
     private String expenseMode;
@@ -75,8 +79,12 @@ public class ActivityEntity {
     public String getMeetupAddress() { return meetupAddress; }
     public void setMeetupAddress(String meetupAddress) { this.meetupAddress = meetupAddress; }
     public String getVenueAddress() { return venueAddress; }
-    public void setVenueAddress(String venueAddress) { this.venueAddress = venueAddress; }
-    public String getOnlineJoinInfo() { return onlineJoinInfo; }
+  public void setVenueAddress(String venueAddress) { this.venueAddress = venueAddress; }
+  public Double getLatitude() { return latitude; }
+  public void setLatitude(Double latitude) { this.latitude = latitude; }
+  public Double getLongitude() { return longitude; }
+  public void setLongitude(Double longitude) { this.longitude = longitude; }
+  public String getOnlineJoinInfo() { return onlineJoinInfo; }
     public void setOnlineJoinInfo(String onlineJoinInfo) { this.onlineJoinInfo = onlineJoinInfo; }
     public String getExpenseMode() { return expenseMode; }
     public void setExpenseMode(String expenseMode) { this.expenseMode = expenseMode; }

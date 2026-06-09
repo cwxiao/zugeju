@@ -34,7 +34,16 @@ Page({
       time: '',
       location: '',
       locationAddress: '',
+      locationLatitude: null,
+      locationLongitude: null,
       note: ''
+    }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '来整 — 发起一场活动',
+      path: '/pages/home/index'
     }
   },
 
@@ -93,6 +102,8 @@ Page({
           time: startTime,
           location: isOffline ? (detail.venueAddress || detail.meetupAddress || '') : '',
           locationAddress: isOffline ? (detail.venueAddress || detail.meetupAddress || '') : '',
+          locationLatitude: isOffline ? (detail.latitude || null) : null,
+          locationLongitude: isOffline ? (detail.longitude || null) : null,
           note: detail.description || ''
         }
       })
@@ -141,6 +152,8 @@ Page({
     if (this.data.modes[modeIndex] === '线上') {
       nextState['form.location'] = ''
       nextState['form.locationAddress'] = ''
+      nextState['form.locationLatitude'] = null
+      nextState['form.locationLongitude'] = null
     }
 
     this.setData(nextState)
@@ -187,7 +200,9 @@ Page({
         const label = res.name || res.address || '已选地点'
         this.setData({
           'form.location': label,
-          'form.locationAddress': res.address || label
+          'form.locationAddress': res.address || label,
+          'form.locationLatitude': res.latitude,
+          'form.locationLongitude': res.longitude
         })
       },
       fail: (error) => {
@@ -287,6 +302,8 @@ Page({
         meetupTime: null,
         meetupAddress: isOffline ? (form.locationAddress || form.location || null) : null,
         venueAddress: isOffline ? (form.locationAddress || form.location || null) : null,
+        latitude: isOffline ? (form.locationLatitude || null) : null,
+        longitude: isOffline ? (form.locationLongitude || null) : null,
         onlineJoinInfo: null,
         expenseMode: selectedExpenseMode,
         expenseFlag: isOffline ? 1 : 0,

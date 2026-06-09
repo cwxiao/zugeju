@@ -43,6 +43,13 @@ Page({
     this.loadArchive()
   },
 
+  onShareAppMessage() {
+    return {
+      title: '来整 — 活动档案',
+      path: '/pages/home/index'
+    }
+  },
+
   async loadArchive() {
     try {
       const archiveRecords = await request({

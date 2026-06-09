@@ -12,12 +12,26 @@ Page({
     authAvatarUrl: '',
     pendingShowAuth: false,
     charging: false,
-    canBrowse: true  // 新增：允许浏览模式
+    canBrowse: true,  // 新增：允许浏览模式
+    gameDrawerOpen: false
   },
 
   onLoad(options) {
     if (options && options.showAuth === '1') {
       this.setData({ pendingShowAuth: true })
+    }
+  },
+
+  onShareAppMessage() {
+    return {
+      title: '来整 — 约人整活，一个按钮就搞定',
+      path: '/pages/home/index'
+    }
+  },
+
+  onShareTimeline() {
+    return {
+      title: '来整 — 约人整活，一个按钮就搞定'
     }
   },
 
@@ -268,6 +282,29 @@ Page({
     wx.removeStorageSync('pendingInvitePath')
     wx.navigateTo({
       url: pendingPath
+    })
+  },
+
+  toggleGameDrawer() {
+    this.setData({ gameDrawerOpen: !this.data.gameDrawerOpen })
+  },
+
+  closeGameDrawer() {
+    this.setData({ gameDrawerOpen: false })
+  },
+
+  goToXuantianzhen() {
+    wx.navigateToMiniProgram({
+      appId: 'wx0be195871454d924',
+      path: '',
+      envVersion: 'release',
+      success: () => {
+        this.setData({ gameDrawerOpen: false })
+      },
+      fail: (err) => {
+        console.error('跳转旋天阵失败', err)
+        wx.showToast({ title: '跳转失败，请稍后重试', icon: 'none' })
+      }
     })
   }
 })

@@ -26,7 +26,7 @@ Page({
 
     wx.showShareMenu({
       withShareTicket: true,
-      menus: ['shareAppMessage']
+      menus: ['shareAppMessage', 'shareTimeline']
     })
 
     try {
@@ -55,6 +55,13 @@ Page({
     return {
       title: report.shareCallout || '来看看我的活动分析',
       path: '/pages/personality/index'
+    }
+  },
+
+  onShareTimeline() {
+    const report = this.data.report || {}
+    return {
+      title: report.shareCallout || '来看看我的活动分析'
     }
   },
 

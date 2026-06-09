@@ -27,6 +27,13 @@ Page({
     await this.loadArchiveDetail()
   },
 
+  onShareAppMessage() {
+    return {
+      title: '来整 — 活动档案',
+      path: '/pages/home/index'
+    }
+  },
+
   async loadArchiveDetail() {
     try {
       const [detail, bill] = await Promise.all([
@@ -55,6 +62,21 @@ Page({
     wx.navigateTo({
       url: `/pages/bills/index?id=${this.data.activityId}`
     })
+  },
+
+  openNavigation() {
+    const detail = this.data.detail
+    if (!detail || !detail.latitude || !detail.longitude) {
+      wx.showToast({ title: '没有位置信息，无法导航', icon: 'none' })
+      return
+    }
+    wx.openLocation({
+      latitude: detail.latitude,
+      longitude: detail.longitude,
+      name: detail.placeText || '',
+      address: detail.placeText || '',
+      scale: 16
+    })
   }
 })
 
@@ -68,6 +90,8 @@ function mapDetail(detail) {
     placeText: detail.mode === 'offline'
       ? (detail.venueAddress || detail.meetupAddress || '待补充')
       : '线上活动',
+    latitude: detail.latitude || null,
+    longitude: detail.longitude || null,
     memberCountText: `${detail.joinedCount} / ${detail.maxParticipantCount}`,
     members: (detail.members || []).map((member) => ({
       ...member,

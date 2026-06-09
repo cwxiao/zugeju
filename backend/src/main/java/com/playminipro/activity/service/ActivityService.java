@@ -130,6 +130,8 @@ public class ActivityService {
         activity.setMeetupTime(request.meetupTime());
         activity.setMeetupAddress(request.meetupAddress());
         activity.setVenueAddress(request.venueAddress());
+        activity.setLatitude(request.latitude());
+        activity.setLongitude(request.longitude());
         activity.setOnlineJoinInfo(writeJson(request));
         activity.setExpenseMode(request.expenseMode());
         activity.setExpenseFlag(request.expenseFlag());
@@ -168,6 +170,8 @@ public class ActivityService {
                 activity.getMeetupTime(),
                 activity.getMeetupAddress(),
                 activity.getVenueAddress(),
+                activity.getLatitude(),
+                activity.getLongitude(),
                 activity.getOnlineJoinInfo(),
                 activity.getExpenseMode(),
                 activity.getExpenseFlag(),

@@ -16,6 +16,8 @@ public record ActivityDetailResponse(
         OffsetDateTime meetupTime,
         String meetupAddress,
         String venueAddress,
+        Double latitude,
+        Double longitude,
         String onlineJoinInfo,
         String expenseMode,
         int expenseFlag,

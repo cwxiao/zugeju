@@ -22,7 +22,7 @@
         </view>
         <view class="archive-detail-metric">
           <text class="archive-detail-label">活动地点</text>
-          <text class="archive-detail-value">{{detail.placeText}}</text>
+          <text class="archive-detail-value archive-detail-place" bindtap="openNavigation">{{detail.placeText}}</text>
         </view>
         <view class="archive-detail-metric">
           <text class="archive-detail-label">到场人数</text>

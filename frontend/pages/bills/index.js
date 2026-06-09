@@ -41,6 +41,13 @@ Page({
     await this.loadSummary()
   },
 
+  onShareAppMessage() {
+    return {
+      title: '来整 — 活动记账结算',
+      path: '/pages/home/index'
+    }
+  },
+
   async loadSummary() {
     try {
       const summary = await request({

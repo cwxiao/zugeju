@@ -17,12 +17,12 @@ public interface ActivityMapper {
             INSERT INTO activities (
                 id, creator_id, type_code, type_name, title, description, mode, status,
                 target_participant_count, max_participant_count, start_time, end_time,
-                meetup_time, meetup_address, venue_address, online_join_info,
+                meetup_time, meetup_address, venue_address, latitude, longitude, online_join_info,
                 expense_mode, expense_flag, allow_member_add_expense
             ) VALUES (
                 CAST(#{id} AS UUID), CAST(#{creatorId} AS UUID), #{typeCode}, #{typeName}, #{title}, #{description}, #{mode}, #{status},
                 #{targetParticipantCount}, #{maxParticipantCount}, #{startTime}, #{endTime},
-                #{meetupTime}, #{meetupAddress}, #{venueAddress}, CAST(#{onlineJoinInfo} AS JSONB),
+                #{meetupTime}, #{meetupAddress}, #{venueAddress}, #{latitude}, #{longitude}, CAST(#{onlineJoinInfo} AS JSONB),
                 #{expenseMode}, #{expenseFlag}, #{allowMemberAddExpense}
             )
             """)
@@ -31,7 +31,7 @@ public interface ActivityMapper {
     @Select("""
             SELECT id, creator_id, type_code, type_name, title, description, mode, status,
                    target_participant_count, max_participant_count, start_time, end_time,
-                   meetup_time, meetup_address, venue_address, online_join_info::text AS online_join_info,
+                   meetup_time, meetup_address, venue_address, latitude, longitude, online_join_info::text AS online_join_info,
                    expense_mode, expense_flag, allow_member_add_expense, created_at, updated_at
             FROM activities
             WHERE id = CAST(#{id} AS UUID)
@@ -50,6 +50,8 @@ public interface ActivityMapper {
                 meetup_time = #{meetupTime},
                 meetup_address = #{meetupAddress},
                 venue_address = #{venueAddress},
+                latitude = #{latitude},
+                longitude = #{longitude},
                 online_join_info = CAST(#{onlineJoinInfo} AS JSONB),
                 expense_mode = #{expenseMode},
                 expense_flag = #{expenseFlag},
@@ -206,7 +208,7 @@ public interface ActivityMapper {
     @Select("""
             SELECT a.id, a.creator_id, a.type_code, a.type_name, a.title, a.description, a.mode, a.status,
                    a.target_participant_count, a.max_participant_count, a.start_time, a.end_time,
-                   a.meetup_time, a.meetup_address, a.venue_address, a.online_join_info::text AS online_join_info,
+                   a.meetup_time, a.meetup_address, a.venue_address, a.latitude, a.longitude, a.online_join_info::text AS online_join_info,
                    a.expense_mode, a.expense_flag, a.allow_member_add_expense, a.created_at, a.updated_at
             FROM activities a
             WHERE a.status IN ('draft', 'recruiting', 'full', 'pending_start')

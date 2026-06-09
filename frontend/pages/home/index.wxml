@@ -158,4 +158,26 @@
       </block>
     </view>
   </view>
+
+  <!-- 旋天阵联动侧边栏 -->
+  <view class="game-drawer-tab" bindtap="toggleGameDrawer">
+    <text class="game-drawer-tab-text">旋</text>
+    <text class="game-drawer-tab-text">天</text>
+    <text class="game-drawer-tab-text">阵</text>
+  </view>
+  <view wx:if="{{gameDrawerOpen}}" class="game-drawer-mask" bindtap="closeGameDrawer"></view>
+  <view class="game-drawer-panel {{gameDrawerOpen ? 'game-drawer-panel-open' : ''}}">
+    <view class="game-drawer-header">
+      <text class="game-drawer-title">🎮 换个玩法？</text>
+      <view class="game-drawer-close" bindtap="closeGameDrawer">✕</view>
+    </view>
+    <view class="game-drawer-body">
+      <image class="game-drawer-cover" src="/img/xuantianzhen.jpg" mode="aspectFill" />
+      <text class="game-drawer-name">旋天阵</text>
+      <text class="game-drawer-desc">策略对弈，指尖排兵布阵</text>
+      <view class="game-drawer-play-btn" bindtap="goToXuantianzhen">
+        <text class="game-drawer-play-text">立即去玩 ▸</text>
+      </view>
+    </view>
+  </view>
 </view>

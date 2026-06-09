@@ -22,6 +22,8 @@ public record CreateActivityRequest(
         OffsetDateTime meetupTime,
         String meetupAddress,
         String venueAddress,
+        Double latitude,
+        Double longitude,
         JsonNode onlineJoinInfo,
         @NotBlank(message = "expenseMode is required") @Pattern(regexp = "none|aa|host_treat|designated_treat", message = "expenseMode is invalid") String expenseMode,
         @NotNull(message = "expenseFlag is required") @Min(0) @Max(1) Integer expenseFlag,
