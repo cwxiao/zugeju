@@ -1,4 +1,5 @@
 const { request, isAuthExpiredError } = require('../../utils/request')
+const cdn = require('../../utils/cdn')
 
 const ROLE_OPTIONS = [
   { value: 'all', label: '全部活动' },
@@ -20,6 +21,7 @@ const STATUS_OPTIONS = [
 
 Page({
   data: {
+    cdnImg: cdn,
     roleOptions: ROLE_OPTIONS,
     timeOptions: TIME_OPTIONS,
     statusOptions: STATUS_OPTIONS,

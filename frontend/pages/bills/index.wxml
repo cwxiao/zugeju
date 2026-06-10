@@ -9,7 +9,7 @@
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
     <view class="bill-card bill-item bill-summary-card receipt-card">
-      <image class="bill-decor-beer" src="/img/ui-beer-skewer.png" mode="aspectFit" />
+      <image class="bill-decor-beer" src="{{cdnImg.UI_BEER_SKEWER}}" mode="aspectFit" />
       <view class="receipt-header">
         <text class="receipt-label">— 来整小票 —</text>
       </view>

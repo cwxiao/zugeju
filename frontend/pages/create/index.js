@@ -1,7 +1,9 @@
 const { request, isAuthExpiredError } = require('../../utils/request')
+const cdn = require('../../utils/cdn')
 
 Page({
   data: {
+    cdnImg: cdn,
     pageTitle: '开始整',
     submitLabel: '下一步',
     editingId: '',

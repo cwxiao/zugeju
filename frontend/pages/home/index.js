@@ -1,8 +1,10 @@
 const { request, isAuthExpiredError, getBaseUrl } = require('../../utils/request')
 const { requestInitialSubscribePermission } = require('../../utils/subscribe')
+const cdn = require('../../utils/cdn')
 
 Page({
   data: {
+    cdnImg: cdn,
     ongoingItems: [],
     loggedIn: false,
     authVisible: false,

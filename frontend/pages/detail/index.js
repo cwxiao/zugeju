@@ -1,5 +1,6 @@
 const { request, isAuthExpiredError } = require('../../utils/request')
 const { requestInitialSubscribePermission } = require('../../utils/subscribe')
+const cdn = require('../../utils/cdn')
 
 const MEMBER_REFRESH_INTERVAL = 10000
 
@@ -13,6 +14,7 @@ const REACTION_OPTIONS = [
 
 Page({
   data: {
+    cdnImg: cdn,
     loading: false,
     joining: false,
     inviteSource: '',

@@ -1,4 +1,5 @@
 const { request, isAuthExpiredError } = require('../../utils/request')
+const cdn = require('../../utils/cdn')
 
 const FINANCE_PERIODS = [
   { value: 'daily', label: '日' },
@@ -10,6 +11,7 @@ const FINANCE_PERIODS = [
 
 Page({
   data: {
+    cdnImg: cdn,
     report: null,
     heatmapVisible: false,
     financePeriods: FINANCE_PERIODS,

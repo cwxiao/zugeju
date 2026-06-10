@@ -9,7 +9,7 @@
     <view class="create-dot create-dot-b"></view>
 
     <view class="form-card create-card create-header-card create-card-sunrise">
-      <image class="create-decor-controller" src="/img/ui-controller.png" mode="aspectFit" />
+      <image class="create-decor-controller" src="{{cdnImg.UI_CONTROLLER}}" mode="aspectFit" />
       <view class="create-card-accent accent-header"></view>
       <view class="create-header-top">
         <view>

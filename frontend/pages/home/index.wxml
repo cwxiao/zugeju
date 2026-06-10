@@ -58,7 +58,7 @@
             <text class="hero-subtitle">想法先落下，时间地点再往里填。</text>
           </view>
           <view class="hero-cta-right">
-            <image class="hero-character-img" src="/img/ui-character.png" mode="aspectFit" />
+            <image class="hero-character-img" src="{{cdnImg.UI_CHARACTER}}" mode="aspectFit" />
             <view class="primary-button minimal-button charge-btn {{charging ? 'charge-active' : ''}}" catchtouchstart="onChargeStart" catchtouchend="onChargeEnd">整!</view>
             <view wx:if="{{charging}}" class="charge-hint">蓄力中...</view>
           </view>
@@ -165,7 +165,7 @@
       <view class="game-drawer-close" bindtap="closeGameDrawer">✕</view>
     </view>
     <view class="game-drawer-body">
-      <image class="game-drawer-cover" src="/img/xuantianzhen.jpg" mode="aspectFill" />
+      <image class="game-drawer-cover" src="{{cdnImg.XUANTIANZHEN}}" mode="aspectFill" />
       <text class="game-drawer-name">旋天阵</text>
       <text class="game-drawer-desc">策略对弈，指尖排兵布阵</text>
       <view class="game-drawer-play-btn" bindtap="goToXuantianzhen">
