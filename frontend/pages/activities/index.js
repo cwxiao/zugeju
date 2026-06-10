@@ -28,7 +28,6 @@ Page({
     statusFilter: 'all',
     startDate: '',
     endDate: '',
-    keyword: '',
     archiveRecords: [],
     filteredRecords: [],
     summaryText: ''
@@ -101,11 +100,6 @@ Page({
     this.applyFilters()
   },
 
-  onKeywordInput(event) {
-    this.setData({ keyword: event.detail.value || '' })
-    this.applyFilters()
-  },
-
   openArchiveDetail(event) {
     const { id } = event.currentTarget.dataset
     wx.navigateTo({
@@ -114,7 +108,6 @@ Page({
   },
 
   applyFilters() {
-    const keyword = this.data.keyword.trim().toLowerCase()
     const startTime = this.data.startDate ? new Date(`${this.data.startDate}T00:00:00`).getTime() : 0
     const endTime = this.data.endDate ? new Date(`${this.data.endDate}T23:59:59`).getTime() : Number.MAX_SAFE_INTEGER
 
@@ -140,11 +133,7 @@ Page({
         return false
       }
 
-      if (!keyword) {
-        return true
-      }
-
-      return item.keywords.indexOf(keyword) >= 0
+      return true
     })
 
     filteredRecords = filteredRecords.sort((left, right) => {
@@ -179,7 +168,7 @@ function mapArchiveRecord(item) {
     roleTimeText: formatTime(item.roleTime),
     roleTimeLabel: `${item.role === 'creator' ? '发起时间' : '参与时间'} ${formatTime(item.roleTime)}`,
     totalAmountText: formatFen(item.totalAmountFen || 0),
-    keywords: [item.title, item.typeName, item.place, item.highlight, roleLabel, resolveStatusLabel(item.status)].filter(Boolean).join('|').toLowerCase()
+    keywords: ''
   }
 }
 

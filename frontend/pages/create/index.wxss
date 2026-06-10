@@ -242,12 +242,15 @@
 }
 
 .header-input-readonly {
-  background: rgba(255, 251, 246, 0.5);
-  border: 1rpx dashed rgba(176, 125, 71, 0.2);
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .header-input-readonly .header-input-control {
   color: #5d4e3f;
+  font-weight: 600;
+  font-size: 32rpx;
 }
 
 .type-selector-block {

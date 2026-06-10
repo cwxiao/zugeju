@@ -207,7 +207,9 @@
   margin-top: 12rpx;
 }
 
-.bill-input {
+.bill-picker-box {
+  display: flex;
+  align-items: center;
   width: 100%;
   height: 90rpx;
   margin-top: 18rpx;
@@ -216,8 +218,13 @@
   border-radius: 26rpx;
   background: rgba(255, 251, 246, 0.88);
   border: 1rpx solid rgba(176, 125, 71, 0.14);
-  color: #2e241b;
+  color: #b07d47;
   font-size: 26rpx;
+}
+
+.bill-picker-active {
+  color: #2e241b;
+  background: rgba(255, 251, 246, 1);
 }
 
 .bill-submit-button,

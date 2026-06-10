@@ -73,14 +73,11 @@
         <text class="bill-selected-name">{{itemName}}</text>
       </view>
 
-      <input
-        class="bill-input"
-        type="digit"
-        placeholder="金额，单位元"
-        placeholder-class="input-placeholder"
-        value="{{amountYuan}}"
-        bindinput="onAmountInput"
-      />
+      <picker mode="selector" range="{{amountOptions}}" value="{{amountIndex}}" bindchange="onAmountChange">
+        <view class="bill-picker-box {{amountIndex >= 0 ? 'bill-picker-active' : ''}}">
+          {{amountIndex >= 0 ? amountOptions[amountIndex] + ' 元' : '选择金额'}}
+        </view>
+      </picker>
       <!-- 付款人选择 -->
       <view class="bill-payer-row">
         <text class="bill-payer-label">付款人</text>
@@ -219,14 +216,11 @@
         <text class="bill-selected-name">{{editItemName}}</text>
       </view>
 
-      <input
-        class="bill-input"
-        type="digit"
-        placeholder="金额，单位元"
-        placeholder-class="input-placeholder"
-        value="{{editAmountYuan}}"
-        bindinput="onEditAmountInput"
-      />
+      <picker mode="selector" range="{{amountOptions}}" value="{{editAmountIndex}}" bindchange="onEditAmountChange">
+        <view class="bill-picker-box {{editAmountIndex >= 0 ? 'bill-picker-active' : ''}}">
+          {{editAmountIndex >= 0 ? amountOptions[editAmountIndex] + ' 元' : '选择金额'}}
+        </view>
+      </picker>
       <!-- 付款人选择 -->
       <view class="bill-payer-row">
         <text class="bill-payer-label">付款人</text>

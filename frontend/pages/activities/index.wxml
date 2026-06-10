@@ -44,13 +44,7 @@
       </block>
     </view>
 
-    <input
-      class="archive-search"
-      placeholder="搜活动名、类型、地点"
-      placeholder-class="archive-placeholder"
-      value="{{keyword}}"
-      bindinput="onKeywordInput"
-    />
+    <text class="archive-search-hint">使用上方筛选条件查找活动</text>
   </view>
 
   <view class="activity-listing archive-listing">

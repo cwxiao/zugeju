@@ -86,12 +86,6 @@ Page({
     }
   },
 
-  handleNicknameInput(event) {
-    this.setData({
-      authNickname: event.detail.value
-    })
-  },
-
   handleChooseAvatar(event) {
     const { avatarUrl } = event.detail
     if (!avatarUrl) {
@@ -111,7 +105,7 @@ Page({
     try {
       await requestInitialSubscribePermission()
       const loginData = await getApp().loginWithConfirm({
-        nickname: this.data.authNickname.trim() || '微信用户',
+        nickname: '微信用户',
         avatarUrl: ''
       })
 

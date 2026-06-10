@@ -5,7 +5,8 @@ Page({
     activityId: '',
     loading: true,
     itemName: '',
-    amountYuan: '',
+    amountOptions: ['5', '10', '20', '30', '50', '80', '100', '150', '200', '300', '500', '800', '1000', '1500', '2000'],
+    amountIndex: -1,
     summary: null,
     // 付款人选择
     payerOptions: [],
@@ -25,7 +26,7 @@ Page({
     editVisible: false,
     editExpenseId: '',
     editItemName: '',
-    editAmountYuan: '',
+    editAmountIndex: -1,
     editPayerOptions: [],
     editPayerIndex: 0,
     // 左滑
@@ -106,8 +107,8 @@ Page({
     this.setData({ itemName: name })
   },
 
-  onAmountInput(event) {
-    this.setData({ amountYuan: event.detail.value })
+  onAmountChange(event) {
+    this.setData({ amountIndex: Number(event.detail.value) })
   },
 
   onPayerChange(event) {
@@ -116,7 +117,8 @@ Page({
 
   async submitExpense() {
     const itemName = this.data.itemName.trim()
-    const amountFen = parseAmountToFen(this.data.amountYuan)
+    const amountYuan = this.data.amountOptions[this.data.amountIndex]
+    const amountFen = amountYuan ? parseAmountToFen(amountYuan) : 0
 
     if (!itemName) {
       wx.showToast({ title: '先写消费事项', icon: 'none' })
@@ -143,7 +145,7 @@ Page({
       })
       this.setData({
         itemName: '',
-        amountYuan: '',
+        amountIndex: -1,
         summary: mapSummary(summary),
         payerIndex: 0
       })
@@ -243,11 +245,12 @@ Page({
     let editPayerIndex = editPayerOptions.findIndex(p => p.userId === item.payerUserId)
     if (editPayerIndex < 0) editPayerIndex = 0
 
+    const editAmountIndex = this.data.amountOptions.findIndex(a => a === String(item.amountFen / 100))
     this.setData({
       editVisible: true,
       editExpenseId: item.id,
       editItemName: item.itemName,
-      editAmountYuan: (item.amountFen / 100).toFixed(2),
+      editAmountIndex: editAmountIndex >= 0 ? editAmountIndex : -1,
       editPayerOptions,
       editPayerIndex,
       swipeIndex: -1
@@ -263,8 +266,8 @@ Page({
     this.setData({ editItemName: name })
   },
 
-  onEditAmountInput(e) {
-    this.setData({ editAmountYuan: e.detail.value })
+  onEditAmountChange(e) {
+    this.setData({ editAmountIndex: Number(e.detail.value) })
   },
 
   onEditPayerChange(e) {
@@ -277,7 +280,8 @@ Page({
 
   async confirmEdit() {
     const itemName = this.data.editItemName.trim()
-    const amountFen = parseAmountToFen(this.data.editAmountYuan)
+    const editAmountYuan = this.data.amountOptions[this.data.editAmountIndex]
+    const amountFen = editAmountYuan ? parseAmountToFen(editAmountYuan) : 0
 
     if (!itemName) {
       wx.showToast({ title: '项目名不能为空', icon: 'none' })
