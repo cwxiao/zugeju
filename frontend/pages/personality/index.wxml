@@ -1,7 +1,7 @@
 <view class="page-shell personality-shell" wx:if="{{report}}">
   <image class="page-bg-img" src="/img/city-bg.png" mode="aspectFill" />
   <view class="summary-card personality-cover-card">
-    <image class="personality-decor-character" src="/img/ui-character.webp" mode="aspectFit" />
+    <image class="personality-decor-character" src="/img/ui-character.png" mode="aspectFit" />
     <text class="personality-cover-kicker">Activity Report</text>
     <text class="personality-cover-title">{{report.coverHeadline}}</text>
     <text class="personality-cover-desc">{{report.coverCaption}}</text>
