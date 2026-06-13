@@ -129,29 +129,30 @@
       <button class="primary-button bill-submit-button" bindtap="submitExpense">记上去</button>
     </view>
 
-    <!-- 消费记录 —— 所有成员可见，左滑可删除/编辑（仅发起人） -->
+    <!-- 消费记录 —— 所有成员可见，发起人可编辑/删除 -->
     <view class="bill-card bill-item bill-section-card" bindtap="closeSwipe">
       <view class="bill-section-head">
         <text class="bill-title">消费记录</text>
         <text class="bill-count-pill">{{summary.recordCount}} 笔</text>
       </view>
+      <text wx:if="{{summary.creatorView && summary.canAddExpense && summary.expenseItems.length}}" class="bill-edit-hint">点击 ✏️ 可编辑，🗑 可删除</text>
       <view wx:if="{{summary.expenseItems.length}}" class="bill-record-list">
         <block wx:for="{{summary.expenseItems}}" wx:key="id">
-          <view class="bill-swipe-wrap">
-            <!-- 操作按钮（露出层） -->
-            <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-swipe-actions">
-              <view class="bill-swipe-btn bill-swipe-edit" catchtap="onEditExpense" data-index="{{index}}">编辑</view>
-              <view class="bill-swipe-btn bill-swipe-delete" catchtap="onDeleteExpense" data-index="{{index}}">删除</view>
+          <view class="bill-record-row-wrap">
+            <view class="bill-record-row bill-record-row-main">
+              <view class="bill-record-info">
+                <text class="bill-record-title">{{item.itemName}}</text>
+                <text class="bill-record-meta">{{item.payerNickname}} 付款</text>
+              </view>
+              <text class="bill-record-amount">{{item.amountText}}</text>
             </view>
-            <!-- 消费行（滑动层） -->
-            <view class="bill-swipe-content {{swipeIndex === index ? 'bill-swipe-open' : ''}}"
-                  bindtouchstart="onTouchStart" bindtouchend="onTouchEnd" bindtouchmove="onTouchMove" data-index="{{index}}">
-              <view class="bill-record-row">
-                <view>
-                  <text class="bill-record-title">{{item.itemName}}</text>
-                  <text class="bill-record-meta">{{item.payerNickname}} 付款</text>
-                </view>
-                <text class="bill-record-amount">{{item.amountText}}</text>
+            <!-- 发起人可见的操作按钮 -->
+            <view wx:if="{{summary.creatorView && summary.canAddExpense}}" class="bill-record-actions">
+              <view class="bill-action-btn bill-action-edit" catchtap="onEditExpense" data-index="{{index}}">
+                <text class="bill-action-icon">✏️</text>
+              </view>
+              <view class="bill-action-btn bill-action-delete" catchtap="onDeleteExpense" data-index="{{index}}">
+                <text class="bill-action-icon">🗑</text>
               </view>
             </view>
           </view>

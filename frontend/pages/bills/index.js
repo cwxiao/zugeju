@@ -37,11 +37,7 @@ Page({
     editItemName: '',
     editCustomAmount: '',     // 编辑弹窗手动输入金额
     editPayerOptions: [],
-    editPayerIndex: 0,
-    // 左滑
-    touchStartX: 0,
-    touchStartY: 0,
-    swipeIndex: -1
+    editPayerIndex: 0
   },
 
   async onLoad(options) {
@@ -208,39 +204,9 @@ Page({
     }
   },
 
-  // ===== 左滑操作 =====
-
-  onTouchStart(e) {
-    this.setData({
-      touchStartX: e.touches[0].clientX,
-      touchStartY: e.touches[0].clientY
-    })
-  },
-
-  onTouchMove(e) {
-    const deltaX = e.touches[0].clientX - this.data.touchStartX
-    const deltaY = Math.abs(e.touches[0].clientY - this.data.touchStartY)
-    // 水平左滑大于垂直滑动才触发
-    if (deltaX < -40 && deltaY < 40) {
-      const index = e.currentTarget.dataset.index
-      if (this.data.swipeIndex !== index) {
-        this.setData({ swipeIndex: index })
-      }
-    } else if (deltaX > 40 && deltaY < 40) {
-      // 右滑关闭
-      this.setData({ swipeIndex: -1 })
-    }
-  },
-
-  onTouchEnd() {
-    // 滑动状态已设置
-  },
-
-  // 点击空白区域收起左滑
+  // 点击空白区域（保留以防外层调用）
   closeSwipe() {
-    if (this.data.swipeIndex !== -1) {
-      this.setData({ swipeIndex: -1 })
-    }
+    // 旧版左滑已移除，保留空方法防止报错
   },
 
   // ===== 删除消费 =====
@@ -264,8 +230,7 @@ Page({
             method: 'DELETE'
           })
           this.setData({
-            summary: mapSummary(summary),
-            swipeIndex: -1
+            summary: mapSummary(summary)
           })
           wx.showToast({ title: '已删除', icon: 'success' })
         } catch (error) {
@@ -300,8 +265,7 @@ Page({
       editItemName: item.itemName,
       editCustomAmount: editCustomAmount,
       editPayerOptions,
-      editPayerIndex,
-      swipeIndex: -1
+      editPayerIndex
     })
   },
 
