@@ -338,17 +338,24 @@
   margin-top: 24rpx;
 }
 
+/* ===== 邀请操作按钮区 ===== */
+
 .invite-action-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
   gap: 16rpx;
-  margin-top: 24rpx;
+  margin-top: 28rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(176, 125, 71, 0.12);
 }
 
 .invite-action-row-single {
   display: flex;
   justify-content: center;
-  margin-top: 24rpx;
+  margin-top: 28rpx;
+  padding-top: 20rpx;
+  border-top: 1rpx solid rgba(176, 125, 71, 0.12);
 }
 
 .invite-action-row-single .invite-quit-button {
@@ -358,11 +365,19 @@
 
 .invite-accept-button,
 .invite-decline-button {
-  height: 76rpx;
+  flex: 1;
+  height: 84rpx;
   border: none;
-  border-radius: 22rpx 30rpx 20rpx 28rpx;
-  font-size: 26rpx;
-  line-height: 76rpx;
+  border-radius: 24rpx 32rpx 22rpx 30rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  line-height: 84rpx;
+  text-align: center;
+  box-sizing: border-box;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .invite-accept-button {

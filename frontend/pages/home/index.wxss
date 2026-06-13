@@ -115,7 +115,7 @@
   color: #8b6d55;
 }
 
-.auth-nickname-readonly {
+.auth-nickname-input {
   display: flex;
   align-items: center;
   width: 100%;
@@ -123,10 +123,16 @@
   margin-top: 18rpx;
   padding: 0 28rpx;
   border-radius: 28rpx 44rpx 30rpx 36rpx;
-  background: rgba(255, 255, 255, 0.6);
-  color: #5d4127;
+  background: rgba(255, 255, 255, 0.75);
+  color: #2f2218;
   font-size: 28rpx;
+  font-weight: 500;
   box-sizing: border-box;
+  border: 1rpx solid rgba(176, 125, 71, 0.12);
+}
+
+.auth-nickname-input::placeholder {
+  color: #b0a092;
 }
 
 .auth-confirm-button {

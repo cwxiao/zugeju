@@ -57,6 +57,8 @@ Page({
     modeRequiredTip: '',
     diceRolling: false,
     diceDisplayIndex: 0,
+    typeKeyword: '',
+    filteredTypes: [],
     locationRequired: false,
     locationTip: '',
     form: {
@@ -243,6 +245,24 @@ Page({
         })
       }
     })
+  },
+
+  onTypeSearch(event) {
+    const keyword = event.detail.value
+    const filtered = this.filterActivityTypes(keyword)
+    this.setData({ typeKeyword: keyword, filteredTypes: filtered })
+  },
+
+  clearTypeSearch() {
+    this.setData({ typeKeyword: '', filteredTypes: [] })
+  },
+
+  filterActivityTypes(keyword) {
+    if (!keyword || !keyword.trim()) return []
+    const kw = keyword.trim().toLowerCase()
+    return this.data.activityTypes
+      .map((item, index) => ({ ...item, _origIndex: index }))
+      .filter(item => item.name.toLowerCase().includes(kw) || (item.code && item.code.toLowerCase().includes(kw)))
   },
 
   rollDice() {

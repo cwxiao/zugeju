@@ -33,23 +33,51 @@
           </view>
         </view>
 
-        <view class="type-selector-block">
-          <view class="type-label-row">
-            <text class="field-label">活动类型</text>
-            <view class="dice-roll-trigger {{diceRolling ? 'dice-shaking' : ''}}" bindtap="rollDice">
-              <text class="dice-icon">🎲</text>
-              <text class="dice-text">{{diceRolling ? '摇...' : '不知道整啥？'}}</text>
+          <view class="type-selector-block">
+            <view class="type-label-row">
+              <text class="field-label">活动类型</text>
+              <view class="dice-roll-trigger {{diceRolling ? 'dice-shaking' : ''}}" bindtap="rollDice">
+                <text class="dice-icon">🎲</text>
+                <text class="dice-text">{{diceRolling ? '摇...' : '不知道整啥？'}}</text>
+              </view>
             </view>
-          </view>
-          <view class="type-chip-row">
-            <block wx:for="{{activityTypes}}" wx:key="code">
-              <view
-                class="type-chip {{(diceRolling ? diceDisplayIndex : activityTypeIndex) === index ? 'type-chip-active' : ''}}"
-                data-index="{{index}}"
-                bindtap="chooseActivityType"
-              >{{item.name}}</view>
-            </block>
-          </view>
+
+            <!-- 活动类型搜索 -->
+            <view class="type-search-bar">
+              <text class="type-search-icon">🔍</text>
+              <input class="type-search-input"
+                     type="text"
+                     placeholder="搜活动类型，如「火锅」「K歌」「露营」"
+                     value="{{typeKeyword}}"
+                     bindinput="onTypeSearch"
+                     maxlength="8" />
+              <text wx:if="{{typeKeyword}}" class="type-search-clear" catchtap="clearTypeSearch">✕</text>
+            </view>
+
+            <!-- 搜索结果 / 全部类型 -->
+            <scroll-view scroll-y class="type-scroll-area {{!typeKeyword ? 'type-show-all' : ''}}">
+              <!-- 有搜索关键词时显示搜索结果 -->
+              <view wx:if="{{typeKeyword}}" class="type-chip-row type-search-results">
+                <text wx:if="{{filteredTypes.length === 0}}" class="type-no-result">没找到匹配，试试别的词？</text>
+                <block wx:for="{{filteredTypes}}" wx:key="code">
+                  <view
+                    class="type-chip type-search-chip {{activityTypeIndex === item._origIndex ? 'type-chip-active' : ''}}"
+                    data-index="{{item._origIndex}}"
+                    bindtap="chooseActivityType"
+                  >{{item.name}}</view>
+                </block>
+              </view>
+              <!-- 无搜索时显示全部类型 -->
+              <view wx:else class="type-chip-row">
+                <block wx:for="{{activityTypes}}" wx:key="code">
+                  <view
+                    class="type-chip {{(diceRolling ? diceDisplayIndex : activityTypeIndex) === index ? 'type-chip-active' : ''}}"
+                    data-index="{{index}}"
+                    bindtap="chooseActivityType"
+                  >{{item.name}}</view>
+                </block>
+              </view>
+            </scroll-view>
           <text wx:if="{{activityRuleHint}}" class="field-required-tip">{{activityRuleHint}}</text>
         </view>
       </view>

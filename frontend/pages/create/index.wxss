@@ -257,6 +257,73 @@
   margin-top: 26rpx;
 }
 
+/* 活动类型搜索框 */
+.type-search-bar {
+  display: flex;
+  align-items: center;
+  height: 72rpx;
+  padding: 0 22rpx;
+  margin-top: 14rpx;
+  border-radius: 22rpx;
+  background: rgba(255, 251, 246, 0.82);
+  border: 1rpx solid rgba(176, 125, 71, 0.14);
+  box-sizing: border-box;
+  gap: 10rpx;
+}
+
+.type-search-icon {
+  font-size: 24rpx;
+  flex-shrink: 0;
+}
+
+.type-search-input {
+  flex: 1;
+  height: 100%;
+  color: #2e241b;
+  font-size: 25rpx;
+}
+
+.type-search-clear {
+  width: 38rpx;
+  height: 38rpx;
+  line-height: 38rpx;
+  text-align: center;
+  border-radius: 50%;
+  background: rgba(176, 125, 71, 0.12);
+  color: #8b735d;
+  font-size: 20rpx;
+  flex-shrink: 0;
+}
+
+.type-scroll-area {
+  max-height: 280rpx;
+  margin-top: 14rpx;
+}
+
+.type-show-all {
+  max-height: none;
+}
+
+.type-search-results {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14rpx;
+}
+
+.type-no-result {
+  display: block;
+  text-align: center;
+  padding: 24rpx 0;
+  color: #b0a092;
+  font-size: 24rpx;
+  width: 100%;
+}
+
+.type-search-chip {
+  min-width: 110rpx;
+  text-align: center;
+}
+
 .type-label-row {
   display: flex;
   align-items: center;

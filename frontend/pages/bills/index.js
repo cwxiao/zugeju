@@ -7,8 +7,8 @@ Page({
     activityId: '',
     loading: true,
     itemName: '',
-    amountOptions: ['5', '10', '20', '30', '50', '80', '100', '150', '200', '300', '500', '800', '1000', '1500', '2000'],
-    amountIndex: -1,
+    customAmount: '',          // 用户手动输入金额
+    quickAmounts: ['10', '20', '50', '100', '200', '500'],
     summary: null,
     // 付款人选择
     payerOptions: [],
@@ -24,11 +24,16 @@ Page({
       { label: '购物', items: ['食材', '零食', '水果', '饮料', '装备', '日用品', '礼物'] },
       { label: '其他', items: ['门票', '小费', '杂费', '押金', '快递费', '包间费', '服务费', '清洁费'] }
     ],
+    // 搜索
+    expenseKeyword: '',
+    filteredExpenseItems: [],
+    editExpenseKeyword: '',
+    filteredEditItems: [],
     // 编辑弹窗
     editVisible: false,
     editExpenseId: '',
     editItemName: '',
-    editAmountIndex: -1,
+    editCustomAmount: '',     // 编辑弹窗手动输入金额
     editPayerOptions: [],
     editPayerIndex: 0,
     // 左滑
@@ -109,8 +114,47 @@ Page({
     this.setData({ itemName: name })
   },
 
-  onAmountChange(event) {
-    this.setData({ amountIndex: Number(event.detail.value) })
+  onExpenseSearch(event) {
+    const keyword = event.detail.value
+    const filtered = this.filterExpenseItems(keyword)
+    this.setData({ expenseKeyword: keyword, filteredExpenseItems: filtered })
+  },
+
+  clearExpenseSearch() {
+    this.setData({ expenseKeyword: '', filteredExpenseItems: [] })
+  },
+
+  onEditExpenseSearch(event) {
+    const keyword = event.detail.value
+    const filtered = this.filterExpenseItems(keyword)
+    this.setData({ editExpenseKeyword: keyword, filteredEditItems: filtered })
+  },
+
+  clearEditExpenseSearch() {
+    this.setData({ editExpenseKeyword: '', filteredEditItems: [] })
+  },
+
+  filterExpenseItems(keyword) {
+    if (!keyword || !keyword.trim()) return []
+    const kw = keyword.trim().toLowerCase()
+    const results = []
+    for (const cat of this.data.expenseCategories) {
+      for (const item of cat.items) {
+        if (item.toLowerCase().includes(kw)) {
+          results.push(item)
+        }
+      }
+    }
+    return results
+  },
+
+  onAmountInput(event) {
+    this.setData({ customAmount: event.detail.value })
+  },
+
+  fillQuickAmount(e) {
+    const value = e.currentTarget.dataset.value
+    this.setData({ customAmount: value })
   },
 
   onPayerChange(event) {
@@ -119,8 +163,7 @@ Page({
 
   async submitExpense() {
     const itemName = this.data.itemName.trim()
-    const amountYuan = this.data.amountOptions[this.data.amountIndex]
-    const amountFen = amountYuan ? parseAmountToFen(amountYuan) : 0
+    const amountFen = parseAmountToFen(this.data.customAmount)
 
     if (!itemName) {
       wx.showToast({ title: '先写消费事项', icon: 'none' })
@@ -147,7 +190,7 @@ Page({
       })
       this.setData({
         itemName: '',
-        amountIndex: -1,
+        customAmount: '',
         summary: mapSummary(summary),
         payerIndex: 0
       })
@@ -247,12 +290,13 @@ Page({
     let editPayerIndex = editPayerOptions.findIndex(p => p.userId === item.payerUserId)
     if (editPayerIndex < 0) editPayerIndex = 0
 
-    const editAmountIndex = this.data.amountOptions.findIndex(a => a === String(item.amountFen / 100))
+    const editAmountIndex = -1 // 不再使用
+    const editCustomAmount = item.amountFen ? (item.amountFen / 100).toString() : ''
     this.setData({
       editVisible: true,
       editExpenseId: item.id,
       editItemName: item.itemName,
-      editAmountIndex: editAmountIndex >= 0 ? editAmountIndex : -1,
+      editCustomAmount: editCustomAmount,
       editPayerOptions,
       editPayerIndex,
       swipeIndex: -1
@@ -268,8 +312,13 @@ Page({
     this.setData({ editItemName: name })
   },
 
-  onEditAmountChange(e) {
-    this.setData({ editAmountIndex: Number(e.detail.value) })
+  onEditAmountInput(e) {
+    this.setData({ editCustomAmount: e.detail.value })
+  },
+
+  fillEditQuickAmount(e) {
+    const value = e.currentTarget.dataset.value
+    this.setData({ editCustomAmount: value })
   },
 
   onEditPayerChange(e) {
@@ -282,8 +331,7 @@ Page({
 
   async confirmEdit() {
     const itemName = this.data.editItemName.trim()
-    const editAmountYuan = this.data.amountOptions[this.data.editAmountIndex]
-    const amountFen = editAmountYuan ? parseAmountToFen(editAmountYuan) : 0
+    const amountFen = parseAmountToFen(this.data.editCustomAmount)
 
     if (!itemName) {
       wx.showToast({ title: '项目名不能为空', icon: 'none' })

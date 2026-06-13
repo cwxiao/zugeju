@@ -88,6 +88,21 @@ Page({
     }
   },
 
+  onNicknameInput(event) {
+    this.setData({ authNickname: event.detail.value })
+  },
+
+  onNicknameBlur(event) {
+    const nickname = (event.detail.value || '').trim()
+    if (nickname) {
+      this.setData({ authNickname: nickname })
+      // 实时保存到本地
+      const profile = wx.getStorageSync('profile') || {}
+      profile.nickname = nickname
+      wx.setStorageSync('profile', profile)
+    }
+  },
+
   handleChooseAvatar(event) {
     const { avatarUrl } = event.detail
     if (!avatarUrl) {
@@ -106,8 +121,9 @@ Page({
 
     try {
       await requestInitialSubscribePermission()
+      const userNickname = (this.data.authNickname || '').trim() || '微信用户'
       const loginData = await getApp().loginWithConfirm({
-        nickname: '微信用户',
+        nickname: userNickname,
         avatarUrl: ''
       })
 
@@ -254,13 +270,16 @@ Page({
 
   promptRelogin() {
     const profile = wx.getStorageSync('profile') || {}
+    // 如果本地有用户信息，优先使用用户的真实昵称
+    const savedUser = wx.getStorageSync('user') || {}
+    const cachedNickname = profile.nickname || (savedUser.nickname && savedUser.nickname !== '微信用户' ? savedUser.nickname : '')
     this.setData({
       authVisible: true,
       authLoading: false,
       loggedIn: false,
       ongoingItems: [],
       silentLoginTried: false,
-      authNickname: profile.nickname || '',
+      authNickname: cachedNickname,
       authAvatarUrl: profile.avatarUrl || ''
     })
     wx.showToast({

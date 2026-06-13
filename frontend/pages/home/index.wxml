@@ -18,8 +18,14 @@
 
         <view class="auth-section auth-nickname-section">
           <text class="auth-section-label">你的昵称</text>
-          <view class="auth-nickname-readonly">微信用户</view>
-          <text class="auth-section-tip">自动使用微信昵称，无需填写。</text>
+          <input class="auth-nickname-input"
+                 type="nickname"
+                 placeholder="输入你的昵称"
+                 value="{{authNickname}}"
+                 bindinput="onNicknameInput"
+                 bindblur="onNicknameBlur"
+                 maxlength="20" />
+          <text class="auth-section-tip">取个响亮的昵称，方便朋友认出你。</text>
         </view>
 
         <button class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLogin">

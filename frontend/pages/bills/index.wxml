@@ -52,20 +52,48 @@
       <text class="bill-title">记一笔消费</text>
       <text class="bill-helper">选择消费项目，填入金额即可。</text>
 
-      <!-- 消费项目卡片选择 -->
-      <view class="bill-expense-cats">
-        <block wx:for="{{expenseCategories}}" wx:key="label">
-          <view class="bill-expense-cat">
-            <text class="bill-expense-cat-label">{{item.label}}</text>
-            <view class="bill-expense-chips">
-              <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
-                class="bill-expense-chip {{itemName === name ? 'bill-expense-chip-active' : ''}}"
-                bindtap="chooseExpenseItem" data-name="{{name}}">
-                {{name}}
+      <!-- 消费项目搜索选择 -->
+      <view class="bill-expense-search-section">
+        <view class="bill-search-bar">
+          <text class="bill-search-icon">🔍</text>
+          <input class="bill-search-input"
+                 type="text"
+                 placeholder="搜消费项目，如「奶茶」「火锅」「打车」"
+                 value="{{expenseKeyword}}"
+                 bindinput="onExpenseSearch"
+                 maxlength="10" />
+          <text wx:if="{{expenseKeyword}}" class="bill-search-clear" catchtap="clearExpenseSearch">✕</text>
+        </view>
+
+        <!-- 搜索结果 / 默认展示 -->
+        <scroll-view scroll-y class="bill-expense-scroll">
+          <block wx:if="{{!expenseKeyword}}">
+            <!-- 无搜索时按分类展示 -->
+            <block wx:for="{{expenseCategories}}" wx:key="label">
+              <view class="bill-expense-cat">
+                <text class="bill-expense-cat-label">{{item.label}}</text>
+                <view class="bill-expense-chips">
+                  <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
+                    class="bill-expense-chip {{itemName === name ? 'bill-expense-chip-active' : ''}}"
+                    bindtap="chooseExpenseItem" data-name="{{name}}">
+                    {{name}}
+                  </view>
+                </view>
               </view>
+            </block>
+          </block>
+          <view wx:else class="bill-search-results">
+            <text class="bill-search-hint" wx:if="{{filteredExpenseItems.length === 0}}">没找到匹配项，直接手写吧</text>
+            <view wx:else class="bill-expense-chips">
+              <block wx:for="{{filteredExpenseItems}}" wx:key="*this">
+                <view class="bill-expense-chip {{itemName === item ? 'bill-expense-chip-active' : ''}} bill-search-chip"
+                  bindtap="chooseExpenseItem" data-name="{{item}}">
+                  {{item}}
+                </view>
+              </block>
             </view>
           </view>
-        </block>
+        </scroll-view>
       </view>
 
       <view class="bill-selected-item" wx:if="{{itemName}}">
@@ -73,11 +101,21 @@
         <text class="bill-selected-name">{{itemName}}</text>
       </view>
 
-      <picker mode="selector" range="{{amountOptions}}" value="{{amountIndex}}" bindchange="onAmountChange">
-        <view class="bill-picker-box {{amountIndex >= 0 ? 'bill-picker-active' : ''}}">
-          {{amountIndex >= 0 ? amountOptions[amountIndex] + ' 元' : '选择金额'}}
+      <!-- 金额输入 -->
+      <view class="bill-amount-section">
+        <view class="bill-amount-label">金额（元）</view>
+        <input class="bill-amount-input {{customAmount ? 'bill-amount-active' : ''}}"
+               type="digit"
+               placeholder="输入金额，如 88.50"
+               value="{{customAmount}}"
+               bindinput="onAmountInput"
+               maxlength="8" />
+        <view class="bill-quick-amounts">
+          <block wx:for="{{quickAmounts}}" wx:key="*this">
+            <view class="bill-quick-chip" bindtap="fillQuickAmount" data-value="{{item}}">{{item}}</view>
+          </block>
         </view>
-      </picker>
+      </view>
       <!-- 付款人选择 -->
       <view class="bill-payer-row">
         <text class="bill-payer-label">付款人</text>
@@ -193,34 +231,68 @@
     <view class="bill-modal" catchtap="">
       <text class="bill-modal-title">编辑消费</text>
 
-      <!-- 消费项目卡片选择 -->
-      <scroll-view scroll-y class="bill-edit-scroll">
-        <view class="bill-expense-cats bill-edit-cats">
-          <block wx:for="{{expenseCategories}}" wx:key="label">
-            <view class="bill-expense-cat">
-              <text class="bill-expense-cat-label">{{item.label}}</text>
-              <view class="bill-expense-chips">
-                <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
-                  class="bill-expense-chip {{editItemName === name ? 'bill-expense-chip-active' : ''}}"
-                  bindtap="chooseEditExpenseItem" data-name="{{name}}">
-                  {{name}}
+      <!-- 消费项目搜索选择（编辑） -->
+      <view class="bill-expense-search-section">
+        <view class="bill-search-bar bill-search-bar-sm">
+          <text class="bill-search-icon">🔍</text>
+          <input class="bill-search-input"
+                 type="text"
+                 placeholder="搜消费项目"
+                 value="{{editExpenseKeyword}}"
+                 bindinput="onEditExpenseSearch"
+                 maxlength="10" />
+          <text wx:if="{{editExpenseKeyword}}" class="bill-search-clear" catchtap="clearEditExpenseSearch">✕</text>
+        </view>
+
+        <scroll-view scroll-y class="bill-edit-scroll">
+          <block wx:if="{{!editExpenseKeyword}}">
+            <block wx:for="{{expenseCategories}}" wx:key="label">
+              <view class="bill-expense-cat">
+                <text class="bill-expense-cat-label">{{item.label}}</text>
+                <view class="bill-expense-chips">
+                  <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
+                    class="bill-expense-chip {{editItemName === name ? 'bill-expense-chip-active' : ''}}"
+                    bindtap="chooseEditExpenseItem" data-name="{{name}}">
+                    {{name}}
+                  </view>
                 </view>
               </view>
-            </view>
+            </block>
           </block>
-        </view>
-      </scroll-view>
+          <view wx:else class="bill-search-results">
+            <text class="bill-search-hint" wx:if="{{filteredEditItems.length === 0}}">没找到匹配项</text>
+            <view wx:else class="bill-expense-chips">
+              <block wx:for="{{filteredEditItems}}" wx:key="*this">
+                <view class="bill-expense-chip {{editItemName === item ? 'bill-expense-chip-active' : ''}} bill-search-chip"
+                  bindtap="chooseEditExpenseItem" data-name="{{item}}">
+                  {{item}}
+                </view>
+              </block>
+            </view>
+          </view>
+        </scroll-view>
+      </view>
 
       <view class="bill-selected-item" wx:if="{{editItemName}}">
         <text class="bill-selected-label">已选：</text>
         <text class="bill-selected-name">{{editItemName}}</text>
       </view>
 
-      <picker mode="selector" range="{{amountOptions}}" value="{{editAmountIndex}}" bindchange="onEditAmountChange">
-        <view class="bill-picker-box {{editAmountIndex >= 0 ? 'bill-picker-active' : ''}}">
-          {{editAmountIndex >= 0 ? amountOptions[editAmountIndex] + ' 元' : '选择金额'}}
+      <!-- 金额输入（编辑） -->
+      <view class="bill-amount-section">
+        <view class="bill-amount-label">金额（元）</view>
+        <input class="bill-amount-input {{editCustomAmount ? 'bill-amount-active' : ''}}"
+               type="digit"
+               placeholder="输入金额，如 88.50"
+               value="{{editCustomAmount}}"
+               bindinput="onEditAmountInput"
+               maxlength="8" />
+        <view class="bill-quick-amounts">
+          <block wx:for="{{quickAmounts}}" wx:key="*this">
+            <view class="bill-quick-chip" bindtap="fillEditQuickAmount" data-value="{{item}}">{{item}}</view>
+          </block>
         </view>
-      </picker>
+      </view>
       <!-- 付款人选择 -->
       <view class="bill-payer-row">
         <text class="bill-payer-label">付款人</text>
