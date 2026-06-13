@@ -2,6 +2,15 @@ const { request, isAuthExpiredError, getBaseUrl } = require('../../utils/request
 const { requestInitialSubscribePermission } = require('../../utils/subscribe')
 const cdn = require('../../utils/cdn')
 
+/** 确保头像URL是完整可访问地址 */
+function resolveAvatarUrl(avatarUrl) {
+  if (!avatarUrl) return ''
+  if (avatarUrl.startsWith('http://tmp') || avatarUrl.startsWith('wxfile://')) return ''
+  if (avatarUrl.startsWith('http')) return avatarUrl
+  // 相对路径（如 /uploads/avatars/xxx.png）拼接域名
+  return getBaseUrl() + avatarUrl
+}
+
 Page({
   data: {
     cdnImg: cdn,
@@ -88,15 +97,11 @@ Page({
     }
   },
 
-  onNicknameInput(event) {
-    this.setData({ authNickname: event.detail.value })
-  },
-
-  onNicknameBlur(event) {
-    const nickname = (event.detail.value || '').trim()
+  onChooseNickname(event) {
+    const nickname = (event.detail.nickName || event.detail.value || '').trim()
     if (nickname) {
       this.setData({ authNickname: nickname })
-      // 实时保存到本地
+      // 保存到本地
       const profile = wx.getStorageSync('profile') || {}
       profile.nickname = nickname
       wx.setStorageSync('profile', profile)
@@ -146,7 +151,8 @@ Page({
 
           const result = JSON.parse(uploadRes.data)
           if (result.data) {
-            const remoteUrl = getBaseUrl() + result.data
+            // 后端返回相对路径如 /uploads/avatars/xxx.png，拼接完整URL
+            const remoteUrl = result.data.startsWith('http') ? result.data : (getBaseUrl() + result.data)
             // 更新后端用户头像
             await request({
               url: '/api/users/avatar',

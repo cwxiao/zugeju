@@ -300,8 +300,24 @@
   margin-top: 14rpx;
 }
 
-.type-show-all {
-  max-height: none;
+.type-hot-section {
+  margin-top: 8rpx;
+}
+
+.type-hot-label {
+  display: block;
+  font-size: 22rpx;
+  color: #8b735d;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
+.type-hot-hint {
+  display: block;
+  text-align: center;
+  padding: 12rpx 0;
+  color: #b0a092;
+  font-size: 22rpx;
 }
 
 .type-search-results {

@@ -1,8 +1,17 @@
-const { request, isAuthExpiredError } = require('../../utils/request')
+const { request, isAuthExpiredError, getBaseUrl } = require('../../utils/request')
 const { requestInitialSubscribePermission } = require('../../utils/subscribe')
 const cdn = require('../../utils/cdn')
 
 const MEMBER_REFRESH_INTERVAL = 10000
+
+/** 确保头像URL是完整可访问地址 */
+function resolveAvatarUrl(avatarUrl) {
+  if (!avatarUrl) return ''
+  if (avatarUrl.startsWith('http://tmp') || avatarUrl.startsWith('wxfile://')) return ''
+  if (avatarUrl.startsWith('http')) return avatarUrl
+  // 相对路径（如 /uploads/avatars/xxx.png）拼接域名
+  return getBaseUrl() + avatarUrl
+}
 
 const REACTION_OPTIONS = [
   { emoji: '🔥', label: '冲！' },
@@ -104,11 +113,12 @@ Page({
 
       const mappedMembers = (detail.members || []).map((member) => {
         const colors = generateAvatarColors(member.userId)
+        const resolvedAvatar = resolveAvatarUrl(member.avatarUrl) || (member.userId === localUser.id ? resolveAvatarUrl(localUser.avatarUrl) : '')
         return {
           id: member.userId,
           nickname: member.nickname || '友',
           shortName: (member.nickname || '友').slice(0, 1),
-          avatarUrl: member.avatarUrl || (member.userId === localUser.id ? (localUser.avatarUrl || '') : ''),
+          avatarUrl: resolvedAvatar,
           avatarBg: colors.bg,
           avatarFg: colors.fg,
           avatarError: false

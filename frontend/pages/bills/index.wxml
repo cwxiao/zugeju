@@ -61,29 +61,29 @@
                  placeholder="搜消费项目，如「奶茶」「火锅」「打车」"
                  value="{{expenseKeyword}}"
                  bindinput="onExpenseSearch"
-                 maxlength="10" />
+                 maxlength="10"
+                 focus="{{!itemName}}" />
           <text wx:if="{{expenseKeyword}}" class="bill-search-clear" catchtap="clearExpenseSearch">✕</text>
         </view>
 
-        <!-- 搜索结果 / 默认展示 -->
+        <!-- 搜索结果 -->
         <scroll-view scroll-y class="bill-expense-scroll">
           <block wx:if="{{!expenseKeyword}}">
-            <!-- 无搜索时按分类展示 -->
-            <block wx:for="{{expenseCategories}}" wx:key="label">
-              <view class="bill-expense-cat">
-                <text class="bill-expense-cat-label">{{item.label}}</text>
-                <view class="bill-expense-chips">
-                  <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
-                    class="bill-expense-chip {{itemName === name ? 'bill-expense-chip-active' : ''}}"
-                    bindtap="chooseExpenseItem" data-name="{{name}}">
-                    {{name}}
-                  </view>
+            <!-- 无搜索时展示热门推荐 -->
+            <view class="bill-expense-hot">
+              <text class="bill-expense-hot-label">🔥 常用项目</text>
+              <view class="bill-expense-chips">
+                <view wx:for="{{hotExpenseItems}}" wx:key="*this"
+                  class="bill-expense-chip {{itemName === item ? 'bill-expense-chip-active' : ''}}"
+                  bindtap="chooseExpenseItem" data-name="{{item}}">
+                  {{item}}
                 </view>
               </view>
-            </block>
+            </view>
+            <text class="bill-search-empty-hint">输入关键词搜索更多项目 ↑</text>
           </block>
           <view wx:else class="bill-search-results">
-            <text class="bill-search-hint" wx:if="{{filteredExpenseItems.length === 0}}">没找到匹配项，直接手写吧</text>
+            <text class="bill-search-hint" wx:if="{{filteredExpenseItems.length === 0}}">没找到匹配项，直接在上方输入名称吧</text>
             <view wx:else class="bill-expense-chips">
               <block wx:for="{{filteredExpenseItems}}" wx:key="*this">
                 <view class="bill-expense-chip {{itemName === item ? 'bill-expense-chip-active' : ''}} bill-search-chip"
@@ -246,18 +246,17 @@
 
         <scroll-view scroll-y class="bill-edit-scroll">
           <block wx:if="{{!editExpenseKeyword}}">
-            <block wx:for="{{expenseCategories}}" wx:key="label">
-              <view class="bill-expense-cat">
-                <text class="bill-expense-cat-label">{{item.label}}</text>
-                <view class="bill-expense-chips">
-                  <view wx:for="{{item.items}}" wx:for-item="name" wx:key="*this"
-                    class="bill-expense-chip {{editItemName === name ? 'bill-expense-chip-active' : ''}}"
-                    bindtap="chooseEditExpenseItem" data-name="{{name}}">
-                    {{name}}
-                  </view>
+            <view class="bill-expense-hot">
+              <text class="bill-expense-hot-label">🔥 常用项目</text>
+              <view class="bill-expense-chips">
+                <view wx:for="{{hotExpenseItems}}" wx:key="*this"
+                  class="bill-expense-chip {{editItemName === item ? 'bill-expense-chip-active' : ''}}"
+                  bindtap="chooseEditExpenseItem" data-name="{{item}}">
+                  {{item}}
                 </view>
               </view>
-            </block>
+            </view>
+            <text class="bill-search-empty-hint">输入关键词搜索更多项目 ↑</text>
           </block>
           <view wx:else class="bill-search-results">
             <text class="bill-search-hint" wx:if="{{filteredEditItems.length === 0}}">没找到匹配项</text>

@@ -54,8 +54,8 @@
               <text wx:if="{{typeKeyword}}" class="type-search-clear" catchtap="clearTypeSearch">✕</text>
             </view>
 
-            <!-- 搜索结果 / 全部类型 -->
-            <scroll-view scroll-y class="type-scroll-area {{!typeKeyword ? 'type-show-all' : ''}}">
+            <!-- 搜索结果 / 热门推荐 -->
+            <scroll-view scroll-y class="type-scroll-area">
               <!-- 有搜索关键词时显示搜索结果 -->
               <view wx:if="{{typeKeyword}}" class="type-chip-row type-search-results">
                 <text wx:if="{{filteredTypes.length === 0}}" class="type-no-result">没找到匹配，试试别的词？</text>
@@ -67,15 +67,17 @@
                   >{{item.name}}</view>
                 </block>
               </view>
-              <!-- 无搜索时显示全部类型 -->
-              <view wx:else class="type-chip-row">
-                <block wx:for="{{activityTypes}}" wx:key="code">
-                  <view
-                    class="type-chip {{(diceRolling ? diceDisplayIndex : activityTypeIndex) === index ? 'type-chip-active' : ''}}"
-                    data-index="{{index}}"
+              <!-- 无搜索时只显示热门推荐 -->
+              <view wx:else class="type-hot-section">
+                <text class="type-hot-label">🔥 热门活动</text>
+                <view class="type-chip-row">
+                  <view wx:for="{{hotActivityTypes}}" wx:key="index"
+                    class="type-chip {{activityTypeIndex === item.index ? 'type-chip-active' : ''}}"
+                    data-index="{{item.index}}"
                     bindtap="chooseActivityType"
                   >{{item.name}}</view>
-                </block>
+                </view>
+                <text class="type-hot-hint">输入关键词搜索更多类型 ↑</text>
               </view>
             </scroll-view>
           <text wx:if="{{activityRuleHint}}" class="field-required-tip">{{activityRuleHint}}</text>

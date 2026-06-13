@@ -553,6 +553,26 @@
   flex-shrink: 0;
 }
 
+.bill-search-empty-hint {
+  display: block;
+  text-align: center;
+  padding: 16rpx 0;
+  color: #b0a092;
+  font-size: 22rpx;
+}
+
+.bill-expense-hot {
+  margin-top: 14rpx;
+}
+
+.bill-expense-hot-label {
+  display: block;
+  font-size: 22rpx;
+  color: #8b735d;
+  font-weight: 600;
+  margin-bottom: 10rpx;
+}
+
 .bill-search-results {
   margin-top: 14rpx;
 }
