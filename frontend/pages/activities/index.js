@@ -43,7 +43,7 @@ Page({
 
   onShareAppMessage() {
     return {
-      title: '来整 — 活动档案',
+      title: '来整 — 活动足迹',
       path: '/pages/home/index'
     }
   },
@@ -71,7 +71,7 @@ Page({
         return
       }
 
-      wx.showToast({ title: '活动档案加载失败', icon: 'none' })
+      wx.showToast({ title: '活动足迹加载失败', icon: 'none' })
     }
   },
 

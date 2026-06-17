@@ -55,7 +55,7 @@
             <image class="minimal-logo" src="/img/brand-logo.png" mode="aspectFit" bindtap="goCreate" />
             <text class="minimal-brand">来整</text>
           </view>
-          <view class="minimal-link" bindtap="goActivities">活动档案</view>
+          <view class="minimal-link" bindtap="goActivities">活动足迹</view>
         </view>
 
         <view class="cta-panel">
@@ -71,14 +71,17 @@
         </view>
 
         <view class="quick-entry-row">
-          <view class="quick-entry-card" bindtap="goActivities">
-            <text class="quick-entry-title">活动档案</text>
+          <view class="quick-entry-card quick-entry-card-solo" bindtap="goActivities">
+            <text class="quick-entry-title">活动足迹</text>
             <text class="quick-entry-desc">回看以前整过的局。</text>
           </view>
+          <!-- 活动分析入口暂时隐藏，代码保留 -->
+          <!--
           <view class="quick-entry-card quick-entry-card-accent" bindtap="goPersonality">
             <text class="quick-entry-title">活动分析</text>
             <text class="quick-entry-desc">30 天整活风格总结。</text>
           </view>
+          -->
         </view>
       </view>
     </view>
@@ -114,7 +117,7 @@
         <view class="feature-card">
           <text class="feature-icon">📊</text>
           <text class="feature-title">活动统计</text>
-          <text class="feature-desc">自动统计人数、AA付款、活动档案，省心省力</text>
+          <text class="feature-desc">自动统计人数、AA付款、活动足迹，省心省力</text>
         </view>
       </view>
 

@@ -3,8 +3,8 @@
   <view wx:if="{{!activityId}}" class="bill-card bill-shell bill-empty-card">
     <text class="bill-empty-badge">记账结算</text>
     <view class="section-title">先从具体活动进入账单</view>
-    <text class="bill-meta">账单跟着活动走，可从活动档案进入。</text>
-    <button class="primary-button bill-empty-button" bindtap="goActivities">去活动档案</button>
+    <text class="bill-meta">账单跟着活动走，可从活动足迹进入。</text>
+    <button class="primary-button bill-empty-button" bindtap="goActivities">去活动足迹</button>
   </view>
 
   <view wx:elif="{{summary}}" class="bill-list bill-shell">
