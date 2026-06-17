@@ -41,11 +41,8 @@ Page({
   },
 
   async onLoad(options) {
-    if (!getApp().hasLoginState()) {
-      wx.showToast({ title: '请先登录', icon: 'none' })
-      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
-      return
-    }
+    // 不再拦截未登录用户，允许浏览
+    // 登录检查移到操作时（记账、编辑、删除）
 
     const activityId = (options && options.id) || ''
     this.setData({ activityId })
@@ -66,6 +63,12 @@ Page({
   },
 
   async loadSummary() {
+    // 未登录时显示友好提示，不请求接口
+    if (!getApp().hasLoginState()) {
+      this.setData({ loading: false })
+      return
+    }
+
     try {
       const summary = await request({
         url: `/api/activities/${this.data.activityId}/expenses/summary`
@@ -160,6 +163,12 @@ Page({
   },
 
   async submitExpense() {
+    if (!getApp().hasLoginState()) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      setTimeout(() => { wx.navigateTo({ url: '/pages/home/index?showAuth=1' }) }, 800)
+      return
+    }
+
     const itemName = this.data.itemName.trim()
     const amountFen = parseAmountToFen(this.data.customAmount)
 
@@ -212,6 +221,11 @@ Page({
   // ===== 删除消费 =====
 
   onDeleteExpense(e) {
+    if (!getApp().hasLoginState()) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+
     const index = e.currentTarget.dataset.index
     const item = this.data.summary.expenseItems[index]
     if (!item) return
@@ -296,6 +310,11 @@ Page({
   },
 
   async confirmEdit() {
+    if (!getApp().hasLoginState()) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      return
+    }
+
     const itemName = this.data.editItemName.trim()
     const amountFen = parseAmountToFen(this.data.editCustomAmount)
 

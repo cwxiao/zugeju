@@ -36,11 +36,8 @@ Page({
   },
 
   onShow() {
-    if (!getApp().hasLoginState()) {
-      wx.showToast({ title: '请先登录', icon: 'none' })
-      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
-      return
-    }
+    // 不再拦截未登录用户，允许浏览
+    // 登录检查移到操作时
     this.loadArchive()
   },
 
@@ -52,6 +49,12 @@ Page({
   },
 
   async loadArchive() {
+    // 未登录时显示空状态，不请求接口
+    if (!getApp().hasLoginState()) {
+      this.setData({ archiveRecords: [] })
+      return
+    }
+
     try {
       const archiveRecords = await request({
         url: '/api/activities/mine/archive'

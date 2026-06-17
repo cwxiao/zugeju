@@ -20,18 +20,19 @@ Page({
   },
 
   async onShow() {
-    if (!getApp().hasLoginState()) {
-      wx.showToast({ title: '请先登录', icon: 'none' })
-      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
-      return
-    }
-
+    // 不再拦截未登录用户
     wx.showShareMenu({
       withShareTicket: true,
       menus: ['shareAppMessage', 'shareTimeline']
     })
 
     try {
+      // 未登录时不请求
+      if (!getApp().hasLoginState()) {
+        this.setData({ report: null })
+        return
+      }
+
       const report = await request({
         url: '/api/activities/mine/personality-report'
       })

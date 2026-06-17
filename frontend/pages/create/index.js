@@ -132,16 +132,8 @@ Page({
   },
 
   async onLoad(options) {
-    if (!getApp().hasLoginState()) {
-      wx.showToast({
-        title: '请先登录',
-        icon: 'none'
-      })
-      wx.navigateTo({
-        url: '/pages/home/index?showAuth=1'
-      })
-      return
-    }
+    // 不再拦截未登录用户，允许浏览表单
+    // 登录检查移到提交时
 
     if (options && options.id) {
       await this.loadForEdit(options.id)
@@ -342,6 +334,15 @@ Page({
   },
 
   async submit() {
+    // 提交时才检查登录
+    if (!getApp().hasLoginState()) {
+      wx.showToast({ title: '请先登录', icon: 'none' })
+      setTimeout(() => {
+        wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
+      }, 800)
+      return
+    }
+
     const {
       form,
       modes,

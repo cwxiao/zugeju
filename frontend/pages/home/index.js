@@ -55,13 +55,14 @@ Page({
       return
     }
 
-    // 未登录：只设置 loggedIn: false，不弹授权框
-    // 让用户先浏览，需要时再提示登录
+    // 未登录：默认不弹授权框，但如果有待处理的授权请求则弹出
+    const shouldShowAuth = this.data.pendingShowAuth
     this.setData({
       loggedIn: false,
-      authVisible: false,  // 绝对不自动弹授权框
+      authVisible: !!shouldShowAuth,
       ongoingItems: [],
-      silentLoginTried: true  // 标记已尝试，避免重复逻辑
+      silentLoginTried: true,
+      pendingShowAuth: false  // 消费掉，避免每次onShow都弹
     })
   },
 
