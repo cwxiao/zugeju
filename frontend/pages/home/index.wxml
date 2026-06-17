@@ -18,14 +18,16 @@
 
         <view class="auth-section auth-nickname-section">
           <text class="auth-section-label">你的昵称</text>
-          <button class="auth-nickname-button {{authNickname ? 'auth-nickname-filled' : ''}}"
-                  open-type="chooseNickname"
-                  bindchoosenickname="onChooseNickname">
-            <text wx:if="{{authNickname}}" class="auth-nickname-text">{{authNickname}}</text>
-            <text wx:else class="auth-nickname-placeholder">点击获取微信昵称</text>
-            <text class="auth-nickname-arrow">▸</text>
-          </button>
-          <text class="auth-section-tip">点击按钮一键获取你的微信昵称。</text>
+          <form class="auth-nickname-form" bindsubmit="onChooseNickname">
+            <input class="auth-nickname-input {{authNickname ? 'auth-nickname-filled' : ''}}"
+                   type="nickname"
+                   name="nickname"
+                   value="{{authNickname}}"
+                   placeholder="点击获取微信昵称"
+                   bindblur="onNicknameBlur"
+                   bindconfirm="onNicknameConfirm" />
+          </form>
+          <text class="auth-section-tip">点击输入框，键盘上方可一键填入微信昵称。</text>
         </view>
 
         <button class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLogin">

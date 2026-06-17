@@ -109,10 +109,30 @@ Page({
   },
 
   onChooseNickname(event) {
-    const nickname = (event.detail.nickName || event.detail.value || '').trim()
+    // form bindsubmit 回调
+    const nickname = (event.detail.value.nickname || event.detail.value || '').trim()
     if (nickname) {
       this.setData({ authNickname: nickname })
-      // 保存到本地
+      const profile = wx.getStorageSync('profile') || {}
+      profile.nickname = nickname
+      wx.setStorageSync('profile', profile)
+    }
+  },
+
+  onNicknameBlur(event) {
+    const nickname = (event.detail.value || '').trim()
+    if (nickname) {
+      this.setData({ authNickname: nickname })
+      const profile = wx.getStorageSync('profile') || {}
+      profile.nickname = nickname
+      wx.setStorageSync('profile', profile)
+    }
+  },
+
+  onNicknameConfirm(event) {
+    const nickname = (event.detail.value || '').trim()
+    if (nickname) {
+      this.setData({ authNickname: nickname })
       const profile = wx.getStorageSync('profile') || {}
       profile.nickname = nickname
       wx.setStorageSync('profile', profile)
