@@ -108,17 +108,6 @@ Page({
     }
   },
 
-  onChooseNickname(event) {
-    // form bindsubmit 回调
-    const nickname = (event.detail.value.nickname || event.detail.value || '').trim()
-    if (nickname) {
-      this.setData({ authNickname: nickname })
-      const profile = wx.getStorageSync('profile') || {}
-      profile.nickname = nickname
-      wx.setStorageSync('profile', profile)
-    }
-  },
-
   onNicknameBlur(event) {
     const nickname = (event.detail.value || '').trim()
     if (nickname) {
@@ -144,8 +133,12 @@ Page({
     if (!avatarUrl) {
       return
     }
-
     this.setData({ authAvatarUrl: avatarUrl })
+  },
+
+  reChooseAvatar() {
+    // 用户点击预览区想更换头像，不做任何事（open-type只能绑在button上）
+    // 预览区下方已经有确认登录按钮，如需更换可以关闭重开
   },
 
   closeAuthDialog() {

@@ -7,31 +7,35 @@
         <text class="auth-title">登录后更好用</text>
         <text class="auth-desc">获取头像和昵称后可创建活动、记账结算，也可先随便看看。</text>
 
-        <view class="auth-section auth-avatar-section">
-          <text class="auth-section-label">获取头像</text>
-          <button class="auth-avatar-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
-            <image wx:if="{{authAvatarUrl}}" class="auth-avatar-image" src="{{authAvatarUrl}}" mode="aspectFill" />
-            <view wx:else class="auth-avatar-placeholder">点这里选头像</view>
-          </button>
-          <text class="auth-section-tip">将用作你的活动头像。</text>
+        <!-- 已获取到头像和昵称：展示预览 -->
+        <view wx:if="{{authAvatarUrl && authNickname}}" class="auth-preview" bindtap="reChooseAvatar">
+          <image class="auth-preview-avatar" src="{{authAvatarUrl}}" mode="aspectFill" />
+          <text class="auth-preview-nickname">{{authNickname}}</text>
+          <text class="auth-preview-hint">点击可更换头像</text>
         </view>
 
-        <view class="auth-section auth-nickname-section">
-          <text class="auth-section-label">你的昵称</text>
-          <form class="auth-nickname-form" bindsubmit="onChooseNickname">
-            <input class="auth-nickname-input {{authNickname ? 'auth-nickname-filled' : ''}}"
+        <!-- 未获取：显示获取按钮 -->
+        <view wx:if="{{!authAvatarUrl || !authNickname}}" class="auth-action-area">
+          <!-- 头像未获取 -->
+          <button wx:if="{{!authAvatarUrl}}" class="auth-agree-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
+            同意并获取头像
+          </button>
+          <!-- 头像已获取，昵称未获取 -->
+          <view wx:if="{{authAvatarUrl && !authNickname}}" class="auth-nickname-row">
+            <image class="auth-nickname-avatar" src="{{authAvatarUrl}}" mode="aspectFill" />
+            <input class="auth-nickname-input"
                    type="nickname"
-                   name="nickname"
                    value="{{authNickname}}"
                    placeholder="点击获取微信昵称"
+                   focus="{{authAvatarUrl && !authNickname}}"
                    bindblur="onNicknameBlur"
                    bindconfirm="onNicknameConfirm" />
-          </form>
-          <text class="auth-section-tip">点击输入框，键盘上方可一键填入微信昵称。</text>
+          </view>
         </view>
 
-        <button class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLogin">
-          {{authLoading ? '登录中...' : '登录使用全部功能'}}
+        <!-- 都获取到了：确认登录 -->
+        <button wx:if="{{authAvatarUrl && authNickname}}" class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLogin">
+          {{authLoading ? '登录中...' : '确认登录'}}
         </button>
         <text class="auth-section-tip auth-subscribe-tip">确认时会请求通知授权，可拒绝。</text>
         <view class="auth-close-row" bindtap="closeAuthDialog">
