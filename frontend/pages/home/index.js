@@ -50,7 +50,14 @@ Page({
     // 已登录的情况
     if (getApp().hasLoginState()) {
       this.setData({ loggedIn: true, authVisible: false })
-      await this.loadActivities()
+      const loadOk = await this.loadActivities()
+      // 如果加载失败（如 Token 过期），静默退回浏览模式，不弹登录框
+      if (!loadOk) {
+        this.setData({
+          loggedIn: false,
+          ongoingItems: []
+        })
+      }
       this.consumePendingInvitePath()
       return
     }
@@ -85,16 +92,19 @@ Page({
       }))
 
       this.setData({ ongoingItems })
+      return true
     } catch (error) {
       if (isAuthExpiredError(error)) {
-        this.promptRelogin()
-        return
+        // Token 过期，清除本地登录状态，不弹窗（由 onShow 静默退回浏览模式）
+        getApp().logout()
+        return false
       }
 
       wx.showToast({
         title: '加载失败',
         icon: 'none'
       })
+      return false
     }
   },
 
