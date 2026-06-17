@@ -29,7 +29,6 @@ Page({
     inviteSource: '',
     reactions: [],
     floatingReactions: [],
-    roundTablePositions: [],
     detail: {
       id: '',
       title: '详情',
@@ -153,8 +152,7 @@ Page({
           canJoin: showJoinButton,
           currentUserJoined: detail.currentUserJoined,
           members: mappedMembers
-        },
-        roundTablePositions: buildRoundTablePositions(mappedMembers)
+        }
       })
     } catch (error) {
       if (isAuthExpiredError(error)) {
@@ -363,16 +361,6 @@ Page({
     }
   },
 
-  onRoundAvatarError(event) {
-    const index = event.currentTarget.dataset.index
-    const positions = this.data.roundTablePositions
-    if (positions && positions[index]) {
-      this.setData({
-        [`roundTablePositions[${index}].avatarError`]: true
-      })
-    }
-  },
-
   cancelActivity() {
     wx.showModal({
       title: '取消活动',
@@ -459,22 +447,6 @@ function loadReactions(activityId) {
 
 function saveReactions(activityId, reactions) {
   wx.setStorageSync(`reactions_${activityId}`, reactions)
-}
-
-function buildRoundTablePositions(members) {
-  const count = members.length
-  if (count === 0) return []
-  const centerX = 50
-  const centerY = 50
-  const radius = 38
-  const startAngle = -90
-  return members.map((member, index) => {
-    const angle = startAngle + (360 / count) * index
-    const rad = angle * Math.PI / 180
-    const x = centerX + Math.cos(rad) * radius
-    const y = centerY + Math.sin(rad) * radius
-    return { ...member, x: `${x.toFixed(1)}%`, y: `${y.toFixed(1)}%` }
-  })
 }
 
 function generateAvatarColors(userId) {

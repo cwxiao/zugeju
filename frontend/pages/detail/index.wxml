@@ -83,21 +83,17 @@
     <view class="summary-card detail-card info-card detail-card-clay-soft">
       <view class="detail-card-accent accent-info"></view>
       <view class="card-caption">到场的人</view>
-      <view class="round-table">
-        <view class="round-table-center">
-          <text class="round-table-emoji">🔥</text>
-          <text class="round-table-label">{{detail.members.length}}人围坐</text>
-        </view>
-        <block wx:for="{{roundTablePositions}}" wx:key="id">
-          <view class="round-seat" style="left:{{item.x}};top:{{item.y}};">
-            <view class="member-avatar member-avatar-frame" style="background: {{item.avatarBg || '#e8d2b8'}};">
-              <image wx:if="{{item.avatarUrl && !item.avatarError}}" class="member-avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" binderror="onRoundAvatarError" data-index="{{index}}" />
+      <view class="member-list">
+        <block wx:for="{{detail.members}}" wx:key="id">
+          <view class="member-list-item">
+            <view class="member-avatar member-avatar-frame" style="background: {{item.avatarUrl && !item.avatarError ? 'transparent' : (item.avatarBg || '#e8d2b8')}}; border-color: {{item.avatarUrl && !item.avatarError ? '#fffaf3' : (item.avatarBg || '#e8d2b8')}};">
+              <image wx:if="{{item.avatarUrl && !item.avatarError}}" class="member-avatar-image" src="{{item.avatarUrl}}" mode="aspectFill" binderror="onAvatarError" data-index="{{index}}" />
               <text wx:else style="color: {{item.avatarFg || '#5d4127'}};">{{item.shortName}}</text>
             </view>
             <text class="member-name">{{item.nickname}}</text>
           </view>
         </block>
-        <button class="round-seat round-seat-invite" open-type="share">
+        <button class="member-list-item member-list-invite" open-type="share">
           <view class="member-avatar member-avatar-plus">
             <text class="round-plus-icon">+</text>
           </view>
