@@ -51,6 +51,8 @@ Page({
   },
   refreshTimer: null,
 
+  autoAccept: false, // 页面级变量：是否需要自动接受邀请
+
   async onLoad(options) {
     const activityId = options.id || ''
     const inviteSource = options.source || ''
@@ -60,10 +62,22 @@ Page({
       return
     }
 
+    // 记录 autoAccept 标记（来自登录后跳回的 URL 参数）
+    this.autoAccept = (options.autoAccept === '1')
+
     this.setData({ inviteSource, reactions: loadReactions(activityId) })
     await this.loadDetail(activityId)
     if (getApp().hasLoginState()) {
       this.startMemberRefresh()
+    }
+
+    // loadDetail 完成后再检查是否需要自动接受
+    if (this.autoAccept && getApp().hasLoginState()) {
+      this.autoAccept = false // 用完即丢
+      // 还没加入才自动接受
+      if (!this.data.detail.currentUserJoined) {
+        this.acceptInvite()
+      }
     }
   },
 
@@ -71,29 +85,6 @@ Page({
     if (this.data.detail.id && getApp().hasLoginState()) {
       this.startMemberRefresh()
     }
-
-    // 自动接受邀请：登录完成后从 home 页跳回来，带 autoAccept 标记
-    this.autoAcceptInvite()
-  },
-
-  autoAcceptInvite() {
-    // 只有已登录 + 有 autoAccept 标记 + 当前活动ID匹配时才自动接受
-    if (!getApp().hasLoginState()) return
-
-    const pendingId = wx.getStorageSync('pendingAutoAcceptActivityId')
-    if (!pendingId) return
-
-    // 清除标记，防止重复触发
-    wx.removeStorageSync('pendingAutoAcceptActivityId')
-
-    // 确保是同一个活动
-    if (pendingId !== this.data.detail.id) return
-
-    // 已加入了就不重复
-    if (this.data.detail.currentUserJoined) return
-
-    // 自动接受邀请
-    this.acceptInvite()
   },
 
   onHide() {
@@ -219,9 +210,8 @@ Page({
     if (!getApp().hasLoginState()) {
       const activityId = this.data.detail.id
       const inviteSource = this.data.inviteSource
-      // 保存待处理的邀请路径，加上 autoAccept 标记
+      // 保存待处理的邀请路径，带 autoAccept 标记，登录后跳回时会自动加入
       wx.setStorageSync('pendingInvitePath', `/pages/detail/index?id=${activityId}&source=${inviteSource || 'invite'}&autoAccept=1`)
-      wx.setStorageSync('pendingAutoAcceptActivityId', activityId)
       wx.showToast({ title: '请先登录后再加入', icon: 'none' })
       // 用 redirectTo 替代 navigateTo，避免页面栈堆叠
       wx.redirectTo({ url: '/pages/home/index?showAuth=1' })
