@@ -118,11 +118,17 @@ Page({
         menus: ['shareAppMessage', 'shareTimeline']
       })
 
-      const isCreator = detail.currentUserCreator || (detail.members || []).some((member) => member.userId === localUser.id && member.role === 'creator')
+      const isCreator = detail.currentUserCreator || (hasLogin && (detail.members || []).some((member) => member.userId === localUser.id && member.role === 'creator'))
 
+      // canJoin 判断：优先用后端返回值，未登录时用前端兜底（招募中+未满+未加入+非创建者+非结束）
+      const rawStatus = detail.status
+      const notJoined = !detail.currentUserJoined
+      const notFull = detail.joinedCount < detail.maxParticipantCount
+      const isRecruiting = rawStatus === 'recruiting'
+      const isActive = rawStatus !== 'finished' && rawStatus !== 'cancelled'
       const showJoinButton = hasLogin
-        ? detail.canJoin
-        : (detail.status === 'recruiting' && detail.joinedCount < detail.maxParticipantCount)
+        ? !!detail.canJoin
+        : (isActive && isRecruiting && notFull && notJoined && !isCreator)
 
       const mappedMembers = (detail.members || []).map((member) => {
         const colors = generateAvatarColors(member.userId)
