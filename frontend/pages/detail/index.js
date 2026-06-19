@@ -71,6 +71,29 @@ Page({
     if (this.data.detail.id && getApp().hasLoginState()) {
       this.startMemberRefresh()
     }
+
+    // 自动接受邀请：登录完成后从 home 页跳回来，带 autoAccept 标记
+    this.autoAcceptInvite()
+  },
+
+  autoAcceptInvite() {
+    // 只有已登录 + 有 autoAccept 标记 + 当前活动ID匹配时才自动接受
+    if (!getApp().hasLoginState()) return
+
+    const pendingId = wx.getStorageSync('pendingAutoAcceptActivityId')
+    if (!pendingId) return
+
+    // 清除标记，防止重复触发
+    wx.removeStorageSync('pendingAutoAcceptActivityId')
+
+    // 确保是同一个活动
+    if (pendingId !== this.data.detail.id) return
+
+    // 已加入了就不重复
+    if (this.data.detail.currentUserJoined) return
+
+    // 自动接受邀请
+    this.acceptInvite()
   },
 
   onHide() {
@@ -196,9 +219,12 @@ Page({
     if (!getApp().hasLoginState()) {
       const activityId = this.data.detail.id
       const inviteSource = this.data.inviteSource
-      wx.setStorageSync('pendingInvitePath', `/pages/detail/index?id=${activityId}&source=${inviteSource || 'invite'}`)
+      // 保存待处理的邀请路径，加上 autoAccept 标记
+      wx.setStorageSync('pendingInvitePath', `/pages/detail/index?id=${activityId}&source=${inviteSource || 'invite'}&autoAccept=1`)
+      wx.setStorageSync('pendingAutoAcceptActivityId', activityId)
       wx.showToast({ title: '请先登录后再加入', icon: 'none' })
-      wx.navigateTo({ url: '/pages/home/index?showAuth=1' })
+      // 用 redirectTo 替代 navigateTo，避免页面栈堆叠
+      wx.redirectTo({ url: '/pages/home/index?showAuth=1' })
       return
     }
 
@@ -211,6 +237,7 @@ Page({
       })
       wx.showToast({ title: '已加入', icon: 'success' })
       await this.loadDetail(this.data.detail.id, true)
+      this.startMemberRefresh()
     } catch (error) {
       if (isAuthExpiredError(error)) {
         wx.showToast({ title: '登录已过期，请重新登录', icon: 'none' })
