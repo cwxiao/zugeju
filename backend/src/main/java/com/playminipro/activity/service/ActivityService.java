@@ -153,7 +153,6 @@ public class ActivityService {
         boolean currentUserJoined = userId != null && activityMemberMapper.existsJoinedMember(activityId, userId) > 0;
         boolean currentUserCreator = userId != null && activityMemberMapper.existsJoinedCreator(activityId, userId) > 0;
         boolean canJoin = !currentUserJoined
-                && userId != null
                 && "recruiting".equals(activity.getStatus())
                 && joinedCount < activity.getMaxParticipantCount();
 
