@@ -29,6 +29,11 @@ Page({
     inviteSource: '',
     reactions: [],
     floatingReactions: [],
+    // 内联登录弹窗状态
+    authVisible: false,
+    authLoading: false,
+    authNickname: '',
+    authAvatarUrl: '',
     detail: {
       id: '',
       title: '详情',
@@ -214,13 +219,15 @@ Page({
     }
 
     if (!getApp().hasLoginState()) {
-      const activityId = this.data.detail.id
-      const inviteSource = this.data.inviteSource
-      // 保存待处理的邀请路径，带 autoAccept 标记，登录后跳回时会自动加入
-      wx.setStorageSync('pendingInvitePath', `/pages/detail/index?id=${activityId}&source=${inviteSource || 'invite'}&autoAccept=1`)
-      wx.showToast({ title: '请先登录后再加入', icon: 'none' })
-      // 用 redirectTo 替代 navigateTo，避免页面栈堆叠
-      wx.redirectTo({ url: '/pages/home/index?showAuth=1' })
+      // 直接在详情页弹出内联登录框，不再跳首页
+      const profile = wx.getStorageSync('profile') || {}
+      const savedUser = wx.getStorageSync('user') || {}
+      const cachedNickname = profile.nickname || (savedUser.nickname && savedUser.nickname !== '微信用户' ? savedUser.nickname : '')
+      this.setData({
+        authVisible: true,
+        authNickname: cachedNickname,
+        authAvatarUrl: profile.avatarUrl || ''
+      })
       return
     }
 
@@ -246,6 +253,115 @@ Page({
       this.setData({ joining: false })
     }
   },
+
+  // ===== 内联登录弹窗方法 =====
+
+  handleChooseAvatar(event) {
+    const { avatarUrl } = event.detail
+    if (!avatarUrl) {
+      return
+    }
+    this.setData({ authAvatarUrl: avatarUrl })
+  },
+
+  onNicknameBlur(event) {
+    const nickname = (event.detail.value || '').trim()
+    if (nickname) {
+      this.setData({ authNickname: nickname })
+    }
+  },
+
+  onNicknameConfirm(event) {
+    const nickname = (event.detail.value || '').trim()
+    if (nickname) {
+      this.setData({ authNickname: nickname })
+    }
+  },
+
+  closeAuthDialog() {
+    this.setData({ authVisible: false })
+  },
+
+  async confirmLoginAndJoin() {
+    this.setData({ authLoading: true })
+
+    try {
+      const userNickname = (this.data.authNickname || '').trim() || '微信用户'
+      const loginData = await getApp().loginWithConfirm({
+        nickname: userNickname,
+        avatarUrl: ''
+      })
+
+      // 登录成功后，如果选择了临时头像，上传到后端获取远程 URL
+      const tmpAvatarUrl = this.data.authAvatarUrl
+      if (tmpAvatarUrl && tmpAvatarUrl.startsWith('http://tmp')) {
+        try {
+          const uploadRes = await new Promise((resolve, reject) => {
+            wx.uploadFile({
+              url: getBaseUrl() + '/api/files/upload',
+              filePath: tmpAvatarUrl,
+              name: 'file',
+              header: {
+                'Authorization': 'Bearer ' + loginData.token
+              },
+              success: resolve,
+              fail: reject
+            })
+          })
+
+          const result = JSON.parse(uploadRes.data)
+          if (result.data) {
+            const remoteUrl = result.data.startsWith('http') ? result.data : (getBaseUrl() + result.data)
+            await request({
+              url: '/api/users/avatar',
+              method: 'PUT',
+              data: { avatarUrl: remoteUrl }
+            })
+            const user = wx.getStorageSync('user') || {}
+            user.avatarUrl = remoteUrl
+            wx.setStorageSync('user', user)
+            getApp().globalData.user = user
+          }
+        } catch (uploadErr) {
+          console.error('头像上传失败', uploadErr)
+        }
+      } else if (tmpAvatarUrl && tmpAvatarUrl.startsWith('http')) {
+        try {
+          await request({
+            url: '/api/users/avatar',
+            method: 'PUT',
+            data: { avatarUrl: tmpAvatarUrl }
+          })
+          const user = wx.getStorageSync('user') || {}
+          user.avatarUrl = tmpAvatarUrl
+          wx.setStorageSync('user', user)
+          getApp().globalData.user = user
+        } catch (e) {
+          console.error('头像更新失败', e)
+        }
+      }
+
+      // 登录成功，关闭弹窗
+      this.setData({ authVisible: false, authLoading: false })
+
+      // 刷新详情数据（登录后可以获取更完整的成员信息）
+      await this.loadDetail(this.data.detail.id, true)
+      this.startMemberRefresh()
+
+      // 登录后自动接受邀请
+      if (!this.data.detail.currentUserJoined) {
+        this.acceptInvite()
+      }
+    } catch (error) {
+      this.setData({ authLoading: false })
+      wx.showToast({
+        title: isAuthExpiredError(error) ? '登录已失效，请重试' : '登录失败',
+        icon: 'none'
+      })
+    }
+  },
+
+  // ===== 邀请操作方法 =====
 
   async declineInvite() {
     if (!this.data.detail.id) {

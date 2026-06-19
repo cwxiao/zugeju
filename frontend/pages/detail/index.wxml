@@ -1,5 +1,58 @@
 <view class="page-shell">
   <image class="page-bg-img" src="/img/city-bg.png" mode="aspectFill" />
+
+  <!-- 内联登录弹窗：未登录时点击"接受邀请"直接弹出 -->
+  <view wx:if="{{authVisible}}" class="auth-mask">
+    <view class="auth-dialog">
+      <image class="auth-logo" src="/img/brand-logo.png" mode="aspectFit" />
+      <text class="auth-title">登录后加入活动</text>
+      <text class="auth-desc">获取头像和昵称后即可接受邀请，一步搞定。</text>
+
+      <!-- 已获取到头像和昵称：展示预览 -->
+      <view wx:if="{{authAvatarUrl && authNickname}}" class="auth-preview" bindtap="reChooseAvatar">
+        <image class="auth-preview-avatar" src="{{authAvatarUrl}}" mode="aspectFill" />
+        <text class="auth-preview-nickname">{{authNickname}}</text>
+        <text class="auth-preview-hint">点击可更换头像</text>
+      </view>
+
+      <!-- 未获取：显示获取按钮 -->
+      <view wx:if="{{!authAvatarUrl || !authNickname}}" class="auth-action-area">
+        <!-- 头像未获取 -->
+        <view wx:if="{{!authAvatarUrl}}" class="auth-step">
+          <text class="auth-step-title">第1步：选择你的微信头像</text>
+          <button class="auth-agree-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
+            点此选择微信头像
+          </button>
+          <text class="auth-step-hint">请选择「用微信头像」，不要从相册选或拍照</text>
+        </view>
+        <!-- 头像已获取，昵称未获取 -->
+        <view wx:if="{{authAvatarUrl && !authNickname}}" class="auth-step">
+          <text class="auth-step-title">第2步：确认你的微信昵称</text>
+          <view class="auth-nickname-row">
+            <image class="auth-nickname-avatar" src="{{authAvatarUrl}}" mode="aspectFill" />
+            <input class="auth-nickname-input"
+                   type="nickname"
+                   value="{{authNickname}}"
+                   placeholder="点键盘上方填入微信昵称"
+                   focus="{{authAvatarUrl && !authNickname}}"
+                   bindblur="onNicknameBlur"
+                   bindconfirm="onNicknameConfirm" />
+          </view>
+          <text class="auth-step-hint">键盘上方会显示你的微信昵称，点击即可自动填入</text>
+        </view>
+      </view>
+
+      <!-- 都获取到了：确认登录并加入 -->
+      <button wx:if="{{authAvatarUrl && authNickname}}" class="auth-confirm-button" loading="{{authLoading}}" bindtap="confirmLoginAndJoin">
+        {{authLoading ? '登录中...' : '确认登录并加入'}}
+      </button>
+      <text class="auth-section-tip auth-subscribe-tip">确认时会请求通知授权，可拒绝。</text>
+      <view class="auth-close-row" bindtap="closeAuthDialog">
+        <text class="auth-close-text">暂不登录</text>
+      </view>
+    </view>
+  </view>
+
   <view class="detail-stage">
     <view class="detail-orb detail-orb-left"></view>
     <view class="detail-orb detail-orb-right"></view>
