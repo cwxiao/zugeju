@@ -17,19 +17,27 @@
         <!-- 未获取：显示获取按钮 -->
         <view wx:if="{{!authAvatarUrl || !authNickname}}" class="auth-action-area">
           <!-- 头像未获取 -->
-          <button wx:if="{{!authAvatarUrl}}" class="auth-agree-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
-            同意并获取头像
-          </button>
+          <view wx:if="{{!authAvatarUrl}}" class="auth-step">
+            <text class="auth-step-title">第1步：选择你的微信头像</text>
+            <button class="auth-agree-button" open-type="chooseAvatar" bindchooseavatar="handleChooseAvatar">
+              点此选择微信头像
+            </button>
+            <text class="auth-step-hint">请选择「用微信头像」，不要从相册选或拍照</text>
+          </view>
           <!-- 头像已获取，昵称未获取 -->
-          <view wx:if="{{authAvatarUrl && !authNickname}}" class="auth-nickname-row">
-            <image class="auth-nickname-avatar" src="{{authAvatarUrl}}" mode="aspectFill" />
-            <input class="auth-nickname-input"
-                   type="nickname"
-                   value="{{authNickname}}"
-                   placeholder="点击获取微信昵称"
-                   focus="{{authAvatarUrl && !authNickname}}"
-                   bindblur="onNicknameBlur"
-                   bindconfirm="onNicknameConfirm" />
+          <view wx:if="{{authAvatarUrl && !authNickname}}" class="auth-step">
+            <text class="auth-step-title">第2步：确认你的微信昵称</text>
+            <view class="auth-nickname-row">
+              <image class="auth-nickname-avatar" src="{{authAvatarUrl}}" mode="aspectFill" />
+              <input class="auth-nickname-input"
+                     type="nickname"
+                     value="{{authNickname}}"
+                     placeholder="点键盘上方填入微信昵称"
+                     focus="{{authAvatarUrl && !authNickname}}"
+                     bindblur="onNicknameBlur"
+                     bindconfirm="onNicknameConfirm" />
+            </view>
+            <text class="auth-step-hint">键盘上方会显示你的微信昵称，点击即可自动填入</text>
           </view>
         </view>
 
